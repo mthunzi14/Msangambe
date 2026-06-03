@@ -1268,12 +1268,43 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   }
 
   function onLogoClick(e) {
-    e.preventDefault();
-    // Redirect to the base URL (wiping any scroll hashes like #story) and force reload
-    window.location.href = window.location.origin + window.location.pathname;
-    setTimeout(() => {
-      window.location.reload();
-    }, 50);
+    if (!document.body.classList.contains('is-locked') && !isTransitioning) {
+      e.preventDefault();
+      isTransitioning = true;
+
+      // 1. Trigger white flash overlay fade-in (takes 800ms to go solid white)
+      const flash = document.getElementById('flash-overlay');
+      if (flash) flash.classList.add('is-active');
+
+      // 2. At 800ms (fully white): lock scroll, lock nav, scroll to top instantly, clear hash, reset scene
+      setTimeout(() => {
+        document.body.classList.add('is-locked');
+        
+        const nav = document.getElementById('main-nav');
+        if (nav) nav.classList.add('is-landing');
+
+        // Scroll to top instantly
+        window.scrollTo({ top: 0, behavior: 'auto' });
+
+        // Cleanly wipe hash from browser address bar without reloading
+        window.history.pushState("", document.title, window.location.pathname + window.location.search);
+
+        // Reset medallion and camera parameters
+        if (emblemGroup) {
+          emblemGroup.scale.set(1, 1, 1);
+          emblemGroup.position.set(0, 0, 0);
+        }
+        camera.position.z = 5.5;
+
+        // 3. At 1000ms: fade out flash and finish transition
+        setTimeout(() => {
+          if (flash) flash.classList.remove('is-active');
+          isTransitioning = false;
+          isHoveringMedallion = false;
+        }, 200);
+
+      }, 800);
+    }
   }
 
   function onWindowResize() {
