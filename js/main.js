@@ -1269,7 +1269,11 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
   function onLogoClick(e) {
     e.preventDefault();
-    window.location.reload();
+    // Redirect to the base URL (wiping any scroll hashes like #story) and force reload
+    window.location.href = window.location.origin + window.location.pathname;
+    setTimeout(() => {
+      window.location.reload();
+    }, 50);
   }
 
   function onWindowResize() {
