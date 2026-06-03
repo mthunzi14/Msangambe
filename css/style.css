@@ -224,26 +224,48 @@ button {
   gap: 24px;
 }
 
-/* Logo */
 .nav-logo {
   flex-shrink: 0;
   display: flex;
   align-items: center;
 }
 
-#nav-logo-img {
-  height: 40px;
-  width: auto;
-  filter: invert(1);
-  transition: filter 0.4s ease, box-shadow 0.4s ease;
+.nav-logo-medallion {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05), inset 0 0 4px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.4s ease,
+              box-shadow 0.4s ease,
+              background 0.4s ease;
 }
 
-.nav.is-scrolled #nav-logo-img {
-  filter: invert(1);
+.nav-logo-medallion img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  opacity: 0.85;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.nav-logo:hover #nav-logo-img {
-  box-shadow: var(--glow-sm);
+.nav-logo-medallion:hover {
+  transform: scale(1.06);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.25), inset 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+.nav-logo-medallion:hover img {
+  opacity: 1;
+  transform: rotate(12deg);
 }
 
 /* Desktop nav links */
@@ -354,7 +376,9 @@ button {
   position: fixed;
   inset: 0;
   z-index: 999;
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -732,22 +756,23 @@ button {
   user-select: none;
 }
 
-/* Layer 4 — Dragon entrance */
 .dragon-element {
   position: absolute;
-  top: 20vh;
+  top: 96px; /* Sits elegantly below the 72px navbar */
+  left: 48px;
   z-index: 3;
   pointer-events: none;
   opacity: 0;
 }
 
 .dragon-element.dragon-fly {
-  animation: dragon-fly 2.5s ease-in-out forwards;
+  animation: dragon-settle 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .dragon-element img {
-  width: 280px;
-  opacity: 0.35;
+  width: 130px;
+  height: auto;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.15));
 }
 
 /* Scroll indicator */
@@ -1745,11 +1770,15 @@ button {
   100% { background-position: 200% 0; }
 }
 
-@keyframes dragon-fly {
-  0%   { transform: translateX(100vw); opacity: 0; }
-  15%  { opacity: 1; }
-  65%  { transform: translateX(-10vw); opacity: 1; }
-  100% { transform: translateX(-60vw); opacity: 0; }
+@keyframes dragon-settle {
+  0% {
+    transform: translate(-100px, -20px) scale(0.7) rotate(-30deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 0.65;
+  }
 }
 
 @keyframes scroll-pulse {
@@ -2283,13 +2312,17 @@ button {
 
 /* Audio Player */
 .audio-player {
-  border: 1px solid rgba(192, 192, 192, 0.25);
-  background: var(--charcoal);
+  background: rgba(28, 28, 28, 0.45); /* translucent charcoal */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
   padding: 32px;
   display: grid;
   grid-template-columns: 35% 65%;
   gap: 24px;
   align-items: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15), inset 0 0 15px rgba(255, 255, 255, 0.05);
 }
 
 .player-visual-side {
@@ -2710,6 +2743,13 @@ button {
   margin: 0 auto 56px;
   position: relative;
   min-height: 380px;
+  background: rgba(15, 15, 15, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .booking-form {
@@ -2738,10 +2778,11 @@ button {
 
 .booking-form input,
 .booking-form textarea {
-  background: transparent;
-  border: 1px solid var(--silver-deep);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: var(--white);
   padding: 14px 20px;
+  border-radius: 4px;
   font-family: 'Raleway', sans-serif;
   font-size: 11px;
   letter-spacing: 0.1em;
@@ -2751,8 +2792,9 @@ button {
 
 .booking-form input:focus,
 .booking-form textarea:focus {
-  border-color: var(--white);
-  box-shadow: 0 0 10px rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
 }
 
 .booking-form input::placeholder,

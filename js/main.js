@@ -300,10 +300,6 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
   setTimeout(() => {
     dragon.classList.add('dragon-fly');
-
-    dragon.addEventListener('animationend', () => {
-      dragon.style.display = 'none';
-    }, { once: true });
   }, 300);
 })();
 
@@ -1010,15 +1006,14 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 /* ══════════════════════════════════════════════════════════════
    13. 3D WEBGL HERO CANVAS & MORPHING MATERIALS
    Initializes Three.js Medallion (Dragon Crest representation)
-   and manages PLATINUM, CYBER, OBSIDIAN, DIAMOND styles and cursor interaction.
+   and manages the premium refractive DIAMOND style and cursor interaction.
    ══════════════════════════════════════════════════════════════ */
 (function initThreeDHero() {
   const canvas = document.getElementById('hero-3d-canvas');
   if (!canvas) return;
 
   const container = canvas.parentElement;
-  let scene, camera, renderer, emblemGroup, coinMesh, logoMesh, rimGlowMesh, lights = [];
-  let currentMaterialName = 'platinum';
+  let scene, camera, renderer, emblemGroup, coinMesh, logoMesh, lights = [];
   let materials = {};
   
   // Mouse tracking variables
@@ -1083,68 +1078,11 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
     // 4. PROCEDURAL TEXTURES & LOGO LOADING
     const envMapTexture = createProceduralEnvMap();
-    const carbonTexture = createCarbonTexture();
     
     const textureLoader = new THREE.TextureLoader();
     const logoTexture = textureLoader.load('FAVICON-LOGO_NOBG-removebg-preview.png');
 
-    // 5. MATERIALS SETUP
-    // PLATINUM (Polished chrome coin)
-    materials.platinumCoin = new THREE.MeshPhysicalMaterial({
-      color: 0xeeeeee,
-      metalness: 0.98,
-      roughness: 0.15,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.05,
-      envMap: envMapTexture,
-      envMapIntensity: 2.2
-    });
-    materials.platinumLogo = new THREE.MeshStandardMaterial({
-      color: 0x111111,
-      map: logoTexture,
-      transparent: true,
-      opacity: 0.95,
-      roughness: 0.1,
-      metalness: 0.9
-    });
-
-    // CYBER (Glass neon coin)
-    materials.cyberCoin = new THREE.MeshPhysicalMaterial({
-      color: 0x080808,
-      roughness: 0.15,
-      metalness: 0.15,
-      transparent: true,
-      opacity: 0.85,
-      transmission: 0.7,
-      thickness: 1.0,
-      envMap: envMapTexture,
-      envMapIntensity: 1.2
-    });
-    materials.cyberLogo = new THREE.MeshBasicMaterial({
-      color: 0x00ffcc,
-      map: logoTexture,
-      transparent: true,
-      opacity: 0.95
-    });
-
-    // OBSIDIAN (Carbon coin)
-    materials.obsidianCoin = new THREE.MeshStandardMaterial({
-      color: 0x121212,
-      roughness: 0.65,
-      metalness: 0.15,
-      map: carbonTexture,
-      bumpMap: carbonTexture,
-      bumpScale: 0.015
-    });
-    materials.obsidianLogo = new THREE.MeshStandardMaterial({
-      color: 0x888888,
-      map: logoTexture,
-      transparent: true,
-      opacity: 0.85,
-      roughness: 0.5
-    });
-
-    // DIAMOND (Crystal refracting coin)
+    // 5. DIAMOND MATERIAL SETUP (Crystal refracting coin)
     materials.diamondCoin = new THREE.MeshPhysicalMaterial({
       color: 0xffffff,
       transmission: 0.95,
@@ -1167,31 +1105,22 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       metalness: 0.8
     });
 
-    // 6. GEOMETRY & EMBLEM MESH CREATION
+    // 6. GEOMETRY & EMBLEM MESH CREATION (Slightly larger sizing)
     emblemGroup = new THREE.Group();
     
-    // Thin beveled cylinder representing the luxury coin
-    const cylinderGeom = new THREE.CylinderGeometry(1.4, 1.4, 0.08, 64);
+    const cylinderGeom = new THREE.CylinderGeometry(1.75, 1.75, 0.08, 64);
     cylinderGeom.rotateX(Math.PI / 2); // orient flat face forward
     
-    coinMesh = new THREE.Mesh(cylinderGeom, materials.platinumCoin);
+    coinMesh = new THREE.Mesh(cylinderGeom, materials.diamondCoin);
     coinMesh.name = 'coinMesh';
     emblemGroup.add(coinMesh);
 
-    // Front-facing logo texture plane (sits slightly forward to avoid z-fighting)
-    const logoGeometry = new THREE.PlaneGeometry(1.15, 1.15);
-    logoMesh = new THREE.Mesh(logoGeometry, materials.platinumLogo);
+    // Front-facing logo texture plane (slightly larger M/dragon logo inside medallion)
+    const logoGeometry = new THREE.PlaneGeometry(1.5, 1.5);
+    logoMesh = new THREE.Mesh(logoGeometry, materials.diamondLogo);
     logoMesh.name = 'logoMesh';
     logoMesh.position.set(0, 0, 0.042); // offset forward
     emblemGroup.add(logoMesh);
-
-    // Rim glow Torus ring (visible only in cyber mode)
-    const ringGeometry = new THREE.TorusGeometry(1.4, 0.02, 16, 64);
-    rimGlowMesh = new THREE.Mesh(ringGeometry, materials.cyberLogo);
-    rimGlowMesh.name = 'rimGlowMesh';
-    rimGlowMesh.position.set(0, 0, 0);
-    rimGlowMesh.visible = false;
-    emblemGroup.add(rimGlowMesh);
 
     scene.add(emblemGroup);
 
@@ -1199,10 +1128,6 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('mousemove', onMouseMove);
     
-    // Set up material tab and action clicks
-    setupTabs();
-    setupActionButtons();
-
     // Start animation loop
     animate();
   }
@@ -1259,109 +1184,6 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     return texture;
   }
 
-  function createCarbonTexture() {
-    const size = 16;
-    const canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext('2d');
-    
-    ctx.fillStyle = '#111111';
-    ctx.fillRect(0, 0, size, size);
-    
-    ctx.fillStyle = '#202020';
-    ctx.fillRect(0, 0, size / 2, size / 2);
-    ctx.fillRect(size / 2, size / 2, size / 2, size / 2);
-    
-    ctx.fillStyle = '#181818';
-    ctx.fillRect(size / 4, 0, size / 4, size / 2);
-    ctx.fillRect((3 * size) / 4, size / 2, size / 4, size / 2);
-    
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(30, 30);
-    return texture;
-  }
-
-  function setMaterial(materialName) {
-    if (materialName === currentMaterialName) return;
-
-    const coinMesh = emblemGroup.getObjectByName('coinMesh');
-    const logoMesh = emblemGroup.getObjectByName('logoMesh');
-    const rimGlowMesh = emblemGroup.getObjectByName('rimGlowMesh');
-    const cursorLight = scene.getObjectByName('cursorLight');
-    if (!coinMesh || !logoMesh || !rimGlowMesh) return;
-
-    currentMaterialName = materialName;
-    rimGlowMesh.visible = false;
-
-    if (materialName === 'platinum') {
-      coinMesh.material = materials.platinumCoin;
-      logoMesh.material = materials.platinumLogo;
-      if (cursorLight) cursorLight.color.setHex(0xffffff);
-      lights[1].color.setHex(0xffffff);
-      lights[2].color.setHex(0xffffff);
-      lights[3].color.setHex(0x00ffcc);
-      lights[4].color.setHex(0xff0055);
-    } else if (materialName === 'cyber') {
-      coinMesh.material = materials.cyberCoin;
-      logoMesh.material = materials.cyberLogo;
-      rimGlowMesh.visible = true;
-      if (cursorLight) cursorLight.color.setHex(0x00ffcc);
-      lights[1].color.setHex(0x00ffcc);
-      lights[2].color.setHex(0xff0055);
-      lights[3].color.setHex(0x00ffcc);
-      lights[4].color.setHex(0xff0055);
-    } else if (materialName === 'obsidian') {
-      coinMesh.material = materials.obsidianCoin;
-      logoMesh.material = materials.obsidianLogo;
-      if (cursorLight) cursorLight.color.setHex(0x888888);
-      lights[1].color.setHex(0x666666);
-      lights[2].color.setHex(0x222222);
-      lights[3].color.setHex(0x444444);
-      lights[4].color.setHex(0x222222);
-    } else if (materialName === 'diamond') {
-      coinMesh.material = materials.diamondCoin;
-      logoMesh.material = materials.diamondLogo;
-      if (cursorLight) cursorLight.color.setHex(0xffffff);
-      lights[1].color.setHex(0xffffff);
-      lights[2].color.setHex(0xaaaaaa);
-      lights[3].color.setHex(0x00ffcc);
-      lights[4].color.setHex(0xff0055);
-    }
-  }
-
-  function setupTabs() {
-    const tabs = document.querySelectorAll('.hero-3d-tab');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        tabs.forEach(t => {
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-        });
-        tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-
-        const materialType = tab.getAttribute('data-material');
-        setMaterial(materialType);
-      });
-    });
-  }
-
-  function setupActionButtons() {
-    const actionBtns = document.querySelectorAll('.hero-hud-action-btn');
-    actionBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const targetSelector = btn.getAttribute('data-scroll-to');
-        const targetElement = document.querySelector(targetSelector);
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
-  }
-
   function onMouseMove(event) {
     mouseX = (event.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
     mouseY = (event.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
@@ -1400,12 +1222,6 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     if (cursorLight) {
       cursorLight.position.x = targetX * 3.5;
       cursorLight.position.y = -targetY * 3.5;
-    }
-
-    // Cyber mode custom pulse effect
-    if (currentMaterialName === 'cyber' && rimGlowMesh) {
-      const pulse = 0.5 + Math.sin(elapsedTime * 4) * 0.35;
-      rimGlowMesh.material.opacity = pulse;
     }
 
     renderer.render(scene, camera);

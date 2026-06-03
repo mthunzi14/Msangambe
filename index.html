@@ -30,11 +30,9 @@
     <div class="nav-inner">
 
       <a href="#home" class="nav-logo" aria-label="Msangambe — Home">
-        <!-- CLIENT REPLACES: swap to logo-lockup-black-on-white.png when asset is available -->
-        <img src="assets/logo-lockup-white-on-black.png"
-             id="nav-logo-img"
-             alt="Msangambe Sigudla"
-             height="40">
+        <div class="nav-logo-medallion">
+          <img src="FAVICON-LOGO_NOBG-removebg-preview.png" alt="Msangambe Sigudla">
+        </div>
       </a>
 
       <ul class="nav-links" role="list">
@@ -116,58 +114,14 @@
   ══════════════════════════════════════════════════════════ -->
   <section id="home" class="hero" aria-label="Hero — Msangambe Sigudla">
 
-    <!-- Layer 1: Watermark crest — parallax 0.2x -->
-    <div class="hero-watermark" aria-hidden="true">
-      <img src="assets/logo-crest-black-on-white.png" alt="">
-    </div>
-
-    <!-- Layer 2: 3D Interactive WebGL Viewport & HUD -->
+    <!-- Layer 2: 3D Interactive WebGL Viewport -->
     <div class="hero-3d-wrap" aria-hidden="true">
       <canvas id="hero-3d-canvas"></canvas>
-      
-      <!-- Symmetrical Heads-Up Display (HUD) Controls -->
-      <div class="hero-3d-hud">
-        <!-- Style Material Tabs -->
-        <div class="hud-group hud-group--materials" role="tablist" aria-label="3D materials selector">
-          <button class="hero-3d-tab active" data-material="platinum" role="tab" aria-selected="true" aria-controls="hero-3d-canvas">
-            <span class="tab-glow"></span>PLATINUM
-          </button>
-          <button class="hero-3d-tab" data-material="cyber" role="tab" aria-selected="false" aria-controls="hero-3d-canvas">
-            <span class="tab-glow"></span>CYBER
-          </button>
-          <button class="hero-3d-tab" data-material="obsidian" role="tab" aria-selected="false" aria-controls="hero-3d-canvas">
-            <span class="tab-glow"></span>OBSIDIAN
-          </button>
-          <button class="hero-3d-tab" data-material="diamond" role="tab" aria-selected="false" aria-controls="hero-3d-canvas">
-            <span class="tab-glow"></span>DIAMOND
-          </button>
-        </div>
-
-        <!-- Navigation Action Tabs -->
-        <div class="hud-group hud-group--actions">
-          <button class="hero-hud-action-btn" data-scroll-to="#story">
-            ENTER THE WORLD
-          </button>
-          <button class="hero-hud-action-btn" data-scroll-to="#sound">
-            STREAM NOW
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Layer 3: Hero content — parallax 0.15x -->
-    <div class="hero-content">
-      <p class="hero-stamp label">SON DYNASTY · MSANGAMBE SIGUDLA</p>
-      <h1 class="hero-name">Msangambe</h1>
-      <p class="hero-tagline">
-        <!-- CLIENT REPLACES: tagline -->
-        Artist. Model. Creator. Son of the Dynasty.
-      </p>
     </div>
 
     <!-- Layer 4: Dragon entrance — slides once on load -->
     <div class="dragon-element" aria-hidden="true">
-      <img src="assets/logo-crest-black-on-white.png" alt="" width="280">
+      <img src="assets/logo-crest-black-on-white.png" alt="">
     </div>
 
     <!-- Scroll indicator -->
