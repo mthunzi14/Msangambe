@@ -1314,13 +1314,17 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       lights[3].color.setHex(0x00ffcc);
       lights[4].color.setHex(0xff0055);
     } else if (materialName === 'obsidian') {
-      mainMesh.material = materials.obsidian;
-      lights[1].color.setHex(0xffffff);
-      lights[2].color.setHex(0x444444);
-      lights[3].color.setHex(0x00ffcc);
-      lights[4].color.setHex(0xff0055);
+      coinMesh.material = materials.obsidianCoin;
+      logoMesh.material = materials.obsidianLogo;
+      if (cursorLight) cursorLight.color.setHex(0x888888);
+      lights[1].color.setHex(0x666666);
+      lights[2].color.setHex(0x222222);
+      lights[3].color.setHex(0x444444);
+      lights[4].color.setHex(0x222222);
     } else if (materialName === 'diamond') {
-      mainMesh.material = materials.diamond;
+      coinMesh.material = materials.diamondCoin;
+      logoMesh.material = materials.diamondLogo;
+      if (cursorLight) cursorLight.color.setHex(0xffffff);
       lights[1].color.setHex(0xffffff);
       lights[2].color.setHex(0xaaaaaa);
       lights[3].color.setHex(0x00ffcc);
@@ -1374,59 +1378,34 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   function animate() {
     requestAnimationFrame(animate);
 
-    const delta = clock.getDelta();
     const elapsedTime = clock.getElapsedTime();
 
     targetX += (mouseX - targetX) * 0.05;
     targetY += (mouseY - targetY) * 0.05;
 
-    // Apply continuous auto-rotation to the Torus Knot mesh geometry directly
-    const mainMesh = knot.getObjectByName('mainMesh');
-    const wireMesh = knot.getObjectByName('wireMesh');
-    if (mainMesh) {
-      mainMesh.rotation.y = elapsedTime * 0.25;
-      mainMesh.rotation.x = elapsedTime * 0.12;
-    }
-    if (wireMesh) {
-      wireMesh.rotation.y = elapsedTime * 0.25;
-      wireMesh.rotation.x = elapsedTime * 0.12;
-    }
-
-    // Apply mouse tilt to the parent knot group only
-    knot.rotation.y = targetX * 0.5;
-    knot.rotation.x = targetY * 0.5;
-
-    // Logo plate floats gently in the middle and tilts with cursor coords (stays upright)
-    if (logoMesh) {
-      logoMesh.rotation.y = targetX * 0.5;
-      logoMesh.rotation.x = targetY * 0.5;
-      logoMesh.position.y = Math.sin(elapsedTime * 1.5) * 0.06; // elegant levitation
-    }
-
-    if (currentMaterialName === 'cyber') {
-      const wireMesh = knot.getObjectByName('wireMesh');
-      if (wireMesh) {
-        const pulse = 0.5 + Math.sin(elapsedTime * 4) * 0.35;
-        wireMesh.material.opacity = pulse;
-        
-        const cycleColor = Math.sin(elapsedTime * 2);
-        if (cycleColor > 0) {
-          wireMesh.material.color.setHex(0x00ffcc);
-        } else {
-          wireMesh.material.color.setHex(0xff0055);
-        }
-      }
-    }
-
-    if (particleSystem) {
-      particleSystem.rotation.y = elapsedTime * 0.015;
-      particleSystem.rotation.x = elapsedTime * 0.008;
+    // Apply floating levitation and slow Y-axis pivot swing to the medallion group
+    if (emblemGroup) {
+      emblemGroup.position.y = Math.sin(elapsedTime * 1.2) * 0.08;
       
-      if (currentMaterialName === 'cyber') {
-        particleSystem.material.opacity = 0.6 + Math.sin(elapsedTime * 2) * 0.2;
-      } else {
-        particleSystem.material.opacity = 0.3;
-      }
+      // Gentle slow Y-axis pivot swing (sine-modulated Y oscillation of about 16 degrees / 0.28 rad)
+      const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
+      
+      // Combine Y swing and mouse tilt coords
+      emblemGroup.rotation.y = pivotY + targetX * 0.45;
+      emblemGroup.rotation.x = targetY * 0.35;
+    }
+
+    // Dynamic spotlight tracking cursor coordinates
+    const cursorLight = scene.getObjectByName('cursorLight');
+    if (cursorLight) {
+      cursorLight.position.x = targetX * 3.5;
+      cursorLight.position.y = -targetY * 3.5;
+    }
+
+    // Cyber mode custom pulse effect
+    if (currentMaterialName === 'cyber' && rimGlowMesh) {
+      const pulse = 0.5 + Math.sin(elapsedTime * 4) * 0.35;
+      rimGlowMesh.material.opacity = pulse;
     }
 
     renderer.render(scene, camera);
