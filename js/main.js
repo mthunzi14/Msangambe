@@ -45,6 +45,13 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     ringX = lerp(ringX, mouseX, LERP);
     ringY = lerp(ringY, mouseY, LERP);
     ring.style.transform = `translate(calc(${ringX}px - 50%), calc(${ringY}px - 50%))`;
+    
+    const tooltip = document.getElementById('medallion-prompt');
+    if (tooltip) {
+      const isActive = tooltip.classList.contains('is-active');
+      tooltip.style.transform = `translate(calc(${ringX}px - 50%), calc(${ringY}px - 50%)) translateY(40px) scale(${isActive ? 1.0 : 0.9})`;
+    }
+    
     requestAnimationFrame(rafLoop);
   })();
 
@@ -1025,6 +1032,13 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   // Timing variables
   let clock = new THREE.Clock();
 
+  // Raycasting & Transition variables
+  let raycaster = new THREE.Raycaster();
+  let mouseVector = new THREE.Vector2();
+  let isHoveringMedallion = false;
+  let isTransitioning = false;
+  let transitionStartTime = 0;
+
   function init() {
     // 1. SCENE & CAMERA
     scene = new THREE.Scene();
@@ -1129,6 +1143,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     // 7. EVENT LISTENERS
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('click', onCanvasClick);
     
     // Start animation loop
     animate();
@@ -1189,6 +1204,62 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   function onMouseMove(event) {
     mouseX = (event.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
     mouseY = (event.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+    
+    // Normalized coordinates for raycaster
+    mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  }
+
+  function onCanvasClick() {
+    if (isHoveringMedallion && !isTransitioning) {
+      isTransitioning = true;
+      transitionStartTime = clock.getElapsedTime();
+      
+      // Hide tooltip
+      const prompt = document.getElementById('medallion-prompt');
+      if (prompt) prompt.classList.remove('is-active');
+      
+      // Reset custom cursor hover status
+      const ring = document.querySelector('.cursor-ring');
+      if (ring) ring.classList.remove('is-hovering');
+      
+      // Trigger white screen flash fade-in (at 500ms, solid by 1000ms)
+      setTimeout(() => {
+        const flash = document.getElementById('flash-overlay');
+        if (flash) flash.classList.add('is-active');
+      }, 500);
+
+      // At 1000ms (solid white): unlock body, navbar, scroll viewport, and reset scene
+      setTimeout(() => {
+        document.body.classList.remove('is-locked');
+        
+        const nav = document.getElementById('main-nav');
+        if (nav) nav.classList.remove('is-landing');
+
+        const storySection = document.getElementById('story');
+        if (storySection) {
+          const NAV_HEIGHT = 72;
+          const top = storySection.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+        
+        // Reset medallion and camera parameters in Three.js scene
+        setTimeout(() => {
+          if (emblemGroup) {
+            emblemGroup.scale.set(1, 1, 1);
+            emblemGroup.position.set(0, 0, 0);
+          }
+          camera.position.z = 5.5;
+          isTransitioning = false;
+          isHoveringMedallion = false;
+          
+          // Fade out white flash overlay
+          const flash = document.getElementById('flash-overlay');
+          if (flash) flash.classList.remove('is-active');
+        }, 400); // reset parameters after scroll transitions begin
+        
+      }, 1000);
+    }
   }
 
   function onWindowResize() {
@@ -1207,16 +1278,60 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     targetX += (mouseX - targetX) * 0.05;
     targetY += (mouseY - targetY) * 0.05;
 
-    // Apply floating levitation and slow Y-axis pivot swing to the medallion group
-    if (emblemGroup) {
-      emblemGroup.position.y = Math.sin(elapsedTime * 1.2) * 0.08;
+    // Raycast hover tracking
+    if (emblemGroup && !isTransitioning) {
+      raycaster.setFromCamera(mouseVector, camera);
+      const intersects = raycaster.intersectObjects([coinMesh, logoMesh]);
       
-      // Gentle slow Y-axis pivot swing (sine-modulated Y oscillation of about 16 degrees / 0.28 rad)
-      const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
+      if (intersects.length > 0) {
+        if (!isHoveringMedallion) {
+          isHoveringMedallion = true;
+          const prompt = document.getElementById('medallion-prompt');
+          if (prompt) prompt.classList.add('is-active');
+          const ring = document.querySelector('.cursor-ring');
+          if (ring) ring.classList.add('is-hovering');
+        }
+      } else {
+        if (isHoveringMedallion) {
+          isHoveringMedallion = false;
+          const prompt = document.getElementById('medallion-prompt');
+          if (prompt) prompt.classList.remove('is-active');
+          const ring = document.querySelector('.cursor-ring');
+          if (ring) ring.classList.remove('is-hovering');
+        }
+      }
+    }
+
+    // Apply transformation logic
+    if (isTransitioning) {
+      const t = clock.getElapsedTime() - transitionStartTime;
+      const duration = 1.0;
+      const progress = Math.min(t / duration, 1.0);
+      const ease = progress * progress * progress; // cubic ease-in
       
-      // Combine Y swing and mouse tilt coords
-      emblemGroup.rotation.y = pivotY + targetX * 0.45;
-      emblemGroup.rotation.x = targetY * 0.35;
+      // Cinematic zoom-in
+      camera.position.z = 5.5 - ease * 5.0; // zoom from 5.5 to 0.5
+      
+      // Cinematic scale-up
+      const currentScale = 1.0 + ease * 3.5; // scale from 1.0 to 4.5
+      if (emblemGroup) {
+        emblemGroup.scale.set(currentScale, currentScale, currentScale);
+        
+        // Rapid spinning
+        emblemGroup.rotation.y += 0.25 * (1.0 + ease * 8.0);
+        emblemGroup.rotation.x += 0.15 * (1.0 + ease * 4.0);
+      }
+    } else {
+      // Normal hover levitation and swinging
+      if (emblemGroup) {
+        emblemGroup.position.y = Math.sin(elapsedTime * 1.2) * 0.08;
+        const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
+        emblemGroup.rotation.y = pivotY + targetX * 0.45;
+        emblemGroup.rotation.x = targetY * 0.35;
+      }
+      if (camera) {
+        camera.position.z = 5.5;
+      }
     }
 
     // Dynamic spotlight tracking cursor coordinates

@@ -222,16 +222,24 @@ button {
   height: 100%;
   padding: 0 32px;
   gap: 24px;
+  position: relative;
 }
 
 .nav-logo {
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  position: absolute;
+  left: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
 }
 
 .nav-logo-globe {
-  height: 44px;
+  height: 60px;
   width: auto;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               filter 0.4s ease;
@@ -1969,6 +1977,7 @@ button {
 ───────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .nav-inner { padding: 0 20px; }
+  .nav-logo { left: 20px; }
 
   .hero-content { padding: 32px 20px; }
 
@@ -2868,5 +2877,82 @@ button {
 @keyframes disc-spin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   24. PLAYSTATION-STYLE ENTRANCE EXPERIENCE
+───────────────────────────────────────────────────────────── */
+
+body.is-locked {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Landing state for navigation */
+.nav.is-landing .nav-links,
+.nav.is-landing .nav-socials,
+.nav.is-landing .nav-burger {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Transition revealing navigation items */
+.nav-links,
+.nav-socials,
+.nav-burger {
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav.is-landing .nav-logo {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Custom Cursor Tooltip */
+.cursor-tooltip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%) translateY(40px) scale(0.9);
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--white);
+  padding: 6px 14px;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.cursor-tooltip.is-active {
+  opacity: 1;
+  transform: translate(-50%, -50%) translateY(40px) scale(1);
+}
+
+/* Fullscreen Transition Overlay */
+.transition-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--white);
+  z-index: 99999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.transition-flash.is-active {
+  opacity: 1;
+  pointer-events: all;
 }
 

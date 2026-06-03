@@ -17,16 +17,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;600;700&family=Raleway:wght@200;300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="is-locked">
 
   <!-- CUSTOM CURSOR -->
   <div class="cursor-dot" aria-hidden="true"></div>
   <div class="cursor-ring" aria-hidden="true"></div>
+  <div class="cursor-tooltip" id="medallion-prompt">CLICK TO ENTER</div>
 
   <!-- ═══════════════════════════════════════════════════════
        NAVIGATION
   ══════════════════════════════════════════════════════════ -->
-  <nav id="main-nav" class="nav" role="navigation" aria-label="Main navigation">
+  <nav id="main-nav" class="nav is-landing" role="navigation" aria-label="Main navigation">
     <div class="nav-inner">
 
       <a href="#home" class="nav-logo" aria-label="Msangambe — Home">
@@ -738,6 +739,9 @@
       </div>
     </div>
   </div>
+
+  <!-- FULLSCREEN TRANSITION overlay -->
+  <div class="transition-flash" id="flash-overlay"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="js/main.js"></script>
