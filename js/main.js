@@ -276,7 +276,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     const scrollY   = window.scrollY;
     const heroBottom = hero.getBoundingClientRect().bottom;
 
-    if (heroBottom < 0) { ticking = false; return; }
+    if (hero.style.display === 'none' || heroBottom < 0) { ticking = false; return; }
 
     if (watermark) watermark.style.transform = `translateY(${scrollY * 0.2}px)`;
     if (hero3dWrap) {
@@ -1038,6 +1038,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   let isHoveringMedallion = false;
   let isTransitioning = false;
   let transitionStartTime = 0;
+  let transitionDirection = 1; // 1 for zoom-in, -1 for zoom-out
 
   function init() {
     // 1. SCENE & CAMERA
@@ -1218,6 +1219,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   function onCanvasClick() {
     if (isHoveringMedallion && !isTransitioning) {
       isTransitioning = true;
+      transitionDirection = 1;
       transitionStartTime = clock.getElapsedTime();
       
       // Hide tooltip
@@ -1234,34 +1236,33 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
         if (flash) flash.classList.add('is-active');
       }, 700);
 
-      // At 1500ms (fully solid white): unlock, update navbar, scroll to story, and reset scene parameters
+      // At 1500ms (fully solid white): hide #home, unlock body, nav, scroll, and reset scene
       setTimeout(() => {
+        // Hide the home section to lock scroll up capability
+        const homeSection = document.getElementById('home');
+        if (homeSection) homeSection.style.display = 'none';
+
         document.body.classList.remove('is-locked');
         
         const nav = document.getElementById('main-nav');
         if (nav) nav.classList.remove('is-landing');
 
-        const storySection = document.getElementById('story');
-        if (storySection) {
-          const NAV_HEIGHT = 72;
-          const top = storySection.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT;
-          window.scrollTo({ top: top, behavior: 'smooth' });
-        }
+        // Scroll to top instantly (since #home is hidden, top of #story is 0)
+        window.scrollTo({ top: 0, behavior: 'auto' });
         
-        // At 1800ms (after scroll starts): reset Three.js scene and fade out white flash
-        setTimeout(() => {
-          if (emblemGroup) {
-            emblemGroup.scale.set(1, 1, 1);
-            emblemGroup.position.set(0, 0, 0);
-          }
-          camera.position.z = 5.5;
-          isTransitioning = false;
-          isHoveringMedallion = false;
-          
-          // Fade out white flash overlay
-          const flash = document.getElementById('flash-overlay');
-          if (flash) flash.classList.remove('is-active');
-        }, 300);
+        // Reset medallion and camera parameters in Three.js scene (invisible under solid white)
+        if (emblemGroup) {
+          emblemGroup.scale.set(1, 1, 1);
+          emblemGroup.position.set(0, 0, 0);
+        }
+        camera.position.z = 5.5;
+        
+        isTransitioning = false;
+        isHoveringMedallion = false;
+        
+        // Fade out white flash overlay
+        const flash = document.getElementById('flash-overlay');
+        if (flash) flash.classList.remove('is-active');
         
       }, 1500);
     }
@@ -1271,13 +1272,18 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     if (!document.body.classList.contains('is-locked') && !isTransitioning) {
       e.preventDefault();
       isTransitioning = true;
+      transitionDirection = -1;
 
       // 1. Trigger white flash overlay fade-in (takes 800ms to go solid white)
       const flash = document.getElementById('flash-overlay');
       if (flash) flash.classList.add('is-active');
 
-      // 2. At 800ms (fully white): lock scroll, lock nav, scroll to top instantly, clear hash, reset scene
+      // 2. At 800ms (fully white): restore #home, lock scroll, lock nav, scroll to top instantly, reset scene to zoom-in values
       setTimeout(() => {
+        // Restore home section in layout
+        const homeSection = document.getElementById('home');
+        if (homeSection) homeSection.style.display = 'block';
+
         document.body.classList.add('is-locked');
         
         const nav = document.getElementById('main-nav');
@@ -1289,19 +1295,19 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
         // Cleanly wipe hash from browser address bar without reloading
         window.history.pushState("", document.title, window.location.pathname + window.location.search);
 
-        // Reset medallion and camera parameters
+        // Force medallion and camera to zoom-in values to prepare for zoom-out
+        camera.position.z = 1.2;
         if (emblemGroup) {
-          emblemGroup.scale.set(1, 1, 1);
-          emblemGroup.position.set(0, 0, 0);
+          emblemGroup.scale.set(3.2, 3.2, 3.2);
         }
-        camera.position.z = 5.5;
 
-        // 3. At 1000ms: fade out flash and finish transition
+        // Start reverse zoom-out timeline
+        transitionStartTime = clock.getElapsedTime();
+
+        // 3. Fade out flash overlay so the user sees the reverse zoom-out happening!
         setTimeout(() => {
           if (flash) flash.classList.remove('is-active');
-          isTransitioning = false;
-          isHoveringMedallion = false;
-        }, 200);
+        }, 150);
 
       }, 800);
     }
@@ -1358,18 +1364,32 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
         ? 4 * progress * progress * progress 
         : 1 - Math.pow(-2 * progress + 2, 3) / 2;
       
-      // Cinematic zoom-in (stop at 1.2 to avoid geometry clipping)
-      camera.position.z = 5.5 - ease * 4.3; // zoom from 5.5 to 1.2
-      
-      // Cinematic scale-up
-      const currentScale = 1.0 + ease * 2.2; // scale from 1.0 to 3.2
-      if (emblemGroup) {
-        emblemGroup.scale.set(currentScale, currentScale, currentScale);
+      if (transitionDirection === 1) {
+        // Zooming in (entering)
+        camera.position.z = 5.5 - ease * 4.3; // zoom from 5.5 to 1.2
+        const currentScale = 1.0 + ease * 2.2; // scale from 1.0 to 3.2
+        if (emblemGroup) {
+          emblemGroup.scale.set(currentScale, currentScale, currentScale);
+          const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
+          emblemGroup.rotation.y = pivotY + targetX * 0.45 + ease * Math.PI * 2;
+          emblemGroup.rotation.x = targetY * 0.35 + ease * Math.PI * 0.5;
+        }
+      } else {
+        // Zooming out (returning)
+        camera.position.z = 1.2 + ease * 4.3; // zoom out from 1.2 to 5.5
+        const currentScale = 3.2 - ease * 2.2; // scale down from 3.2 to 1.0
+        if (emblemGroup) {
+          emblemGroup.scale.set(currentScale, currentScale, currentScale);
+          const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
+          emblemGroup.rotation.y = pivotY + targetX * 0.45 + (1.0 - ease) * Math.PI * 2;
+          emblemGroup.rotation.x = targetY * 0.35 + (1.0 - ease) * Math.PI * 0.5;
+        }
         
-        // Elegant accelerated rotation (a controlled 360-degree spin + subtle X-axis tilt rotation)
-        const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
-        emblemGroup.rotation.y = pivotY + targetX * 0.45 + ease * Math.PI * 2;
-        emblemGroup.rotation.x = targetY * 0.35 + ease * Math.PI * 0.5;
+        // Complete reverse transition state reset
+        if (progress >= 1.0) {
+          isTransitioning = false;
+          isHoveringMedallion = false;
+        }
       }
     } else {
       // Normal hover levitation and swinging
