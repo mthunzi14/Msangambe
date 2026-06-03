@@ -4,6 +4,15 @@
    Son Dynasty · South Africa · 2026
    ══════════════════════════════════════════════════════════════ */
 
+@font-face {
+  font-family: 'Bastliga One';
+  src: url('../Bastliga One.ttf') format('truetype'),
+       url('../Bastliga One.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ─────────────────────────────────────────────────────────────
    0. DESIGN TOKENS
 ───────────────────────────────────────────────────────────── */
@@ -664,10 +673,10 @@ button {
 .hero-stamp.is-visible { opacity: 1; transform: none; }
 
 .hero-stamp--bottom {
-  font-family: 'Alex Brush', 'Italianno', cursive;
+  font-family: 'Bastliga One', 'Alex Brush', 'Italianno', cursive;
   text-transform: none;
   letter-spacing: 0.05em;
-  font-size: 26px;
+  font-size: 32px;
   font-weight: 400;
 }
 
