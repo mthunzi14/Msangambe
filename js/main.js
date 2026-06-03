@@ -257,7 +257,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 (function initParallax() {
   const watermark = $('.hero-watermark');
   const hero3dWrap = $('.hero-3d-wrap');
-  const content   = $('.hero-content');
+  const contents  = $$('.hero-content');
   const hero      = $('#home');
   if (!hero) return;
 
@@ -273,9 +273,9 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     if (hero3dWrap) {
       hero3dWrap.style.transform = `translate(-50%, calc(-50% + ${scrollY * 0.35}px))`;
     }
-    if (content) {
+    contents.forEach(content => {
       content.style.transform = `translate(-50%, calc(-50% + ${scrollY * 0.15}px))`;
-    }
+    });
 
     ticking = false;
   }

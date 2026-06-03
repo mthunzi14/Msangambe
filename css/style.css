@@ -230,42 +230,18 @@ button {
   align-items: center;
 }
 
-.nav-logo-medallion {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05), inset 0 0 4px rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.nav-logo-globe {
+  height: 90px;
+  width: auto;
+  margin-top: 15px;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.4s ease,
-              box-shadow 0.4s ease,
-              background 0.4s ease;
+              filter 0.4s ease;
+  filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.15));
 }
 
-.nav-logo-medallion img {
-  width: 26px;
-  height: 26px;
-  object-fit: contain;
-  opacity: 0.85;
-  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.nav-logo-medallion:hover {
-  transform: scale(1.06);
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.45);
-  box-shadow: 0 0 18px rgba(255, 255, 255, 0.25), inset 0 0 8px rgba(255, 255, 255, 0.2);
-}
-
-.nav-logo-medallion:hover img {
-  opacity: 1;
-  transform: rotate(12deg);
+.nav-logo:hover .nav-logo-globe {
+  transform: scale(1.08) rotate(5deg);
+  filter: drop-shadow(0 8px 25px rgba(0, 255, 204, 0.25));
 }
 
 /* Desktop nav links */
@@ -649,7 +625,6 @@ button {
 .hero-content {
   position: absolute;
   left: 50%;
-  top: 16%;
   transform: translate(-50%, -50%);
   z-index: 1;
   width: 90%;
@@ -657,6 +632,14 @@ button {
   text-align: center;
   will-change: transform;
   pointer-events: none;
+}
+
+.hero-content--top {
+  top: 22%;
+}
+
+.hero-content--bottom {
+  top: 78%;
 }
 
 .hero-stamp {
@@ -754,25 +737,6 @@ button {
   color: var(--silver);
   font-size: 14px;
   user-select: none;
-}
-
-.dragon-element {
-  position: absolute;
-  top: 96px; /* Sits elegantly below the 72px navbar */
-  left: 48px;
-  z-index: 3;
-  pointer-events: none;
-  opacity: 0;
-}
-
-.dragon-element.dragon-fly {
-  animation: dragon-settle 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.dragon-element img {
-  width: 130px;
-  height: auto;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.15));
 }
 
 /* Scroll indicator */
@@ -1890,13 +1854,20 @@ button {
   .hero-content {
     position: absolute !important;
     left: 50% !important;
-    top: 16% !important;
     transform: translate(-50%, -50%) !important;
     padding: 0 !important;
     max-width: 90% !important;
     width: 90%;
     text-align: center;
     background: transparent !important;
+  }
+
+  .hero-content--top {
+    top: 22% !important;
+  }
+
+  .hero-content--bottom {
+    top: 78% !important;
   }
 
   .hero-3d-hud {
