@@ -271,10 +271,11 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
     if (watermark) watermark.style.transform = `translateY(${scrollY * 0.2}px)`;
     if (hero3dWrap) {
-      const base = window.innerWidth <= 768 ? 0 : -50;
-      hero3dWrap.style.transform = `translateY(calc(${base}% + ${scrollY * 0.35}px))`;
+      hero3dWrap.style.transform = `translate(-50%, calc(-50% + ${scrollY * 0.35}px))`;
     }
-    if (content)   content.style.transform   = `translateY(${scrollY * 0.15}px)`;
+    if (content) {
+      content.style.transform = `translate(-50%, calc(-50% + ${scrollY * 0.15}px))`;
+    }
 
     ticking = false;
   }
@@ -1009,14 +1010,14 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 /* ══════════════════════════════════════════════════════════════
    13. 3D WEBGL HERO CANVAS & MORPHING MATERIALS
    Initializes Three.js Torus Knot (Dragon Crest representation)
-   and manages PLATINUM, CYBER, OBSIDIAN styles and cursor interaction.
+   and manages PLATINUM, CYBER, OBSIDIAN, DIAMOND styles and cursor interaction.
    ══════════════════════════════════════════════════════════════ */
 (function initThreeDHero() {
   const canvas = document.getElementById('hero-3d-canvas');
   if (!canvas) return;
 
   const container = canvas.parentElement;
-  let scene, camera, renderer, knot, particleSystem, lights = [];
+  let scene, camera, renderer, knot, logoMesh, particleSystem, lights = [];
   let currentMaterialName = 'platinum';
   let materials = {};
   
@@ -1075,9 +1076,12 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     scene.add(accentLight2);
     lights.push(accentLight2);
 
-    // 4. PROCEDURAL TEXTURES GENERATION
+    // 4. PROCEDURAL TEXTURES & LOGO LOADING
     const envMapTexture = createProceduralEnvMap();
     const carbonTexture = createCarbonTexture();
+    
+    const textureLoader = new THREE.TextureLoader();
+    const logoTexture = textureLoader.load('FAVICON-LOGO_NOBG-removebg-preview.png');
 
     // 5. MATERIALS SETUP
     // Style A: PLATINUM (Sleek Chrome, soft professional reflection)
@@ -1119,6 +1123,22 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       bumpScale: 0.015
     });
 
+    // Style D: DIAMOND (Clear refractive crystal)
+    materials.diamond = new THREE.MeshPhysicalMaterial({
+      color: 0xffffff,
+      transmission: 0.95,
+      opacity: 1.0,
+      ior: 2.42, // index of refraction for diamond
+      roughness: 0.02,
+      metalness: 0.0,
+      thickness: 1.2,
+      transparent: true,
+      envMap: envMapTexture,
+      envMapIntensity: 2.4,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.0
+    });
+
     // 6. GEOMETRY & MESH CREATION
     // Slim, elegant Torus Knot geometry (radius=1.45, tube=0.15 for sophisticated look)
     const geometry = new THREE.TorusKnotGeometry(1.45, 0.15, 300, 20, 3, 4);
@@ -1139,6 +1159,22 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     knot.add(wireMesh);
 
     scene.add(knot);
+
+    // Floating double-sided logo plate at the center of the knot
+    const logoGeometry = new THREE.PlaneGeometry(1.1, 1.1);
+    const logoMaterial = new THREE.MeshStandardMaterial({
+      map: logoTexture,
+      transparent: true,
+      opacity: 0.95,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+      roughness: 0.15,
+      metalness: 0.8
+    });
+    logoMesh = new THREE.Mesh(logoGeometry, logoMaterial);
+    logoMesh.name = 'logoMesh';
+    logoMesh.position.set(0, 0, 0);
+    scene.add(logoMesh);
 
     // 7. PARTICLES BACKGROUND (Ethereal dust field)
     const particleCount = 200;
@@ -1181,8 +1217,9 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('mousemove', onMouseMove);
     
-    // Set up material tab clicks
+    // Set up material tab and action clicks
     setupTabs();
+    setupActionButtons();
 
     // Start animation loop
     animate();
@@ -1275,6 +1312,23 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     currentMaterialName = materialName;
     wireMesh.visible = false;
     
+    // Sync logo colors/opacities with active styles
+    if (logoMesh) {
+      if (materialName === 'platinum') {
+        logoMesh.material.color.setHex(0xffffff);
+        logoMesh.material.opacity = 0.95;
+      } else if (materialName === 'cyber') {
+        logoMesh.material.color.setHex(0x00ffcc);
+        logoMesh.material.opacity = 0.9;
+      } else if (materialName === 'obsidian') {
+        logoMesh.material.color.setHex(0x444444);
+        logoMesh.material.opacity = 0.85;
+      } else if (materialName === 'diamond') {
+        logoMesh.material.color.setHex(0xffffff);
+        logoMesh.material.opacity = 0.95;
+      }
+    }
+    
     if (materialName === 'platinum') {
       mainMesh.material = materials.platinum;
       lights[1].color.setHex(0xffffff);
@@ -1294,6 +1348,12 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       lights[2].color.setHex(0x444444);
       lights[3].color.setHex(0x00ffcc);
       lights[4].color.setHex(0xff0055);
+    } else if (materialName === 'diamond') {
+      mainMesh.material = materials.diamond;
+      lights[1].color.setHex(0xffffff);
+      lights[2].color.setHex(0xaaaaaa);
+      lights[3].color.setHex(0x00ffcc);
+      lights[4].color.setHex(0xff0055);
     }
   }
 
@@ -1310,6 +1370,19 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
         const materialType = tab.getAttribute('data-material');
         setMaterial(materialType);
+      });
+    });
+  }
+
+  function setupActionButtons() {
+    const actionBtns = document.querySelectorAll('.hero-hud-action-btn');
+    actionBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const targetSelector = btn.getAttribute('data-scroll-to');
+        const targetElement = document.querySelector(targetSelector);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
       });
     });
   }
@@ -1336,15 +1409,34 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     targetX += (mouseX - targetX) * 0.05;
     targetY += (mouseY - targetY) * 0.05;
 
-    knot.rotation.y = elapsedTime * 0.15 + targetX * 0.6;
-    knot.rotation.x = elapsedTime * 0.1 + targetY * 0.6;
+    // Apply continuous auto-rotation to the Torus Knot mesh geometry directly
+    const mainMesh = knot.getObjectByName('mainMesh');
+    const wireMesh = knot.getObjectByName('wireMesh');
+    if (mainMesh) {
+      mainMesh.rotation.y = elapsedTime * 0.25;
+      mainMesh.rotation.x = elapsedTime * 0.12;
+    }
+    if (wireMesh) {
+      wireMesh.rotation.y = elapsedTime * 0.25;
+      wireMesh.rotation.x = elapsedTime * 0.12;
+    }
+
+    // Apply mouse tilt to the parent knot group only
+    knot.rotation.y = targetX * 0.5;
+    knot.rotation.x = targetY * 0.5;
+
+    // Logo plate floats gently in the middle and tilts with cursor coords (stays upright)
+    if (logoMesh) {
+      logoMesh.rotation.y = targetX * 0.5;
+      logoMesh.rotation.x = targetY * 0.5;
+      logoMesh.position.y = Math.sin(elapsedTime * 1.5) * 0.06; // elegant levitation
+    }
 
     if (currentMaterialName === 'cyber') {
       const wireMesh = knot.getObjectByName('wireMesh');
       if (wireMesh) {
         const pulse = 0.5 + Math.sin(elapsedTime * 4) * 0.35;
         wireMesh.material.opacity = pulse;
-        wireMesh.rotation.y = Math.sin(elapsedTime * 0.2) * 0.05;
         
         const cycleColor = Math.sin(elapsedTime * 2);
         if (cycleColor > 0) {

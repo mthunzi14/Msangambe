@@ -38,13 +38,8 @@
       </a>
 
       <ul class="nav-links" role="list">
-        <li><a href="#home"       class="nav-link">HOME</a></li>
         <li><a href="#story"      class="nav-link">THE STORY</a></li>
-        <li><a href="#sound"      class="nav-link">SOUND</a></li>
-        <li><a href="#dynasty"    class="nav-link">THE DYNASTY</a></li>
         <li><a href="#modelling"  class="nav-link">THE FORM</a></li>
-        <li><a href="#visual-art" class="nav-link">VISUAL ART</a></li>
-        <li><a href="#journal"    class="nav-link">THE JOURNAL</a></li>
         <li><a href="#contact"    class="nav-link">CONTACT</a></li>
       </ul>
 
@@ -126,21 +121,37 @@
       <img src="assets/logo-crest-black-on-white.png" alt="">
     </div>
 
-    <!-- Layer 2: 3D Interactive WebGL Viewport -->
+    <!-- Layer 2: 3D Interactive WebGL Viewport & HUD -->
     <div class="hero-3d-wrap" aria-hidden="true">
       <canvas id="hero-3d-canvas"></canvas>
       
-      <!-- Interactive Material Control Tabs -->
-      <div class="hero-3d-tabs" role="tablist" aria-label="3D Object Material controls">
-        <button class="hero-3d-tab active" data-material="platinum" role="tab" aria-selected="true" aria-controls="hero-3d-canvas">
-          <span class="tab-glow"></span>PLATINUM
-        </button>
-        <button class="hero-3d-tab" data-material="cyber" role="tab" aria-selected="false" aria-controls="hero-3d-canvas">
-          <span class="tab-glow"></span>CYBER
-        </button>
-        <button class="hero-3d-tab" data-material="obsidian" role="tab" aria-selected="false" aria-controls="hero-3d-canvas">
-          <span class="tab-glow"></span>OBSIDIAN
-        </button>
+      <!-- Symmetrical Heads-Up Display (HUD) Controls -->
+      <div class="hero-3d-hud">
+        <!-- Style Material Tabs -->
+        <div class="hud-group hud-group--materials" role="tablist" aria-label="3D materials selector">
+          <button class="hero-3d-tab active" data-material="platinum" role="tab" aria-selected="true" aria-controls="hero-3d-canvas">
+            <span class="tab-glow"></span>PLATINUM
+          </button>
+          <button class="hero-3d-tab" data-material="cyber" role="tab" aria-selected="false" aria-controls="hero-3d-canvas">
+            <span class="tab-glow"></span>CYBER
+          </button>
+          <button class="hero-3d-tab" data-material="obsidian" role="tab" aria-selected="false" aria-controls="hero-3d-canvas">
+            <span class="tab-glow"></span>OBSIDIAN
+          </button>
+          <button class="hero-3d-tab" data-material="diamond" role="tab" aria-selected="false" aria-controls="hero-3d-canvas">
+            <span class="tab-glow"></span>DIAMOND
+          </button>
+        </div>
+
+        <!-- Navigation Action Tabs -->
+        <div class="hud-group hud-group--actions">
+          <button class="hero-hud-action-btn" data-scroll-to="#story">
+            ENTER THE WORLD
+          </button>
+          <button class="hero-hud-action-btn" data-scroll-to="#sound">
+            STREAM NOW
+          </button>
+        </div>
       </div>
     </div>
 
@@ -152,11 +163,6 @@
         <!-- CLIENT REPLACES: tagline -->
         Artist. Model. Creator. Son of the Dynasty.
       </p>
-      <div class="hero-ctas">
-        <a href="#story" class="cta-link">ENTER THE WORLD</a>
-        <span class="cta-divider" aria-hidden="true">|</span>
-        <a href="#sound" class="cta-link">STREAM NOW</a>
-      </div>
     </div>
 
     <!-- Layer 4: Dragon entrance — slides once on load -->
