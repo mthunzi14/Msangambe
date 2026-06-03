@@ -651,6 +651,14 @@ button {
 
 .hero-stamp.is-visible { opacity: 1; transform: none; }
 
+.hero-stamp--bottom {
+  font-family: 'Alex Brush', 'Italianno', cursive;
+  text-transform: none;
+  letter-spacing: 0.05em;
+  font-size: 26px;
+  font-weight: 400;
+}
+
 .hero-name {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
