@@ -222,20 +222,12 @@ button {
   height: 100%;
   padding: 0 32px;
   gap: 24px;
-  position: relative;
 }
 
 .nav-logo {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  position: absolute;
-  left: 32px;
-  top: 50%;
-  transform: translateY(-50%);
-  transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 10;
 }
 
 .nav-logo-globe {
@@ -1977,7 +1969,6 @@ button {
 ───────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .nav-inner { padding: 0 20px; }
-  .nav-logo { left: 20px; }
 
   .hero-content { padding: 32px 20px; }
 
@@ -2903,11 +2894,6 @@ body.is-locked {
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.nav.is-landing .nav-logo {
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 /* Custom Cursor Tooltip */
 .cursor-tooltip {
   position: fixed;
@@ -2948,7 +2934,7 @@ body.is-locked {
   z-index: 99999;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .transition-flash.is-active {

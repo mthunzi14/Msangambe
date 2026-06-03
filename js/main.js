@@ -1145,6 +1145,11 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     window.addEventListener('mousemove', onMouseMove);
     canvas.addEventListener('click', onCanvasClick);
     
+    const navLogo = document.querySelector('.nav-logo');
+    if (navLogo) {
+      navLogo.addEventListener('click', onLogoClick);
+    }
+    
     // Start animation loop
     animate();
   }
@@ -1223,13 +1228,13 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       const ring = document.querySelector('.cursor-ring');
       if (ring) ring.classList.remove('is-hovering');
       
-      // Trigger white screen flash fade-in (at 500ms, solid by 1000ms)
+      // Trigger white screen flash fade-in (starts at 700ms, reaches solid white at 1500ms)
       setTimeout(() => {
         const flash = document.getElementById('flash-overlay');
         if (flash) flash.classList.add('is-active');
-      }, 500);
+      }, 700);
 
-      // At 1000ms (solid white): unlock body, navbar, scroll viewport, and reset scene
+      // At 1500ms (fully solid white): unlock, update navbar, scroll to story, and reset scene parameters
       setTimeout(() => {
         document.body.classList.remove('is-locked');
         
@@ -1243,7 +1248,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
           window.scrollTo({ top: top, behavior: 'smooth' });
         }
         
-        // Reset medallion and camera parameters in Three.js scene
+        // At 1800ms (after scroll starts): reset Three.js scene and fade out white flash
         setTimeout(() => {
           if (emblemGroup) {
             emblemGroup.scale.set(1, 1, 1);
@@ -1256,9 +1261,46 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
           // Fade out white flash overlay
           const flash = document.getElementById('flash-overlay');
           if (flash) flash.classList.remove('is-active');
-        }, 400); // reset parameters after scroll transitions begin
+        }, 300);
         
-      }, 1000);
+      }, 1500);
+    }
+  }
+
+  function onLogoClick(e) {
+    if (!document.body.classList.contains('is-locked') && !isTransitioning) {
+      e.preventDefault();
+      isTransitioning = true;
+
+      // 1. Trigger white flash overlay fade-in (takes 800ms to go solid white)
+      const flash = document.getElementById('flash-overlay');
+      if (flash) flash.classList.add('is-active');
+
+      // 2. At 800ms (fully white): lock scroll, lock nav, scroll to top instantly, reset scene
+      setTimeout(() => {
+        document.body.classList.add('is-locked');
+        
+        const nav = document.getElementById('main-nav');
+        if (nav) nav.classList.add('is-landing');
+
+        // Scroll to top instantly
+        window.scrollTo({ top: 0, behavior: 'auto' });
+
+        // Reset medallion and camera parameters
+        if (emblemGroup) {
+          emblemGroup.scale.set(1, 1, 1);
+          emblemGroup.position.set(0, 0, 0);
+        }
+        camera.position.z = 5.5;
+
+        // 3. At 1000ms: fade out flash and finish transition
+        setTimeout(() => {
+          if (flash) flash.classList.remove('is-active');
+          isTransitioning = false;
+          isHoveringMedallion = false;
+        }, 200);
+
+      }, 800);
     }
   }
 
@@ -1305,21 +1347,26 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     // Apply transformation logic
     if (isTransitioning) {
       const t = clock.getElapsedTime() - transitionStartTime;
-      const duration = 1.0;
+      const duration = 1.5; // 1.5s total transition
       const progress = Math.min(t / duration, 1.0);
-      const ease = progress * progress * progress; // cubic ease-in
       
-      // Cinematic zoom-in
-      camera.position.z = 5.5 - ease * 5.0; // zoom from 5.5 to 0.5
+      // Smooth easeInOutCubic curve
+      const ease = progress < 0.5 
+        ? 4 * progress * progress * progress 
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      
+      // Cinematic zoom-in (stop at 1.2 to avoid geometry clipping)
+      camera.position.z = 5.5 - ease * 4.3; // zoom from 5.5 to 1.2
       
       // Cinematic scale-up
-      const currentScale = 1.0 + ease * 3.5; // scale from 1.0 to 4.5
+      const currentScale = 1.0 + ease * 2.2; // scale from 1.0 to 3.2
       if (emblemGroup) {
         emblemGroup.scale.set(currentScale, currentScale, currentScale);
         
-        // Rapid spinning
-        emblemGroup.rotation.y += 0.25 * (1.0 + ease * 8.0);
-        emblemGroup.rotation.x += 0.15 * (1.0 + ease * 4.0);
+        // Elegant accelerated rotation (a controlled 360-degree spin + subtle X-axis tilt rotation)
+        const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
+        emblemGroup.rotation.y = pivotY + targetX * 0.45 + ease * Math.PI * 2;
+        emblemGroup.rotation.x = targetY * 0.35 + ease * Math.PI * 0.5;
       }
     } else {
       // Normal hover levitation and swinging
