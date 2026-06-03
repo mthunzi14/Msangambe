@@ -1031,6 +1031,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   
   // Timing variables
   let clock = new THREE.Clock();
+  let lastTime = 0;
 
   // Raycasting & Transition variables
   let raycaster = new THREE.Raycaster();
@@ -1299,6 +1300,12 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
         camera.position.z = 1.2;
         if (emblemGroup) {
           emblemGroup.scale.set(3.2, 3.2, 3.2);
+          
+          // Snap rotation to starting transition values to prevent initial frame rotation jitter
+          const elapsedTime = clock.getElapsedTime();
+          const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
+          emblemGroup.rotation.y = pivotY + targetX * 0.45 + Math.PI * 2;
+          emblemGroup.rotation.x = targetY * 0.35 + Math.PI * 0.5;
         }
 
         // Render one frame immediately to draw the snapped state under the white veil
@@ -1330,9 +1337,15 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     requestAnimationFrame(animate);
 
     const elapsedTime = clock.getElapsedTime();
+    const dt = elapsedTime - lastTime;
+    lastTime = elapsedTime;
 
-    targetX += (mouseX - targetX) * 0.05;
-    targetY += (mouseY - targetY) * 0.05;
+    // Frame-rate independent lerp for mouse tracking (exp-decay)
+    const rate = 3.0;
+    const lerpFactor = Math.min(Math.max(1.0 - Math.exp(-rate * dt), 0.0), 1.0);
+
+    targetX += (mouseX - targetX) * lerpFactor;
+    targetY += (mouseY - targetY) * lerpFactor;
 
     // Raycast hover tracking
     if (emblemGroup && !isTransitioning) {
