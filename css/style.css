@@ -245,6 +245,7 @@ button {
   justify-content: center;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               filter 0.4s ease;
+  transform: translateY(12px);
 }
 
 .nav-logo-globe {
@@ -255,7 +256,7 @@ button {
 }
 
 .nav-logo:hover .nav-logo-wrapper {
-  transform: scale(1.08);
+  transform: translateY(12px) scale(1.08);
   filter: drop-shadow(0 4px 12px rgba(0, 255, 204, 0.25));
 }
 
@@ -676,7 +677,7 @@ button {
   font-family: 'Bastliga One', 'Alex Brush', 'Italianno', cursive;
   text-transform: none;
   letter-spacing: 0.05em;
-  font-size: 51px;
+  font-size: 71px;
   font-weight: 400;
 }
 
@@ -793,8 +794,8 @@ button {
   width: 1px;
   height: 40px;
   background: var(--silver);
-  transform-origin: top;
-  animation: scroll-pulse 1.8s ease-in-out infinite;
+  transform-origin: bottom;
+  animation: scroll-pulse-up 1.8s ease-in-out infinite;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -1773,10 +1774,10 @@ button {
   }
 }
 
-@keyframes scroll-pulse {
-  0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
-  50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
-  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+@keyframes scroll-pulse-up {
+  0%   { transform: scaleY(0); transform-origin: bottom; opacity: 1; }
+  50%  { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: top; opacity: 0; }
 }
 
 @keyframes marquee-left {
