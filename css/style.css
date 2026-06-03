@@ -465,42 +465,96 @@ button {
   user-select: none;
 }
 
-/* Layer 2 — Modelling image */
-.hero-model-img-wrap {
+/* Layer 2 — 3D Interactive WebGL Viewport */
+.hero-3d-wrap {
   position: absolute;
-  right: 8%;
+  right: 6%;
   top: 50%;
   transform: translateY(-50%);
+  width: 42vw;
+  height: 75vh;
+  max-width: 580px;
+  max-height: 580px;
   z-index: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   will-change: transform;
-}
-
-.hero-vertical-line {
-  width: 1px;
-  height: 60%;
-  background: var(--silver);
-  position: absolute;
-  left: -20px;
-  top: 20%;
-  opacity: 0.5;
-}
-
-.hero-model-img {
-  width: 32vw;
-  max-width: 420px;
-  height: auto;
-  aspect-ratio: 2/3;
-  object-fit: cover;
-  border: 1px solid var(--silver);
   opacity: 0;
-  transition: opacity 1s ease 0.8s;
+  transition: opacity 1s ease 0.6s;
+}
+
+.hero-3d-wrap.is-loaded {
+  opacity: 1;
+}
+
+#hero-3d-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: calc(100% - 60px);
+  display: block;
+  outline: none;
+}
+
+/* 3D Control Tabs */
+.hero-3d-tabs {
+  display: flex;
+  gap: 12px;
+  background: rgba(10, 10, 10, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px;
+  border-radius: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  z-index: 3;
+}
+
+.hero-3d-tab {
+  position: relative;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--silver-deep);
+  background: transparent;
+  border: none;
+  transition: color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.hero-3d-tab:hover {
+  color: var(--white);
+}
+
+.hero-3d-tab.active {
+  color: var(--black);
+  background: var(--white);
   box-shadow: var(--glow-sm);
 }
 
-.hero-model-img.is-loaded {
-  opacity: 1;
+/* Unique Active Glows for Tabs */
+.hero-3d-tab.active[data-material="chrome"] {
+  background: linear-gradient(135deg, #e0e0e0, #ffffff);
+  color: #0c0c0c;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+.hero-3d-tab.active[data-material="neon"] {
+  background: #00ffcc;
+  color: #000000;
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
+}
+
+.hero-3d-tab.active[data-material="carbon"] {
+  background: #151515;
+  color: var(--grey-light);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
 }
 
 /* Layer 3 — Content */
@@ -1666,12 +1720,9 @@ button {
     display: flex;
   }
 
-  .hero-model-img-wrap {
+  .hero-3d-wrap {
     right: 4%;
-  }
-
-  .hero-model-img {
-    width: 42vw;
+    width: 45vw;
   }
 
   .hero-content {
@@ -1726,25 +1777,17 @@ button {
     padding-bottom: 80px;
   }
 
-  .hero-model-img-wrap {
+  .hero-3d-wrap {
     position: absolute;
     right: 0;
     top: 0;
-    transform: none;
+    transform: none !important;
     width: 100%;
-    height: 70vh;
-    overflow: hidden;
+    height: 55vh;
+    max-width: none;
+    max-height: none;
+    padding: 20px;
   }
-
-  .hero-model-img {
-    width: 100%;
-    max-width: 100%;
-    height: 100%;
-    aspect-ratio: unset;
-    object-position: center top;
-  }
-
-  .hero-vertical-line { display: none; }
 
   .hero-content {
     position: relative;
@@ -1890,7 +1933,7 @@ button {
     transition: none !important;
   }
 
-  .hero-model-img {
+  .hero-3d-wrap {
     opacity: 1 !important;
     transition: none !important;
   }

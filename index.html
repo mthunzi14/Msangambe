@@ -126,12 +126,22 @@
       <img src="assets/logo-crest-black-on-white.png" alt="">
     </div>
 
-    <!-- Layer 2: Modelling image — parallax 0.35x -->
-    <div class="hero-model-img-wrap" aria-hidden="true">
-      <div class="hero-vertical-line"></div>
-      <img class="hero-model-img"
-           src="assets/images/modelling/WhatsApp Image 2026-04-22 at 5.58.14 PM.jpeg"
-           alt="Msangambe Sigudla — editorial portrait">
+    <!-- Layer 2: 3D Interactive WebGL Viewport -->
+    <div class="hero-3d-wrap" aria-hidden="true">
+      <canvas id="hero-3d-canvas"></canvas>
+      
+      <!-- Interactive Material Control Tabs -->
+      <div class="hero-3d-tabs" role="tablist" aria-label="3D Object Material controls">
+        <button class="hero-3d-tab active" data-material="chrome" role="tab" aria-selected="true" aria-controls="hero-3d-canvas">
+          <span class="tab-glow"></span>CHROME
+        </button>
+        <button class="hero-3d-tab" data-material="neon" role="tab" aria-selected="false" aria-controls="hero-3d-canvas">
+          <span class="tab-glow"></span>NEON
+        </button>
+        <button class="hero-3d-tab" data-material="carbon" role="tab" aria-selected="false" aria-controls="hero-3d-canvas">
+          <span class="tab-glow"></span>CARBON
+        </button>
+      </div>
     </div>
 
     <!-- Layer 3: Hero content — parallax 0.15x -->
@@ -761,6 +771,7 @@
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
