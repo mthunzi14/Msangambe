@@ -1301,16 +1301,18 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
           emblemGroup.scale.set(3.2, 3.2, 3.2);
         }
 
-        // Start reverse zoom-out timeline
-        transitionStartTime = clock.getElapsedTime();
-        isTransitioning = true;
-        transitionDirection = -1;
-        isWaitingForReturnStart = false;
+        // Render one frame immediately to draw the snapped state under the white veil
+        renderer.render(scene, camera);
 
-        // 3. Fade out flash overlay so the user sees the reverse zoom-out happening!
+        // Start reverse zoom-out timeline and trigger fade-out after a minimal delay (e.g. 50ms)
         setTimeout(() => {
+          transitionStartTime = clock.getElapsedTime();
+          isTransitioning = true;
+          transitionDirection = -1;
+          isWaitingForReturnStart = false;
+
           if (flash) flash.classList.remove('is-active');
-        }, 150);
+        }, 50);
 
       }, 800);
     }
