@@ -634,11 +634,11 @@ button {
 }
 
 .hero-content--top {
-  top: 22%;
+  top: 25%;
 }
 
 .hero-content--bottom {
-  top: 78%;
+  top: 83%;
 }
 
 .hero-stamp {
@@ -1862,11 +1862,11 @@ button {
   }
 
   .hero-content--top {
-    top: 22% !important;
+    top: 25% !important;
   }
 
   .hero-content--bottom {
-    top: 78% !important;
+    top: 83% !important;
   }
 
   .hero-3d-hud {
