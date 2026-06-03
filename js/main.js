@@ -237,9 +237,11 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   ];
 
   delays.forEach(([sel, delay]) => {
-    const el = $(sel);
-    if (!el) return;
-    setTimeout(() => el.classList.add('is-visible'), delay);
+    const elements = $$(sel);
+    if (elements.length === 0) return;
+    setTimeout(() => {
+      elements.forEach(el => el.classList.add('is-visible'));
+    }, delay);
   });
 
   /* 3D viewport wrapper fade-in */

@@ -231,17 +231,16 @@ button {
 }
 
 .nav-logo-globe {
-  height: 90px;
+  height: 44px;
   width: auto;
-  margin-top: 15px;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               filter 0.4s ease;
-  filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.15));
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
 }
 
 .nav-logo:hover .nav-logo-globe {
   transform: scale(1.08) rotate(5deg);
-  filter: drop-shadow(0 8px 25px rgba(0, 255, 204, 0.25));
+  filter: drop-shadow(0 4px 12px rgba(0, 255, 204, 0.25));
 }
 
 /* Desktop nav links */
