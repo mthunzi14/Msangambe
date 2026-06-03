@@ -1037,6 +1037,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   let mouseVector = new THREE.Vector2();
   let isHoveringMedallion = false;
   let isTransitioning = false;
+  let isWaitingForReturnStart = false;
   let transitionStartTime = 0;
   let transitionDirection = 1; // 1 for zoom-in, -1 for zoom-out
 
@@ -1269,10 +1270,9 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   }
 
   function onLogoClick(e) {
-    if (!document.body.classList.contains('is-locked') && !isTransitioning) {
+    if (!document.body.classList.contains('is-locked') && !isTransitioning && !isWaitingForReturnStart) {
       e.preventDefault();
-      isTransitioning = true;
-      transitionDirection = -1;
+      isWaitingForReturnStart = true;
 
       // 1. Trigger white flash overlay fade-in (takes 800ms to go solid white)
       const flash = document.getElementById('flash-overlay');
@@ -1303,6 +1303,9 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
         // Start reverse zoom-out timeline
         transitionStartTime = clock.getElapsedTime();
+        isTransitioning = true;
+        transitionDirection = -1;
+        isWaitingForReturnStart = false;
 
         // 3. Fade out flash overlay so the user sees the reverse zoom-out happening!
         setTimeout(() => {
@@ -1398,6 +1401,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
         const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
         emblemGroup.rotation.y = pivotY + targetX * 0.45;
         emblemGroup.rotation.x = targetY * 0.35;
+        emblemGroup.scale.set(1, 1, 1);
       }
       if (camera) {
         camera.position.z = 5.5;
