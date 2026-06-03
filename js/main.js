@@ -1009,7 +1009,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 /* ══════════════════════════════════════════════════════════════
    13. 3D WEBGL HERO CANVAS & MORPHING MATERIALS
    Initializes Three.js Torus Knot (Dragon Crest representation)
-   and manages CHROME, NEON, CARBON styles and cursor interaction.
+   and manages PLATINUM, CYBER, OBSIDIAN styles and cursor interaction.
    ══════════════════════════════════════════════════════════════ */
 (function initThreeDHero() {
   const canvas = document.getElementById('hero-3d-canvas');
@@ -1017,7 +1017,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
   const container = canvas.parentElement;
   let scene, camera, renderer, knot, particleSystem, lights = [];
-  let currentMaterialName = 'chrome';
+  let currentMaterialName = 'platinum';
   let materials = {};
   
   // Mouse tracking variables
@@ -1050,28 +1050,28 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     renderer.toneMappingExposure = 1.0;
 
     // 3. LIGHTS
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.25);
     scene.add(ambientLight);
     lights.push(ambientLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.5);
+    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.8);
     dirLight1.position.set(5, 5, 5);
     scene.add(dirLight1);
     lights.push(dirLight1);
 
-    const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+    const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
     dirLight2.position.set(-5, -5, -5);
     scene.add(dirLight2);
     lights.push(dirLight2);
 
-    // Dynamic colored accents for premium reflections
-    const accentLight1 = new THREE.PointLight(0x00ffcc, 2.0, 15);
-    accentLight1.position.set(3, -2, 3);
+    // Dynamic colored accents for premium reflections (placed further out to avoid harsh hot spots)
+    const accentLight1 = new THREE.PointLight(0x00ffcc, 1.2, 25);
+    accentLight1.position.set(6, -4, 5);
     scene.add(accentLight1);
     lights.push(accentLight1);
 
-    const accentLight2 = new THREE.PointLight(0xff0055, 1.5, 15);
-    accentLight2.position.set(-3, 2, 2);
+    const accentLight2 = new THREE.PointLight(0xff0055, 0.8, 25);
+    accentLight2.position.set(-6, 4, 4);
     scene.add(accentLight2);
     lights.push(accentLight2);
 
@@ -1080,60 +1080,61 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     const carbonTexture = createCarbonTexture();
 
     // 5. MATERIALS SETUP
-    // Style A: CHROME (Glossy, Highly Reflective)
-    materials.chrome = new THREE.MeshStandardMaterial({
+    // Style A: PLATINUM (Sleek Chrome, soft professional reflection)
+    materials.platinum = new THREE.MeshPhysicalMaterial({
       color: 0xffffff,
-      metalness: 1.0,
-      roughness: 0.05,
+      metalness: 0.98,
+      roughness: 0.1, // slightly rough for smooth satin metal sheen
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.05,
       envMap: envMapTexture,
-      envMapIntensity: 2.5,
-      roughnessMap: null,
-      bumpScale: 0.05
+      envMapIntensity: 2.2
     });
 
-    // Style B: NEON (Glowing grid / wireframe core overlay)
-    materials.neonSolid = new THREE.MeshPhysicalMaterial({
+    // Style B: CYBER (Glowing grid / wireframe core overlay)
+    materials.cyberSolid = new THREE.MeshPhysicalMaterial({
       color: 0x050505,
-      roughness: 0.2,
+      roughness: 0.15,
       metalness: 0.1,
       transparent: true,
-      opacity: 0.8,
-      transmission: 0.6,
-      thickness: 1.0
+      opacity: 0.85,
+      transmission: 0.65,
+      thickness: 1.2
     });
     
-    materials.neonWire = new THREE.MeshBasicMaterial({
+    materials.cyberWire = new THREE.MeshBasicMaterial({
       color: 0x00ffcc,
       wireframe: true,
       transparent: true,
       opacity: 0.9
     });
 
-    // Style C: CARBON (Matte black detailed carbon weave pattern)
-    materials.carbon = new THREE.MeshStandardMaterial({
+    // Style C: OBSIDIAN (Matte black detailed carbon weave pattern)
+    materials.obsidian = new THREE.MeshStandardMaterial({
       color: 0x151515,
-      roughness: 0.65,
-      metalness: 0.15,
+      roughness: 0.7,
+      metalness: 0.1,
       map: carbonTexture,
       bumpMap: carbonTexture,
       bumpScale: 0.015
     });
 
     // 6. GEOMETRY & MESH CREATION
-    const geometry = new THREE.TorusKnotGeometry(1.3, 0.36, 280, 16, 3, 4);
+    // Slim, elegant Torus Knot geometry (radius=1.45, tube=0.15 for sophisticated look)
+    const geometry = new THREE.TorusKnotGeometry(1.45, 0.15, 300, 20, 3, 4);
     
     // Group containing the mesh(es) for mouse rotation control
     knot = new THREE.Group();
     
     // Main mesh
-    const mainMesh = new THREE.Mesh(geometry, materials.chrome);
+    const mainMesh = new THREE.Mesh(geometry, materials.platinum);
     mainMesh.name = 'mainMesh';
     knot.add(mainMesh);
 
-    // Overlay mesh for Neon wireframe look (active only in neon mode)
-    const wireMesh = new THREE.Mesh(geometry, materials.neonWire);
+    // Overlay mesh for Neon wireframe look (active only in cyber mode)
+    const wireMesh = new THREE.Mesh(geometry, materials.cyberWire);
     wireMesh.name = 'wireMesh';
-    wireMesh.scale.setScalar(1.005);
+    wireMesh.scale.setScalar(1.01); // slightly larger to prevent clipping
     wireMesh.visible = false;
     knot.add(wireMesh);
 
@@ -1187,34 +1188,53 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     animate();
   }
 
+  // Softbox-style studio lighting equirectangular envmap generator
   function createProceduralEnvMap() {
     const canvas = document.createElement('canvas');
     canvas.width = 512;
     canvas.height = 256;
     const ctx = canvas.getContext('2d');
     
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, '#0a0a0f');
-    gradient.addColorStop(0.4, '#15151b');
-    gradient.addColorStop(0.5, '#eaeaea');
-    gradient.addColorStop(0.51, '#ffffff');
-    gradient.addColorStop(0.53, '#b0b0b8');
-    gradient.addColorStop(0.65, '#222228');
-    gradient.addColorStop(1, '#050508');
-    
-    ctx.fillStyle = gradient;
+    // Base sky/ground gradient
+    const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grad.addColorStop(0, '#101015');
+    grad.addColorStop(0.45, '#1e1e24');
+    grad.addColorStop(0.5, '#2e2e38');
+    grad.addColorStop(0.55, '#1a1a20');
+    grad.addColorStop(1, '#0a0a0d');
+    ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    ctx.fillStyle = '#ffffff';
-    for (let i = 0; i < 20; i++) {
-      const x = Math.random() * canvas.width;
-      const y = Math.random() * canvas.height * 0.45;
-      const r = Math.random() * 2 + 0.5;
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    
+    // Softbox highlight 1 (Top Left)
+    let softGrad1 = ctx.createRadialGradient(120, 60, 0, 120, 60, 80);
+    softGrad1.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+    softGrad1.addColorStop(0.35, 'rgba(255, 255, 255, 0.4)');
+    softGrad1.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = softGrad1;
+    ctx.beginPath();
+    ctx.arc(120, 60, 80, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Softbox highlight 2 (Right Center)
+    let softGrad2 = ctx.createRadialGradient(380, 120, 0, 380, 120, 100);
+    softGrad2.addColorStop(0, 'rgba(255, 255, 255, 0.65)');
+    softGrad2.addColorStop(0.4, 'rgba(255, 255, 255, 0.25)');
+    softGrad2.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = softGrad2;
+    ctx.beginPath();
+    ctx.arc(380, 120, 100, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Softbox highlight 3 (Bottom Left - subtle blue fill light)
+    let softGrad3 = ctx.createRadialGradient(180, 200, 0, 180, 200, 120);
+    softGrad3.addColorStop(0, 'rgba(100, 150, 255, 0.35)');
+    softGrad3.addColorStop(0.5, 'rgba(100, 150, 255, 0.1)');
+    softGrad3.addColorStop(1, 'rgba(100, 150, 255, 0)');
+    ctx.fillStyle = softGrad3;
+    ctx.beginPath();
+    ctx.arc(180, 200, 120, 0, Math.PI * 2);
+    ctx.fill();
+
     const texture = new THREE.CanvasTexture(canvas);
     texture.mapping = THREE.EquirectangularReflectionMapping;
     return texture;
@@ -1255,21 +1275,21 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     currentMaterialName = materialName;
     wireMesh.visible = false;
     
-    if (materialName === 'chrome') {
-      mainMesh.material = materials.chrome;
+    if (materialName === 'platinum') {
+      mainMesh.material = materials.platinum;
       lights[1].color.setHex(0xffffff);
       lights[2].color.setHex(0xffffff);
       lights[3].color.setHex(0x00ffcc);
       lights[4].color.setHex(0xff0055);
-    } else if (materialName === 'neon') {
-      mainMesh.material = materials.neonSolid;
+    } else if (materialName === 'cyber') {
+      mainMesh.material = materials.cyberSolid;
       wireMesh.visible = true;
       lights[1].color.setHex(0x00ffcc);
       lights[2].color.setHex(0xff0055);
       lights[3].color.setHex(0x00ffcc);
       lights[4].color.setHex(0xff0055);
-    } else if (materialName === 'carbon') {
-      mainMesh.material = materials.carbon;
+    } else if (materialName === 'obsidian') {
+      mainMesh.material = materials.obsidian;
       lights[1].color.setHex(0xffffff);
       lights[2].color.setHex(0x444444);
       lights[3].color.setHex(0x00ffcc);
@@ -1319,7 +1339,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     knot.rotation.y = elapsedTime * 0.15 + targetX * 0.6;
     knot.rotation.x = elapsedTime * 0.1 + targetY * 0.6;
 
-    if (currentMaterialName === 'neon') {
+    if (currentMaterialName === 'cyber') {
       const wireMesh = knot.getObjectByName('wireMesh');
       if (wireMesh) {
         const pulse = 0.5 + Math.sin(elapsedTime * 4) * 0.35;
@@ -1339,7 +1359,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       particleSystem.rotation.y = elapsedTime * 0.015;
       particleSystem.rotation.x = elapsedTime * 0.008;
       
-      if (currentMaterialName === 'neon') {
+      if (currentMaterialName === 'cyber') {
         particleSystem.material.opacity = 0.6 + Math.sin(elapsedTime * 2) * 0.2;
       } else {
         particleSystem.material.opacity = 0.3;

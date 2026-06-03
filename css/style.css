@@ -520,7 +520,7 @@ button {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.2em;
-  color: var(--silver-deep);
+  color: rgba(255, 255, 255, 0.6);
   background: transparent;
   border: none;
   transition: color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
@@ -538,19 +538,19 @@ button {
 }
 
 /* Unique Active Glows for Tabs */
-.hero-3d-tab.active[data-material="chrome"] {
+.hero-3d-tab.active[data-material="platinum"] {
   background: linear-gradient(135deg, #e0e0e0, #ffffff);
   color: #0c0c0c;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
 }
 
-.hero-3d-tab.active[data-material="neon"] {
+.hero-3d-tab.active[data-material="cyber"] {
   background: #00ffcc;
   color: #000000;
   box-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
 }
 
-.hero-3d-tab.active[data-material="carbon"] {
+.hero-3d-tab.active[data-material="obsidian"] {
   background: #151515;
   color: var(--grey-light);
   border: 1px solid rgba(255, 255, 255, 0.15);
