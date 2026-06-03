@@ -230,17 +230,29 @@ button {
   align-items: center;
 }
 
-.nav-logo-globe {
-  height: 60px;
-  width: auto;
+.nav-logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               filter 0.4s ease;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
 }
 
-.nav-logo:hover .nav-logo-globe {
-  transform: scale(1.08) rotate(5deg);
+.nav-logo-globe {
+  height: 70px;
+  width: auto;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+  animation: globe-slow-spin 25s linear infinite;
+}
+
+.nav-logo:hover .nav-logo-wrapper {
+  transform: scale(1.08);
   filter: drop-shadow(0 4px 12px rgba(0, 255, 204, 0.25));
+}
+
+@keyframes globe-slow-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 /* Desktop nav links */
