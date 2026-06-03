@@ -649,7 +649,7 @@ button {
 .hero-content {
   position: absolute;
   left: 50%;
-  top: 48%;
+  top: 25%;
   transform: translate(-50%, -50%);
   z-index: 1;
   width: 90%;
@@ -1890,7 +1890,7 @@ button {
   .hero-content {
     position: absolute !important;
     left: 50% !important;
-    top: 45% !important;
+    top: 25% !important;
     transform: translate(-50%, -50%) !important;
     padding: 0 !important;
     max-width: 90% !important;
