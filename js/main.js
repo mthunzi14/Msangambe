@@ -1347,8 +1347,8 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     targetX += (mouseX - targetX) * lerpFactor;
     targetY += (mouseY - targetY) * lerpFactor;
 
-    // Raycast hover tracking
-    if (emblemGroup && !isTransitioning) {
+    // Raycast hover tracking (only while landing page is locked active)
+    if (emblemGroup && !isTransitioning && document.body.classList.contains('is-locked')) {
       raycaster.setFromCamera(mouseVector, camera);
       const intersects = raycaster.intersectObjects([coinMesh, logoMesh]);
       
