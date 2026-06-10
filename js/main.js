@@ -318,7 +318,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
    Offsets by nav height so content isn't hidden under nav.
    ══════════════════════════════════════════════════════════════ */
 (function initSmoothScroll() {
-  const NAV_HEIGHT = 72;
+  const NAV_HEIGHT = 108;
 
   document.addEventListener('click', (e) => {
     const link = e.target.closest('a[href^="#"]');
