@@ -213,17 +213,31 @@ button {
   border-bottom: 1px solid transparent;
   display: flex;
   flex-direction: column;
+  pointer-events: none;
 }
 
 .nav.is-scrolled {
+  background: transparent;
+  border-bottom-color: transparent;
+}
+
+.nav.is-scrolled .marquee-strip--top {
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom-color: rgba(192, 192, 192, 0.25);
 }
 
-.nav.is-hidden {
-  transform: translateY(calc(-1 * var(--nav-height)));
+.nav.is-scrolled .nav-inner {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(192, 192, 192, 0.25);
+}
+
+.nav.is-hidden .nav-inner {
+  transform: translateY(-108px);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .nav-inner {
@@ -233,6 +247,9 @@ button {
   height: 72px;
   padding: 0 32px;
   gap: 24px;
+  pointer-events: auto;
+  transition: transform 0.35s var(--ease-nav), opacity 0.35s ease,
+              background 0.4s ease, border-color 0.4s ease;
 }
 
 .nav-logo {
@@ -2988,6 +3005,7 @@ body.is-locked {
   display: flex;
   align-items: center;
   z-index: 1001;
+  pointer-events: auto;
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
               background 0.4s ease, border-color 0.4s ease;
 }
