@@ -3267,3 +3267,305 @@ body.is-locked {
   color: var(--black) !important;
   border-color: rgba(0, 0, 0, 0.15) !important;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   27. SOUND PAGE VIEW STYLING
+───────────────────────────────────────────────────────────── */
+.section--sound.spa-page {
+  min-height: 100vh;
+  padding-top: 140px !important;
+  padding-bottom: 80px !important;
+  box-sizing: border-box;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background: var(--white);
+}
+
+.section--sound.spa-page.is-visible {
+  display: block;
+  opacity: 1;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   28. HOUSE OF XYON (HOX) PAGE
+───────────────────────────────────────────────────────────── */
+.section--hox.spa-page {
+  background: var(--off-white);
+  min-height: 100vh;
+  padding-top: 140px !important;
+  padding-bottom: 80px !important;
+  box-sizing: border-box;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.section--hox.spa-page.is-visible {
+  display: flex;
+  opacity: 1;
+}
+
+.hox-container {
+  width: 90%;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hox-header {
+  margin-bottom: 48px;
+}
+
+.hox-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--black);
+  margin-top: 16px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.hox-subtitle {
+  font-family: 'Raleway', sans-serif;
+  font-size: clamp(14px, 1.5vw, 18px);
+  font-weight: 300;
+  color: var(--silver-deep);
+  max-width: 600px;
+  margin: 0 auto;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+}
+
+/* Interactive Card */
+.hox-card-interactive {
+  position: relative;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  padding: 56px 40px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.hox-card-interactive:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.08);
+}
+
+.hox-glow-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 0, 0, 0.02) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hox-coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.coming-soon-label {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  color: var(--black);
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  animation: pulse-coming-soon 2.5s infinite ease-in-out;
+}
+
+@keyframes pulse-coming-soon {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.hox-loading-indicator {
+  display: flex;
+  gap: 6px;
+}
+
+.hox-bar {
+  width: 4px;
+  height: 24px;
+  background: var(--black);
+  border-radius: 2px;
+  animation: hox-bar-grow 1.2s infinite ease-in-out;
+}
+
+.hox-bar:nth-child(1) { animation-delay: -0.4s; }
+.hox-bar:nth-child(2) { animation-delay: -0.2s; }
+.hox-bar:nth-child(3) { animation-delay: 0s; }
+
+@keyframes hox-bar-grow {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+.hox-desc-wrap {
+  max-width: 550px;
+}
+
+.hox-desc-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 26px;
+  color: var(--black);
+  margin-bottom: 16px;
+}
+
+.hox-description {
+  font-family: 'Raleway', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--grey-dark);
+}
+
+.hox-interactive-zone {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 48px;
+}
+
+.hox-action-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--black);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: transparent;
+  padding: 14px 32px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hox-action-btn:hover {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+.hox-success-note {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: #15803d;
+  animation: fade-in-success 0.4s ease forwards;
+}
+
+@keyframes fade-in-success {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   29. PREMIUM DYNAMIC MAGNIFICATION DOCK
+───────────────────────────────────────────────────────────── */
+.magnification-dock-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-end;
+  height: 90px;
+  pointer-events: none;
+}
+
+.magnification-dock {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  background: rgba(15, 15, 15, 0.35);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 10px 16px;
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  height: 64px;
+  box-sizing: border-box;
+}
+
+.dock-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  cursor: pointer;
+  width: 52px;
+  height: 52px;
+  transition: width 0.1s ease-out, height 0.1s ease-out, background 0.3s, border-color 0.3s;
+}
+
+.dock-item:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: var(--white);
+}
+
+.dock-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.dock-icon svg {
+  width: 50%;
+  height: 50%;
+}
+
+.dock-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: rgba(10, 10, 10, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.dock-item:hover .dock-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-18px);
+}

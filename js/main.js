@@ -99,7 +99,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   const burger     = $('.nav-burger');
   const mobileMenu = $('#mobile-menu');
   const mobileClose = $('.mobile-close');
-  const SPA_PAGES = ['#story-page', '#modelling', '#visual-art', '#contact'];
+  const SPA_PAGES = ['#story-page', '#modelling', '#visual-art', '#sound', '#hox', '#contact'];
   if (!nav) return;
 
   let lastScroll  = 0;
@@ -178,7 +178,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     }
   }, { threshold: [0.1, 0.3, 0.5] });
 
-  $$('#home, #story, #sound, #dynasty, #modelling, #visual-art, #journal, #contact').forEach(s => {
+  $$('#story').forEach(s => {
     if (s) observer.observe(s);
   });
 
@@ -277,7 +277,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
         // Show the target page
         if (target) {
-          const displayMode = (id === '#contact' || id === '#story-page') ? 'flex' : 'block';
+          const displayMode = (id === '#contact' || id === '#story-page' || id === '#hox') ? 'flex' : 'block';
           target.style.display = displayMode;
           target.offsetHeight; // force reflow
           target.classList.add('is-visible');
@@ -963,154 +963,6 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   14. TABBED JOURNAL DASHBOARD & TWEETS
-   ══════════════════════════════════════════════════════════════ */
-(function initJournalDashboard() {
-  const tabs = $$('.journal-tab-btn');
-  const essaysView = $('#journal-essays-view');
-  const tweetsView = $('#journal-tweets-view');
-  const tweetContainer = $('#tweet-list-container');
-  if (!tabs.length || !essaysView || !tweetsView || !tweetContainer) return;
-
-  const tweets = [
-    {
-      date: "MAY 22, 2026",
-      handle: "@sondynasty",
-      content: "Dynasty is never meant to simply be witnessed. It is meant to be experienced. Pretoria underground shoots live."
-    },
-    {
-      date: "MAY 18, 2026",
-      handle: "@sondynasty",
-      content: "Flesh and machine. Techno/Animal spirit is the direction. New drops arriving shortly."
-    },
-    {
-      date: "MAY 14, 2026",
-      handle: "@sondynasty",
-      content: "Directed context fumbled from Twitter, now woven directly into the frequency."
-    },
-    {
-      date: "MAY 10, 2026",
-      handle: "@sondynasty",
-      content: "Silence is a weapon. The pause between notes holds more power than the noise."
-    }
-  ];
-
-  const fragment = document.createDocumentFragment();
-  tweets.forEach((tweet, idx) => {
-    const div = document.createElement('div');
-    div.className = 'tweet-card reveal-left';
-    div.style.setProperty('--i', String(idx));
-    div.innerHTML = `
-      <div class="tweet-card-header">
-        <span class="tweet-handle label">${tweet.handle}</span>
-        <span class="tweet-date label">${tweet.date}</span>
-      </div>
-      <p class="tweet-text">${tweet.content}</p>
-      <div class="tweet-footer">
-        <span class="label">RETWEETS · 12</span>
-        <span class="label">LIKES · 48</span>
-      </div>
-    `;
-    fragment.appendChild(div);
-  });
-  tweetContainer.appendChild(fragment);
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const target = tab.getAttribute('data-tab');
-      if (target === 'tweets') {
-        essaysView.classList.remove('active');
-        tweetsView.classList.add('active');
-        $$('.tweet-card', tweetsView).forEach(card => {
-          card.classList.remove('is-visible');
-          void card.offsetWidth;
-          card.classList.add('is-visible');
-        });
-      } else {
-        tweetsView.classList.remove('active');
-        essaysView.classList.add('active');
-      }
-    });
-  });
-
-  const essayContentList = [
-    {
-      title: "On the weight of becoming",
-      date: "MAY 22, 2026 · ENTRY 01",
-      body: `<p>Some words about the journey, the stillness before movement, and what it means to build something that lasts beyond the moment.</p><br><p>To become requires a shedding of skin. You cannot transition into new realities while holding tightly to the comforts of yesterday. The process is heavy, silent, and often invisible. The weight of becoming is the weight of potential. The density of raw carbon transitioning under pressure.</p>`
-    },
-    {
-      title: "The art of choosing silence",
-      date: "MAY 15, 2026 · ENTRY 02",
-      body: `<p>There is power in what is not said. In the pause between notes. In the space between frames. This is where the dynasty breathes.</p><br><p>In a world of constant amplification, silence is a direct rebellion. Choosing to hold back, choosing to remain still, is a high-level creative act. We do not speak because we have to; we speak only when the silence can no longer contain the frequency of the work.</p>`
-    },
-    {
-      title: "On building in public",
-      date: "MAY 08, 2026 · ENTRY 03",
-      body: `<p>Every venture, every creation, every step made visible. The dynasty does not hide its process — it reveals it as art.</p><br><p>To build in public is to be vulnerable, yet invincible. By exposing the frame before the paint, you invite the world into the architecture of creation. The errors, the triumphs, the fumbles, the breakthroughs — they are all part of the performance. The medium is the message, and the process is the masterpiece.</p>`
-    },
-    {
-      title: "Limerence & Obsession",
-      date: "MAY 01, 2026 · ENTRY 04",
-      body: `<p class="label" style="color:var(--silver-deep);">[ CINEMATIC SCRIPT CONCEPT ]</p><br>
-             <p><strong>SON:</strong> So I was kind of like just talking today, and I wanted to record the conversation I was just having with myself, you know? But I do also want to make a video, almost like a short cinematic film. Showing what we're talking about when I'm talking about the conflicting ideas between love and everything else like infatuation, Limerence, and obsession. What do they mean?</p><br>
-             <p><strong>SHE:</strong> You speak of them as if they are separate rooms in the same house. But they are different fires. Infatuation is a match struck in the dark — quick, blinding, and gone in seconds.</p><br>
-             <p><strong>SON:</strong> And Limerence? It's a projection of the mind. An obsession with a version of you that only lives in my head. Between flesh and machine, spirit and system.</p><br>
-             <p><strong>SHE:</strong> That is not love. That is the fear of being alone, dressed in a royal cloak. True love is stillness. It does not demand obsession or cinematic lighting. It just is.</p>`
-    }
-  ];
-
-  $$('.journal-read').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const idx = parseInt(btn.getAttribute('data-essay-index') || '0');
-      const essay = essayContentList[idx];
-      if (!essay) return;
-
-      const overlay = document.createElement('div');
-      overlay.className = 'essay-reader-overlay';
-      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,10,0.85);backdrop-filter:blur(24px);z-index:10000;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.4s ease;';
-      overlay.innerHTML = `
-        <div class="essay-reader-card" style="background:var(--black);color:var(--white);width:90%;max-width:650px;padding:60px 48px;border:1px solid var(--silver);box-shadow:var(--glow-lg);position:relative;transform:translateY(20px);transition:transform 0.4s var(--ease-out-expo);max-height:85vh;overflow-y:auto;">
-          <button class="essay-reader-close label" style="position:absolute;top:24px;right:28px;cursor:pointer;font-family:Cinzel,serif;font-size:10px;letter-spacing:0.2em;color:var(--silver-deep);border:0;background:0;">[ CLOSE ]</button>
-          <span class="label" style="color:var(--silver-deep);font-size:9px;margin-bottom:12px;display:block;">${essay.date}</span>
-          <h2 style="font-family:\'Cormorant Garamond\',serif;font-style:italic;font-weight:300;font-size:36px;line-height:1.2;margin-bottom:24px;color:var(--white); border-bottom:1px solid rgba(192,192,192,0.25);padding-bottom:16px;">${essay.title}</h2>
-          <div class="essay-reader-body" style="font-family:\'Raleway\',sans-serif;font-weight:300;font-size:15px;line-height:1.8;color:var(--grey-light);">${essay.body}</div>
-        </div>
-      `;
-      document.body.appendChild(overlay);
-      document.body.style.overflow = 'hidden';
-
-      void overlay.offsetWidth;
-      overlay.style.opacity = '1';
-      overlay.querySelector('.essay-reader-card').style.transform = 'translateY(0)';
-
-      const close = () => {
-        overlay.style.opacity = '0';
-        overlay.querySelector('.essay-reader-card').style.transform = 'translateY(20px)';
-        setTimeout(() => {
-          overlay.remove();
-          document.body.style.overflow = '';
-        }, 400);
-      };
-
-      overlay.querySelector('.essay-reader-close').addEventListener('click', close);
-      overlay.addEventListener('click', (ev) => {
-        if (ev.target === overlay) close();
-      });
-      document.addEventListener('keydown', function escHandler(ev) {
-        if (ev.key === 'Escape') {
-          close();
-          document.removeEventListener('keydown', escHandler);
-        }
-      });
-    });
-  });
-})();
-
-/* ══════════════════════════════════════════════════════════════
    13. 3D WEBGL HERO CANVAS & MORPHING MATERIALS
    Initializes Three.js Medallion (Dragon Crest representation)
    and manages the premium refractive DIAMOND style and cursor interaction.
@@ -1380,7 +1232,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       // 2. At 800ms (fully white): restore #home, lock scroll, lock nav, scroll to top instantly, reset scene to zoom-in values
       setTimeout(() => {
         // Hide all SPA pages if active and restore main wrapper
-        const pages = ['#story-page', '#modelling', '#visual-art', '#contact'];
+        const pages = ['#story-page', '#modelling', '#visual-art', '#sound', '#hox', '#contact'];
         pages.forEach(pageId => {
           const el = document.querySelector(pageId);
           if (el) {
@@ -1546,4 +1398,100 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   }
 
   init();
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   15. BOTTOM MAGNIFICATION DOCK
+   ══════════════════════════════════════════════════════════════ */
+(function initMagnificationDock() {
+  const container = document.getElementById('app-dock-container');
+  const dock = document.querySelector('.magnification-dock');
+  const items = document.querySelectorAll('.dock-item');
+  if (!container || !dock || !items.length) return;
+
+  const baseSize = 52;
+  const maxSize = 80;
+  const maxDistance = 160;
+
+  document.addEventListener('mousemove', (e) => {
+    const rect = dock.getBoundingClientRect();
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+
+    // Detect if mouse is in the bottom dock's vertical active zone (within 200px of dock top)
+    const isNearDock = mouseY >= rect.top - 200 && mouseY <= rect.bottom + 100;
+
+    if (isNearDock) {
+      items.forEach(item => {
+        const itemRect = item.getBoundingClientRect();
+        const itemCenterX = itemRect.left + itemRect.width / 2;
+        const dist = Math.abs(mouseX - itemCenterX);
+
+        if (dist < maxDistance) {
+          const factor = 1 - (dist / maxDistance);
+          const smoothFactor = Math.sin(factor * Math.PI / 2);
+          const size = baseSize + (maxSize - baseSize) * smoothFactor;
+          
+          item.style.width = `${size}px`;
+          item.style.height = `${size}px`;
+        } else {
+          item.style.width = `${baseSize}px`;
+          item.style.height = `${baseSize}px`;
+        }
+      });
+    } else {
+      items.forEach(item => {
+        item.style.width = `${baseSize}px`;
+        item.style.height = `${baseSize}px`;
+      });
+    }
+  });
+
+  dock.addEventListener('mouseleave', () => {
+    items.forEach(item => {
+      item.style.width = `${baseSize}px`;
+      item.style.height = `${baseSize}px`;
+    });
+  });
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   16. HOUSE OF XYON (HOX) INTERACTIVE ACCESS REGISTER
+   ══════════════════════════════════════════════════════════════ */
+(function initHoxInteractive() {
+  const notifyBtn = document.getElementById('hox-notify-btn');
+  const successNote = document.getElementById('hox-success-note');
+  const hoxCard = document.querySelector('.hox-card-interactive');
+
+  if (notifyBtn && successNote) {
+    notifyBtn.addEventListener('click', () => {
+      notifyBtn.classList.add('is-hidden');
+      notifyBtn.style.display = 'none';
+      successNote.classList.remove('is-hidden');
+    });
+  }
+
+  // 3D Tilt Hover Effect on Interactive Card
+  if (hoxCard) {
+    hoxCard.addEventListener('mousemove', (e) => {
+      const rect = hoxCard.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const xPct = (x / rect.width - 0.5) * 15; // Max 7.5 deg rotation
+      const yPct = (y / rect.height - 0.5) * -15;
+
+      hoxCard.style.transform = `perspective(1000px) rotateY(${xPct}deg) rotateX(${yPct}deg) translateY(-8px)`;
+      
+      // Update mouse light position CSS variables
+      hoxCard.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+      hoxCard.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+    });
+
+    hoxCard.addEventListener('mouseleave', () => {
+      hoxCard.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(0)';
+      hoxCard.style.setProperty('--mouse-x', '50%');
+      hoxCard.style.setProperty('--mouse-y', '50%');
+    });
+  }
 })();
