@@ -147,6 +147,10 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   const visibleSections = new Map();
 
   const observer = new IntersectionObserver((entries) => {
+    const storyPage = document.getElementById('story-page');
+    if (storyPage && storyPage.style.display !== 'none') {
+      return;
+    }
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         visibleSections.set(entry.target.id, entry.intersectionRatio);
@@ -206,6 +210,95 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     if (e.key === 'Escape' && mobileMenu.classList.contains('is-open')) {
       closeMenu();
     }
+  });
+
+  /* Router and Smooth scroll */
+  const NAV_HEIGHT = 108;
+  const storyPage = document.getElementById('story-page');
+  const mainWrapper = document.getElementById('main-content-wrapper');
+  const flash = document.getElementById('flash-overlay');
+
+  function setActiveNavLink(targetId) {
+    const links = document.querySelectorAll('.nav-link, .mobile-nav-links a');
+    links.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href === '#' + targetId) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const id = link.getAttribute('href');
+    if (id === '#') return;
+
+    const target = document.querySelector(id);
+    if (!target) return;
+
+    e.preventDefault();
+
+    const isStoryPageVisible = storyPage && storyPage.style.display !== 'none';
+    const isTargetStoryPage = id === '#story-page';
+
+    if (isTargetStoryPage) {
+      if (isStoryPageVisible) return;
+
+      // Transition to detailed story page
+      if (flash) {
+        flash.classList.add('is-fast');
+        flash.classList.add('is-active');
+      }
+
+      setTimeout(() => {
+        if (mainWrapper) mainWrapper.style.display = 'none';
+        if (storyPage) {
+          storyPage.style.display = 'flex';
+          storyPage.offsetHeight; // force reflow
+          storyPage.classList.add('is-visible');
+        }
+
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        setActiveNavLink('story-page');
+
+        if (flash) flash.classList.remove('is-active');
+      }, 400);
+
+      return;
+    }
+
+    if (isStoryPageVisible) {
+      // Transition from detailed story page back to main content section
+      if (flash) {
+        flash.classList.add('is-fast');
+        flash.classList.add('is-active');
+      }
+
+      setTimeout(() => {
+        if (storyPage) {
+          storyPage.classList.remove('is-visible');
+          storyPage.style.display = 'none';
+        }
+        if (mainWrapper) mainWrapper.style.display = 'block';
+
+        const top = target.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT;
+        window.scrollTo({ top, behavior: 'auto' });
+        
+        setActiveNavLink(id.replace('#', ''));
+
+        if (flash) flash.classList.remove('is-active');
+      }, 400);
+
+      return;
+    }
+
+    // Standard smooth scroll
+    const top = target.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT;
+    window.scrollTo({ top, behavior: 'smooth' });
   });
 })();
 
@@ -312,30 +405,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   }, 300);
 })();
 
-/* ══════════════════════════════════════════════════════════════
-   7. SMOOTH SCROLL
-   Intercepts all [href^="#"] clicks and smoothly scrolls to target.
-   Offsets by nav height so content isn't hidden under nav.
-   ══════════════════════════════════════════════════════════════ */
-(function initSmoothScroll() {
-  const NAV_HEIGHT = 108;
 
-  document.addEventListener('click', (e) => {
-    const link = e.target.closest('a[href^="#"]');
-    if (!link) return;
-
-    const id     = link.getAttribute('href');
-    if (id === '#') return;
-
-    const target = $(id);
-    if (!target) return;
-
-    e.preventDefault();
-
-    const top = target.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT;
-    window.scrollTo({ top, behavior: 'smooth' });
-  });
-})();
 
 /* ══════════════════════════════════════════════════════════════
    8. MARQUEE PAUSE ON HOVER
@@ -1281,6 +1351,17 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
       // 2. At 800ms (fully white): restore #home, lock scroll, lock nav, scroll to top instantly, reset scene to zoom-in values
       setTimeout(() => {
+        // Hide story page if active and restore main wrapper
+        const storyPage = document.getElementById('story-page');
+        const mainWrapper = document.getElementById('main-content-wrapper');
+        if (storyPage) {
+          storyPage.classList.remove('is-visible');
+          storyPage.style.display = 'none';
+        }
+        if (mainWrapper) {
+          mainWrapper.style.display = 'block';
+        }
+
         // Restore home section in layout
         const homeSection = document.getElementById('home');
         if (homeSection) homeSection.style.display = 'block';

@@ -391,7 +391,7 @@ button {
 .mobile-overlay {
   position: fixed;
   inset: 0;
-  z-index: 999;
+  z-index: 2000;
   background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
@@ -2994,6 +2994,14 @@ body.is-locked {
   transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+.transition-flash.is-fast {
+  transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.transition-flash.is-fast.is-active {
+  transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
 /* Top Marquee inside Navigation */
 .marquee-strip--top {
   height: 36px;
@@ -3014,5 +3022,119 @@ body.is-locked {
   font-size: 8px;
   letter-spacing: 0.25em;
   color: var(--silver-deep);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   25. DETAILED STORY PAGE
+───────────────────────────────────────────────────────────── */
+.story-page-view {
+  background: var(--off-white);
+  min-height: 100vh;
+  padding-top: 140px; /* offset for nav bar */
+  padding-bottom: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.story-page-view.is-visible {
+  opacity: 1;
+}
+
+.story-page-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.story-page-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.story-page-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--black);
+  margin-top: 16px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.story-page-subtitle {
+  font-family: 'Raleway', sans-serif;
+  font-size: clamp(14px, 1.5vw, 18px);
+  font-weight: 300;
+  color: var(--silver-deep);
+  max-width: 600px;
+  margin: 0 auto;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+}
+
+.story-page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.story-page-editorial {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+@media (max-width: 768px) {
+  .story-page-editorial {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+.editorial-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.editorial-col p {
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--grey-dark);
+}
+
+.editorial-lead {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px !important;
+  line-height: 1.6 !important;
+  font-style: italic;
+  color: var(--black);
+  margin-bottom: 10px;
+}
+
+.story-page-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.back-home-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--black);
+  border-bottom: 1px solid var(--black);
+  padding-bottom: 4px;
+  transition: opacity 0.3s ease;
+}
+
+.back-home-btn:hover {
+  opacity: 0.6;
 }
 
