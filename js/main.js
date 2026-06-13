@@ -99,6 +99,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   const burger     = $('.nav-burger');
   const mobileMenu = $('#mobile-menu');
   const mobileClose = $('.mobile-close');
+  const SPA_PAGES = ['#story-page', '#modelling', '#visual-art', '#contact'];
   if (!nav) return;
 
   let lastScroll  = 0;
@@ -147,8 +148,11 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   const visibleSections = new Map();
 
   const observer = new IntersectionObserver((entries) => {
-    const storyPage = document.getElementById('story-page');
-    if (storyPage && storyPage.style.display !== 'none') {
+    const isAnyPageVisible = SPA_PAGES.some(pageId => {
+      const el = document.querySelector(pageId);
+      return el && el.style.display !== 'none';
+    });
+    if (isAnyPageVisible) {
       return;
     }
     entries.forEach(entry => {
@@ -214,7 +218,6 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
   /* Router and Smooth scroll */
   const NAV_HEIGHT = 108;
-  const storyPage = document.getElementById('story-page');
   const mainWrapper = document.getElementById('main-content-wrapper');
   const flash = document.getElementById('flash-overlay');
 
@@ -242,28 +245,46 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
     e.preventDefault();
 
-    const isStoryPageVisible = storyPage && storyPage.style.display !== 'none';
-    const isTargetStoryPage = id === '#story-page';
+    // Check if any SPA page is currently visible
+    const visiblePageId = SPA_PAGES.find(pageId => {
+      const el = document.querySelector(pageId);
+      return el && el.style.display !== 'none';
+    });
 
-    if (isTargetStoryPage) {
-      if (isStoryPageVisible) return;
+    const isTargetPage = SPA_PAGES.includes(id);
 
-      // Transition to detailed story page
+    // 1. Transitioning TO an SPA page
+    if (isTargetPage) {
+      if (visiblePageId === id) return;
+
       if (flash) {
         flash.classList.add('is-fast');
         flash.classList.add('is-active');
       }
 
       setTimeout(() => {
+        // Hide main content wrapper
         if (mainWrapper) mainWrapper.style.display = 'none';
-        if (storyPage) {
-          storyPage.style.display = 'flex';
-          storyPage.offsetHeight; // force reflow
-          storyPage.classList.add('is-visible');
+
+        // Hide all other SPA pages
+        SPA_PAGES.forEach(pageId => {
+          const el = document.querySelector(pageId);
+          if (el) {
+            el.classList.remove('is-visible');
+            el.style.display = 'none';
+          }
+        });
+
+        // Show the target page
+        if (target) {
+          const displayMode = (id === '#contact' || id === '#story-page') ? 'flex' : 'block';
+          target.style.display = displayMode;
+          target.offsetHeight; // force reflow
+          target.classList.add('is-visible');
         }
 
         window.scrollTo({ top: 0, behavior: 'auto' });
-        setActiveNavLink('story-page');
+        setActiveNavLink(id.replace('#', ''));
 
         if (flash) flash.classList.remove('is-active');
       }, 400);
@@ -271,20 +292,27 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       return;
     }
 
-    if (isStoryPageVisible) {
-      // Transition from detailed story page back to main content section
+    // 2. Transitioning FROM an SPA page to a main content section
+    if (visiblePageId) {
       if (flash) {
         flash.classList.add('is-fast');
         flash.classList.add('is-active');
       }
 
       setTimeout(() => {
-        if (storyPage) {
-          storyPage.classList.remove('is-visible');
-          storyPage.style.display = 'none';
-        }
+        // Hide all SPA pages
+        SPA_PAGES.forEach(pageId => {
+          const el = document.querySelector(pageId);
+          if (el) {
+            el.classList.remove('is-visible');
+            el.style.display = 'none';
+          }
+        });
+
+        // Restore main content wrapper
         if (mainWrapper) mainWrapper.style.display = 'block';
 
+        // Scroll instantly to the target section
         const top = target.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT;
         window.scrollTo({ top, behavior: 'auto' });
         
@@ -296,7 +324,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       return;
     }
 
-    // Standard smooth scroll
+    // 3. Standard smooth scroll
     const top = target.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT;
     window.scrollTo({ top, behavior: 'smooth' });
   });
@@ -1351,13 +1379,16 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
       // 2. At 800ms (fully white): restore #home, lock scroll, lock nav, scroll to top instantly, reset scene to zoom-in values
       setTimeout(() => {
-        // Hide story page if active and restore main wrapper
-        const storyPage = document.getElementById('story-page');
+        // Hide all SPA pages if active and restore main wrapper
+        const pages = ['#story-page', '#modelling', '#visual-art', '#contact'];
+        pages.forEach(pageId => {
+          const el = document.querySelector(pageId);
+          if (el) {
+            el.classList.remove('is-visible');
+            el.style.display = 'none';
+          }
+        });
         const mainWrapper = document.getElementById('main-content-wrapper');
-        if (storyPage) {
-          storyPage.classList.remove('is-visible');
-          storyPage.style.display = 'none';
-        }
         if (mainWrapper) {
           mainWrapper.style.display = 'block';
         }

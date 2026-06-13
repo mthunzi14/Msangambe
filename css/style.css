@@ -3138,3 +3138,132 @@ body.is-locked {
   opacity: 0.6;
 }
 
+/* ─────────────────────────────────────────────────────────────
+   26. EXPANDED SPA PAGE VIEW STYLING & CONTACT THEME
+───────────────────────────────────────────────────────────── */
+.section--modelling.spa-page,
+.section--visual-art.spa-page,
+.section--contact.spa-page {
+  min-height: 100vh;
+  padding-top: 140px !important;
+  padding-bottom: 80px !important;
+  box-sizing: border-box;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background: var(--off-white);
+}
+
+.section--modelling.spa-page.is-visible,
+.section--visual-art.spa-page.is-visible {
+  display: block;
+  opacity: 1;
+}
+
+.section--contact.spa-page.is-visible {
+  display: flex;
+  opacity: 1;
+}
+
+/* Light/Off-White Theme Styling for Contact Page */
+.section--contact.spa-page {
+  background: var(--off-white) !important;
+}
+
+.section--contact.spa-page .contact-heading {
+  color: var(--black) !important;
+}
+
+.section--contact.spa-page .contact-sub {
+  color: var(--grey-dark) !important;
+}
+
+.section--contact.spa-page .contact-details p {
+  color: var(--grey-dark) !important;
+}
+
+.section--contact.spa-page .contact-details p .label {
+  color: var(--black) !important;
+}
+
+/* Light Frosted Glass Form Container */
+.section--contact.spa-page .booking-container {
+  background: rgba(255, 255, 255, 0.45) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Input Fields & Textareas - Light Theme */
+.section--contact.spa-page .booking-form input,
+.section--contact.spa-page .booking-form textarea {
+  background: rgba(0, 0, 0, 0.03) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  color: var(--black) !important;
+}
+
+.section--contact.spa-page .booking-form input:focus,
+.section--contact.spa-page .booking-form textarea:focus {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+.section--contact.spa-page .booking-form input::placeholder,
+.section--contact.spa-page .booking-form textarea::placeholder {
+  color: var(--silver-deep) !important;
+}
+
+/* Booking Submit Button - Light Theme */
+.section--contact.spa-page .contact-btn {
+  color: var(--black) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+.section--contact.spa-page .contact-btn:hover {
+  background: var(--black) !important;
+  color: var(--white) !important;
+  border-color: var(--black) !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Social links in contact - Light Theme */
+.section--contact.spa-page .dynasty-social--white {
+  color: var(--black) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+.section--contact.spa-page .dynasty-social--white:hover {
+  background: var(--black) !important;
+  color: var(--white) !important;
+  border-color: var(--black) !important;
+}
+
+/* Success Card - Light Theme */
+.section--contact.spa-page .booking-success-card {
+  background: var(--off-white) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+.section--contact.spa-page .booking-success-card p {
+  color: var(--grey-dark) !important;
+}
+
+.section--contact.spa-page .booking-success-card .success-title {
+  color: #15803d !important; /* Premium dark green for readability */
+  text-shadow: none !important;
+}
+
+.section--contact.spa-page .booking-success-card .success-glow {
+  border-color: #15803d !important;
+  box-shadow: 0 0 10px rgba(21, 128, 61, 0.2) !important;
+}
+
+.section--contact.spa-page .booking-success-card .success-glow::after {
+  color: #15803d !important;
+}
+
+.section--contact.spa-page .booking-success-card .terminal-btn {
+  color: var(--black) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
