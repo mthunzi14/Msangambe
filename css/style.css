@@ -5451,7 +5451,7 @@ body.is-locked-modal {
    28. DYNASTY WORLD ISSUE (DWI) GRID STYLING
    ══════════════════════════════════════════════════════════════ */
 .dwi-view.spa-page {
-  padding-top: 160px !important; /* Slightly reduced padding to pull content up */
+  padding-top: 125px !important; /* Brought logo close to the navbar */
 }
 
 .dwi-container {
