@@ -5470,7 +5470,7 @@ body.is-locked-modal {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 0px; /* No margin below the logo to pull cover art right up */
+  margin-bottom: 24px; /* Added breathing room below logo picture */
   width: 100%;
 }
 
@@ -5962,6 +5962,13 @@ body.is-locked-modal {
 .dwi-twitter-body::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+}
+
+/* Force the generated widget iframe from platform.twitter.com to fill container */
+#twitter-feed-container iframe {
+  height: 100% !important;
+  width: 100% !important;
+  min-height: 100% !important;
 }
 
 /* DWI Video Section Placeholder styling */
