@@ -827,6 +827,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     const artCell = e.target.closest('.art-cell');
     const modelCell = e.target.closest('.model-cell');
     const playerCover = e.target.closest('#player-cover');
+    const dwiCover = e.target.closest('.dwi-cover-wrapper');
 
     if (artCell) {
       const allArt = $$('.art-cell');
@@ -838,6 +839,8 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       openLightbox(allModels, idx);
     } else if (playerCover) {
       openLightbox([playerCover], 0);
+    } else if (dwiCover) {
+      openLightbox([dwiCover], 0);
     }
   });
 
@@ -1981,32 +1984,28 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   const mockTweets = [
     {
       id: 1,
-      time: "2h",
-      text: "The new collection 'Aljeno Natura' is undergoing final rendering steps. Ancestral spirit colliding with digital cyberpunk realities. Get ready. #SonDynasty #DynastyWorld",
-      image: "assets/images/Red_Gold_Modern_Dragon_Lunar_New_Year_Instagram_Post_2.png",
-      likes: 142,
-      retweets: 48,
-      replies: 12,
+      time: "Jan 25",
+      text: "Watch twitch stream!!!\n\nEvery Wed & Sun 6pm (CAT)",
+      linkPreview: {
+        domain: "twitch.tv",
+        title: "sondynastytv - Twitch",
+        desc: "My name is Msangambe Sigudla. Welcome to your gateway to the world of Son Dynasty. Where art, ..."
+      },
+      likes: 1,
+      retweets: 0,
+      replies: 0,
       liked: false,
       retweeted: false
     },
     {
       id: 2,
-      time: "1d",
-      text: "Honored to be featured in the upcoming Dynasty World Issue cover. A tribute to modern street style and the South African creative renaissance. #DynastyVibe #DWI",
-      likes: 298,
-      retweets: 89,
-      replies: 24,
-      liked: false,
-      retweeted: false
-    },
-    {
-      id: 3,
-      time: "3d",
-      text: "Art is not confined to canvas. It exists in the movements of bodies, the architecture of cities, the mechanics of sound, and the fashion of the dynasty. Watch the soundscapes drop soon. #SonDynasty",
-      likes: 412,
-      retweets: 110,
-      replies: 35,
+      time: "Apr 21",
+      text: "",
+      image: "assets/images/modelling/OG.jpeg",
+      isVideo: true,
+      likes: 12,
+      retweets: 3,
+      replies: 2,
       liked: false,
       retweeted: false
     }
@@ -2014,19 +2013,36 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
   function renderTweets() {
     container.innerHTML = mockTweets.map(tweet => {
-      const mediaHtml = tweet.image 
-        ? `<div class="tweet-media"><img src="${tweet.image}" alt="Tweet media"></div>`
-        : '';
+      let mediaHtml = '';
+      if (tweet.image) {
+        if (tweet.isVideo) {
+          mediaHtml = `
+            <div class="tweet-media tweet-media--video">
+              <img src="${tweet.image}" alt="Tweet video">
+              <div class="tweet-video-overlay-play">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>`;
+        } else {
+          mediaHtml = `<div class="tweet-media"><img src="${tweet.image}" alt="Tweet media"></div>`;
+        }
+      } else if (tweet.linkPreview) {
+        mediaHtml = `
+          <div class="tweet-card-link-preview">
+            <div class="link-preview-domain">${tweet.linkPreview.domain}</div>
+            <div class="link-preview-title">${tweet.linkPreview.title}</div>
+            <div class="link-preview-desc">${tweet.linkPreview.desc}</div>
+          </div>`;
+      }
         
       return `
         <a href="https://x.com/msangambe1" target="_blank" rel="noopener noreferrer" class="tweet-card" data-id="${tweet.id}">
           <div class="tweet-card-header">
             <img class="tweet-avatar" src="SONDYNASTY-removebg-preview.png" alt="Avatar">
             <div class="tweet-user-info">
-              <span class="tweet-display-name">Msangambe Sigudla</span>
+              <span class="tweet-display-name">‘son dynasty’</span>
               <span class="tweet-username">@msangambe1 · ${tweet.time}</span>
             </div>
-            <svg class="tweet-x-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           </div>
           <div class="tweet-content">
             <p>${formatTweetText(tweet.text)}</p>
@@ -2035,15 +2051,15 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
           <div class="tweet-actions">
             <div class="tweet-action tweet-action--reply" aria-label="Reply">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.064.065.093.155.076.244l-.38 2.056a.43.43 0 00.569.482l2.36-.93a.278.278 0 01.222.012c1.077.585 2.316.906 3.617.906z" /></svg>
-              <span>${tweet.replies}</span>
+              <span>${tweet.replies || ''}</span>
             </div>
             <div class="tweet-action tweet-action--retweet" aria-label="Retweet">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.656 48.656 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7C4.547 9.547 4.5 10.768 4.5 12s.047 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7C19.453 14.453 19.5 13.232 19.5 12z" /><path stroke-linecap="round" stroke-linejoin="round" d="M9 10.5l3-3 3 3M15 13.5l-3 3-3-3" /></svg>
-              <span>${tweet.retweets}</span>
+              <span>${tweet.retweets || ''}</span>
             </div>
             <div class="tweet-action tweet-action--like" aria-label="Like">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
-              <span>${tweet.likes}</span>
+              <span>${tweet.likes || ''}</span>
             </div>
           </div>
         </a>
@@ -2058,6 +2074,11 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   }
 
   renderTweets();
+  // Set profile info link cursor behavior
+  const dwiHeaderLink = document.querySelector('.dwi-profile-header-link');
+  if (dwiHeaderLink) {
+    dwiHeaderLink.style.cursor = 'none';
+  }
 })();
 
 /* ══════════════════════════════════════════════════════════════
