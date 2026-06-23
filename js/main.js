@@ -99,7 +99,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   const burger     = $('.nav-burger');
   const mobileMenu = $('#mobile-menu');
   const mobileClose = $('.mobile-close');
-  const SPA_PAGES = ['#story-page', '#modelling', '#visual-art', '#sound', '#hox', '#contact'];
+  const SPA_PAGES = ['#dwi', '#story-page', '#modelling', '#visual-art', '#sound', '#hox', '#contact'];
   if (!nav) return;
 
   let lastScroll  = 0;
@@ -263,6 +263,8 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       }
 
       setTimeout(() => {
+        window.isCanvasActive = false; // Pause WebGL loop when navigating away from home page
+
         // Hide main content wrapper
         if (mainWrapper) mainWrapper.style.display = 'none';
 
@@ -277,17 +279,44 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
         // Show the target page
         if (target) {
-          const displayMode = (id === '#contact' || id === '#story-page' || id === '#hox') ? 'flex' : 'block';
+          const displayMode = (id === '#contact' || id === '#story-page' || id === '#hox' || id === '#dwi') ? 'flex' : 'block';
           target.style.display = displayMode;
           target.offsetHeight; // force reflow
           target.classList.add('is-visible');
+        }
+
+        // Toggle footer and nav dark theme classes
+        const footer = $('.site-footer');
+        if (footer) {
+          if (id === '#hox' || id === '#sound') {
+            footer.classList.add('is-dark');
+          } else {
+            footer.classList.remove('is-dark');
+          }
+        }
+        if (nav) {
+          if (id === '#hox' || id === '#sound') {
+            nav.classList.add('is-dark-page');
+          } else {
+            nav.classList.remove('is-dark-page');
+          }
+        }
+
+        // Trigger typing reveal animation on story page title
+        if (id === '#story-page') {
+          const titleEl = target.querySelector('.story-page-title');
+          if (titleEl) {
+            titleEl.classList.remove('play-typing');
+            void titleEl.offsetWidth; // force reflow
+            titleEl.classList.add('play-typing');
+          }
         }
 
         window.scrollTo({ top: 0, behavior: 'auto' });
         setActiveNavLink(id.replace('#', ''));
 
         if (flash) flash.classList.remove('is-active');
-      }, 400);
+      }, 150);
 
       return;
     }
@@ -316,10 +345,13 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
         const top = target.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT;
         window.scrollTo({ top, behavior: 'auto' });
         
-        setActiveNavLink(id.replace('#', ''));
+        // Toggle footer and nav dark theme classes off
+        const footer = $('.site-footer');
+        if (footer) footer.classList.remove('is-dark');
+        if (nav) nav.classList.remove('is-dark-page');
 
         if (flash) flash.classList.remove('is-active');
-      }, 400);
+      }, 150);
 
       return;
     }
@@ -328,6 +360,74 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     const top = target.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT;
     window.scrollTo({ top, behavior: 'smooth' });
   });
+
+  /* Footer logo click scroll-to-top */
+  const footerLogo = $('.footer-msangambe-logo');
+  if (footerLogo) {
+    footerLogo.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  // Initial Hash Routing Check
+  const initialHash = window.location.hash;
+  if (initialHash && SPA_PAGES.includes(initialHash)) {
+    window.isCanvasActive = false; // Pause WebGL loop if SPA subpage loaded directly
+    // Hide main content wrapper
+    if (mainWrapper) mainWrapper.style.display = 'none';
+
+    // Hide all other SPA pages
+    SPA_PAGES.forEach(pageId => {
+      const el = document.querySelector(pageId);
+      if (el) {
+        el.classList.remove('is-visible');
+        el.style.display = 'none';
+      }
+    });
+
+    // Show the target page
+    const target = document.querySelector(initialHash);
+    if (target) {
+      const displayMode = (initialHash === '#contact' || initialHash === '#story-page' || initialHash === '#hox' || initialHash === '#dwi') ? 'flex' : 'block';
+      target.style.display = displayMode;
+      target.offsetHeight; // force reflow
+      target.classList.add('is-visible');
+
+      if (initialHash === '#story-page') {
+        const titleEl = target.querySelector('.story-page-title');
+        if (titleEl) {
+          titleEl.classList.remove('play-typing');
+          void titleEl.offsetWidth; // force reflow
+          titleEl.classList.add('play-typing');
+        }
+      }
+    }
+
+    // Toggle footer and nav dark theme classes
+    const footer = $('.site-footer');
+    if (footer) {
+      if (initialHash === '#hox' || initialHash === '#sound') {
+        footer.classList.add('is-dark');
+      } else {
+        footer.classList.remove('is-dark');
+      }
+    }
+    if (nav) {
+      if (initialHash === '#hox' || initialHash === '#sound') {
+        nav.classList.add('is-dark-page');
+      } else {
+        nav.classList.remove('is-dark-page');
+      }
+    }
+
+    // Unlock body & disable landing navbar state
+    document.body.classList.remove('is-locked');
+    if (nav) nav.classList.remove('is-landing');
+
+    // Scroll to top instantly
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    setActiveNavLink(initialHash.replace('#', ''));
+  }
 })();
 
 /* ══════════════════════════════════════════════════════════════
@@ -343,6 +443,11 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('is-visible');
+        if (entry.target.classList.contains('story-heading')) {
+          entry.target.classList.remove('play-entrance');
+          void entry.target.offsetWidth; // force reflow
+          entry.target.classList.add('play-entrance');
+        }
         observer.unobserve(entry.target);
       }
     });
@@ -465,28 +570,20 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   const BASE_PATH = 'assets/images/modelling/';
 
   const modellingImages = [
-    'WhatsApp Image 2026-04-22 at 5.58.14 PM.jpeg',
-    'WhatsApp Image 2026-04-22 at 5.58.15 PM.jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.51 PM.jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.53 PM.jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.56 PM.jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.56 PM (1).jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.57 PM.jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.57 PM (1).jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.57 PM (2).jpeg',
+    'BLACK.jpeg',
+    'BLONDE.jpeg',
+    'CALVIN.jpeg',
+    'CIG.jpeg',
+    'GFA.jpeg',
+    'HOP.jpeg',
+    'JAGUAR.jpeg',
+    'KLEIN.jpeg',
+    'KLEIN2.jpeg',
+    'KOINZ.jpeg',
+    'OG.jpeg',
+    'SMOOTH.jpeg',
     'WhatsApp Image 2026-04-22 at 5.42.58 PM.jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.58 PM (1).jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.58 PM (2).jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.58 PM (3).jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.59 PM.jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.59 PM (1).jpeg',
-    'WhatsApp Image 2026-04-22 at 5.42.59 PM (2).jpeg',
-    'WhatsApp Image 2026-04-22 at 5.43.00 PM.jpeg',
-    'WhatsApp Image 2026-04-22 at 5.43.00 PM (1).jpeg',
-    'WhatsApp Image 2026-04-22 at 5.43.00 PM (2).jpeg',
-    'WhatsApp Image 2026-04-22 at 5.43.00 PM (3).jpeg',
-    'WhatsApp Image 2026-04-22 at 5.43.01 PM.jpeg',
-    'WhatsApp Image 2026-04-22 at 5.43.01 PM (1).jpeg',
+    'ZEBRA.jpeg'
   ];
 
   const fragment = document.createDocumentFragment();
@@ -608,11 +705,6 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
         valid = false;
       }
     }
-    if (messageField && !messageField.value.trim()) {
-      showError(messageField, 'MESSAGE CANNOT BE EMPTY');
-      valid = false;
-    }
-
     if (!valid) return;
 
     const submitBtn = $('#form-submit-btn');
@@ -623,14 +715,8 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
     fetch(form.action, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        name: nameField.value.trim(),
-        surname: surnameField.value.trim(),
-        number: numberField.value.trim(),
-        email: emailField.value.trim(),
-        message: messageField.value.trim()
-      })
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(form)
     })
     .then(res => {
       // Regardless of Formspree test limit, display success for previewing client response
@@ -647,7 +733,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     })
     .finally(() => {
       if (submitBtn) {
-        submitBtn.textContent = "BOOK A MEETING";
+        submitBtn.textContent = "LET'S CONNECT";
         submitBtn.disabled = false;
       }
     });
@@ -740,6 +826,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   document.addEventListener('click', (e) => {
     const artCell = e.target.closest('.art-cell');
     const modelCell = e.target.closest('.model-cell');
+    const playerCover = e.target.closest('#player-cover');
 
     if (artCell) {
       const allArt = $$('.art-cell');
@@ -749,6 +836,8 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       const allModels = $$('.model-cell');
       const idx = allModels.indexOf(modelCell);
       openLightbox(allModels, idx);
+    } else if (playerCover) {
+      openLightbox([playerCover], 0);
     }
   });
 
@@ -774,74 +863,151 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
    12. BESPOKE AUDIO PLAYER & RADIO SIMULATOR
    ══════════════════════════════════════════════════════════════ */
 (function initAudioPlayer() {
-  const audio = $('#hidden-audio');
-  const playBtn = $('#player-play-btn');
-  const playIcon = $('#play-icon');
-  const pauseIcon = $('#pause-icon');
-  const prevBtn = $('#player-prev-btn');
-  const nextBtn = $('#player-next-btn');
-  const titleEl = $('#player-track-title');
-  const artistEl = $('#player-track-artist');
-  const prodEl = $('#player-track-producer');
-  const coverEl = $('#player-cover');
-  const discWrapper = $('.album-disc-wrapper');
-  const scrubSlider = $('#player-scrub');
-  const currentText = $('#player-time-current');
-  const durationText = $('#player-time-duration');
-  const volumeSlider = $('#player-volume');
-  
-  const tuneBtn = $('#terminal-tune-btn');
-  const visualizer = $('.terminal-visualizer');
-  const terminalText = $('.terminal-status-text');
+  const audio          = $('#hidden-audio');
+  const playBtn        = $('#player-play-btn');
+  const playIcon       = $('#play-icon');
+  const pauseIcon      = $('#pause-icon');
+  const prevBtn        = $('#player-prev-btn');
+  const nextBtn        = $('#player-next-btn');
+  const titleEl        = $('#player-track-title');
+  const artistEl       = $('#player-track-artist');
+  const prodEl         = $('#player-track-producer');
+  const extraEl        = $('#player-track-extra');
+  const genreEl        = $('#player-genre-tag');
+  const coverEl        = $('#player-cover');
+  const discWrapper    = $('#disc-wrapper-hero');
+  const scrubSlider    = $('#player-scrub');
+  const currentText    = $('#player-time-current');
+  const durationText   = $('#player-time-duration');
+  const volumeSlider   = $('#player-volume');
+  const waveform       = $('#hero-waveform');
+  const libraryList    = $('#music-library-list');
+  const libraryCount   = $('#library-count');
+
+  const tuneBtn        = $('#terminal-tune-btn');
+  const visualizer     = $('.terminal-visualizer');
+  const terminalText   = $('.terminal-status-text');
 
   if (!audio || !playBtn) return;
 
+  /* ── TRACK CATALOGUE ────────────────────────────────────── */
   const tracks = [
     {
-      title: "CYBERNETIC RITUAL",
-      artist: "ARTIST: SON DYNASTY",
-      producer: "PRODUCERS: SON DYNASTY & XYON",
-      cover: "assets/logo-sondynasty-globe.png",
-      src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      title:    "ZIZI",
+      artist:   "ARTIST: SON DYNASTY",
+      producer: "PRODUCED BY: DROOPIE, SON DYNASTY",
+      extra:    "MIXED & MASTERED BY: OAGENG MAKOKWE, DROOPIE · 2016",
+      genre:    "HIP-HOP · POP · ROCK",
+      written:  "Written by: Son Dynasty",
+      cover:    "assets/images/ZIZI_song_cover_.jpg",
+      src:      "assets/music/ZIZI.mp3?v=2"
     },
     {
-      title: "PRETORIA BEATS",
-      artist: "ARTIST: SON DYNASTY",
-      producer: "PRODUCERS: SON DYNASTY",
-      cover: "assets/logo-lockup-white-on-black.png",
-      src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
-    },
-    {
-      title: "DYNASTY INTRO",
-      artist: "ARTIST: SON DYNASTY",
-      producer: "PRODUCERS: SON DYNASTY & PROD. X",
-      cover: "assets/logo-crest-black-on-white.png",
-      src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+      title:    "DIGITAL OVERLOAD",
+      artist:   "ARTIST: SON DYNASTY",
+      producer: "PRODUCED BY: DROOPIE",
+      extra:    "MIXED & MASTERED BY: OAGENG MAKOKWE, DROOPIE · 2016",
+      genre:    "PUNK · HIP-HOP · POP · ROCK",
+      written:  "Written by: Son Dynasty, Droopie, Cushy",
+      cover:    "assets/images/Digital_Overload_.png",
+      src:      "assets/music/DIGITAL OVERLOAD.mp3"
     }
   ];
 
   let currentTrackIndex = 0;
-  let isPlaying = false;
-  let isTuned = false;
+  let isPlaying  = false;
+  let isTuned    = false;
 
-  function loadTrack(index) {
-    const track = tracks[index];
-    audio.src = track.src;
-    titleEl.textContent = track.title;
-    artistEl.textContent = track.artist;
-    prodEl.textContent = track.producer;
-    coverEl.src = track.cover;
-    scrubSlider.value = 0;
-    currentText.textContent = "0:00";
-    durationText.textContent = "0:00";
+  /* ── LIBRARY RENDER ─────────────────────────────────────── */
+  function renderLibrary() {
+    if (!libraryList) return;
+    libraryList.innerHTML = '';
+    if (libraryCount) {
+      libraryCount.textContent = tracks.length + (tracks.length === 1 ? ' TRACK' : ' TRACKS');
+    }
+    tracks.forEach((t, i) => {
+      const row = document.createElement('button');
+      row.className = 'library-track-row' + (i === currentTrackIndex ? ' is-active' : '');
+      row.setAttribute('aria-label', 'Play ' + t.title);
+      row.dataset.index = i;
+      row.innerHTML = `
+        <div class="library-track-art">
+          <img src="${t.cover}" alt="${t.title} cover" class="library-track-thumb">
+          <div class="library-track-play-overlay">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="library-track-details">
+          <span class="library-track-name">${t.title}</span>
+          <span class="library-track-meta label">${t.genre}</span>
+        </div>
+        <div class="library-track-waveform">
+          ${Array.from({length: 12}, (_, b) =>
+            `<span style="height:${20 + Math.random()*60}%"></span>`
+          ).join('')}
+        </div>
+        <div class="library-track-duration label" id="lib-dur-${i}">—</div>`;
+      row.addEventListener('click', () => {
+        currentTrackIndex = i;
+        loadTrack(i);
+        playTrack();
+      });
+      libraryList.appendChild(row);
+    });
   }
 
+  /* ── LOAD TRACK ─────────────────────────────────────────── */
+  function loadTrack(index) {
+    const t = tracks[index];
+    audio.src      = t.src;
+    titleEl.textContent  = t.title;
+    artistEl.textContent = t.artist;
+    prodEl.textContent   = t.producer;
+    if (extraEl) extraEl.textContent = t.extra;
+    if (genreEl) genreEl.textContent = t.genre;
+    coverEl.src          = t.cover;
+    
+    /* Add lightbox data attributes so it zooms dynamically on click */
+    coverEl.setAttribute('data-media-src', t.cover);
+    coverEl.setAttribute('data-media-type', 'image');
+    coverEl.setAttribute('data-title', t.title);
+    coverEl.setAttribute('data-meta', t.artist + ' · ' + t.producer);
+    
+    scrubSlider.value    = 0;
+    currentText.textContent  = '0:00';
+    durationText.textContent = '0:00';
+
+    /* Update Media Session metadata for iOS/Android Control Centers */
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: t.title,
+        artist: t.artist.replace('ARTIST: ', ''),
+        album: 'Son Dynasty',
+        artwork: [
+          { src: new URL(t.cover, window.location.href).href, sizes: '512x512', type: t.cover.endsWith('.png') ? 'image/png' : 'image/jpeg' }
+        ]
+      });
+    }
+
+    /* Highlight active library row */
+    $$('.library-track-row').forEach((r, i) => {
+      r.classList.toggle('is-active', i === index);
+    });
+  }
+
+  /* ── PLAY / PAUSE ───────────────────────────────────────── */
   function playTrack() {
     isPlaying = true;
-    audio.play().catch(err => console.log("Audio deferred."));
+    audio.play().catch(() => {});
     playIcon.classList.add('is-hidden');
     pauseIcon.classList.remove('is-hidden');
     if (discWrapper) discWrapper.classList.add('spinning');
+    if (waveform)    waveform.classList.add('playing');
+    $$('.library-track-row.is-active .library-track-waveform').forEach(w => w.classList.add('playing'));
+    
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = "playing";
+    }
   }
 
   function pauseTrack() {
@@ -850,15 +1016,15 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     playIcon.classList.remove('is-hidden');
     pauseIcon.classList.add('is-hidden');
     if (discWrapper) discWrapper.classList.remove('spinning');
-  }
-
-  function togglePlay() {
-    if (isPlaying) {
-      pauseTrack();
-    } else {
-      playTrack();
+    if (waveform)    waveform.classList.remove('playing');
+    $$('.library-track-waveform').forEach(w => w.classList.remove('playing'));
+    
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = "paused";
     }
   }
+
+  function togglePlay() { isPlaying ? pauseTrack() : playTrack(); }
 
   function nextTrack() {
     currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
@@ -872,65 +1038,89 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     if (isPlaying) playTrack();
   }
 
+  /* ── SCRUB & TIME ───────────────────────────────────────── */
   audio.addEventListener('durationchange', () => {
-    const duration = audio.duration;
-    if (duration) {
-      const minutes = Math.floor(duration / 60);
-      const seconds = Math.floor(duration % 60);
-      durationText.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    const d = audio.duration;
+    if (d && isFinite(d)) {
+      durationText.textContent = fmt(d);
+      const dur = $('#lib-dur-' + currentTrackIndex);
+      if (dur) dur.textContent = fmt(d);
     }
   });
 
   audio.addEventListener('timeupdate', () => {
-    const current = audio.currentTime;
-    const duration = audio.duration;
-    if (duration) {
-      const percent = (current / duration) * 100;
-      scrubSlider.value = percent;
-      
-      const currentMin = Math.floor(current / 60);
-      const currentSec = Math.floor(current % 60);
-      currentText.textContent = `${currentMin}:${currentSec < 10 ? '0' : ''}${currentSec}`;
+    const c = audio.currentTime, d = audio.duration;
+    if (d && isFinite(d)) {
+      scrubSlider.value = (c / d) * 100;
+      currentText.textContent = fmt(c);
+      /* Animate waveform bars based on playback fraction */
+      if (waveform && isPlaying) {
+        const bars = waveform.querySelectorAll('span');
+        const fraction = c / d;
+        bars.forEach((bar, bi) => {
+          bar.style.setProperty('--progress', (bi / bars.length) <= fraction ? '1' : '0');
+        });
+      }
     }
   });
 
   audio.addEventListener('ended', nextTrack);
 
   scrubSlider.addEventListener('input', () => {
-    const val = scrubSlider.value;
-    const duration = audio.duration;
-    if (duration) {
-      audio.currentTime = (val / 100) * duration;
-    }
+    if (audio.duration) audio.currentTime = (scrubSlider.value / 100) * audio.duration;
   });
 
   volumeSlider.addEventListener('input', () => {
     audio.volume = volumeSlider.value / 100;
   });
 
+  /* ── RADIO TERMINAL ─────────────────────────────────────── */
   if (tuneBtn && visualizer && terminalText) {
     tuneBtn.addEventListener('click', () => {
       isTuned = !isTuned;
       if (isTuned) {
-        tuneBtn.textContent = "DISCONNECT FREQUENCY";
+        tuneBtn.textContent = 'DISCONNECT FREQUENCY';
         tuneBtn.classList.add('active');
         visualizer.classList.add('animating');
-        terminalText.textContent = "DYNASTY RADIO BROADCAST · ONLINE";
-        audio.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3";
+        terminalText.textContent = 'DYNASTY RADIO BROADCAST · ONLINE';
+        audio.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3';
         playTrack();
       } else {
-        tuneBtn.textContent = "TUNE IN FREQUENCY";
+        tuneBtn.textContent = 'TUNE IN FREQUENCY';
         tuneBtn.classList.remove('active');
         visualizer.classList.remove('animating');
-        terminalText.textContent = "DYNASTY RADIO BROADCAST · LIVE";
+        terminalText.textContent = 'DYNASTY RADIO BROADCAST · LIVE';
         pauseTrack();
         loadTrack(currentTrackIndex);
       }
     });
   }
 
-  loadTrack(currentTrackIndex);
+  /* ── AUDIO DOWNLOAD PROTECTION ──────────────────────────── */
+  // Prevent contextmenu downloads on player and hidden audio element
+  const soundContainer = $('#sound');
+  if (soundContainer) {
+    soundContainer.addEventListener('contextmenu', e => e.preventDefault());
+  }
+  audio.addEventListener('contextmenu', e => e.preventDefault());
 
+  /* ── MEDIA SESSION CONTROLS BINDING ─────────────────────── */
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.setActionHandler('play', playTrack);
+    navigator.mediaSession.setActionHandler('pause', pauseTrack);
+    navigator.mediaSession.setActionHandler('previoustrack', prevTrack);
+    navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
+  }
+
+  /* ── HELPERS ────────────────────────────────────────────── */
+  function fmt(secs) {
+    const m = Math.floor(secs / 60), s = Math.floor(secs % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  /* ── INIT ───────────────────────────────────────────────── */
+  renderLibrary();
+  loadTrack(currentTrackIndex);
   playBtn.addEventListener('click', togglePlay);
   if (nextBtn) nextBtn.addEventListener('click', nextTrack);
   if (prevBtn) prevBtn.addEventListener('click', prevTrack);
@@ -974,6 +1164,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   const container = canvas.parentElement;
   let scene, camera, renderer, emblemGroup, coinMesh, logoMesh, lights = [];
   let materials = {};
+  window.isCanvasActive = true; // Expose globally to pause calculations on subpages
   
   // Mouse tracking variables
   let mouseX = 0, mouseY = 0;
@@ -1193,6 +1384,8 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
         // Hide the home section to lock scroll up capability
         const homeSection = document.getElementById('home');
         if (homeSection) homeSection.style.display = 'none';
+        
+        window.isCanvasActive = false; // Pause WebGL loop
 
         document.body.classList.remove('is-locked');
         
@@ -1215,6 +1408,14 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
         // Fade out white flash overlay
         const flash = document.getElementById('flash-overlay');
         if (flash) flash.classList.remove('is-active');
+
+        // Play entrance animation for story heading
+        const storyHeading = document.querySelector('.story-heading');
+        if (storyHeading) {
+          storyHeading.classList.remove('play-entrance');
+          void storyHeading.offsetWidth; // force reflow
+          storyHeading.classList.add('play-entrance');
+        }
         
       }, 1500);
     }
@@ -1231,8 +1432,10 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
       // 2. At 800ms (fully white): restore #home, lock scroll, lock nav, scroll to top instantly, reset scene to zoom-in values
       setTimeout(() => {
+        window.isCanvasActive = true; // Resume WebGL loop
+        
         // Hide all SPA pages if active and restore main wrapper
-        const pages = ['#story-page', '#modelling', '#visual-art', '#sound', '#hox', '#contact'];
+        const pages = ['#dwi', '#story-page', '#modelling', '#visual-art', '#sound', '#hox', '#contact'];
         pages.forEach(pageId => {
           const el = document.querySelector(pageId);
           if (el) {
@@ -1249,10 +1452,21 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
         const homeSection = document.getElementById('home');
         if (homeSection) homeSection.style.display = 'block';
 
+        const storyHeading = document.querySelector('.story-heading');
+        if (storyHeading) {
+          storyHeading.classList.remove('play-entrance');
+        }
+
         document.body.classList.add('is-locked');
         
         const nav = document.getElementById('main-nav');
-        if (nav) nav.classList.add('is-landing');
+        if (nav) {
+          nav.classList.add('is-landing');
+          nav.classList.remove('is-dark-page');
+        }
+
+        const footer = document.querySelector('.site-footer');
+        if (footer) footer.classList.remove('is-dark');
 
         // Scroll to top instantly
         window.scrollTo({ top: 0, behavior: 'auto' });
@@ -1299,6 +1513,11 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
   function animate() {
     requestAnimationFrame(animate);
+
+    // Skip computations and rendering when canvas is inactive
+    if (window.isCanvasActive === false) {
+      return;
+    }
 
     const elapsedTime = clock.getElapsedTime();
     const dt = elapsedTime - lastTime;
@@ -1407,52 +1626,111 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
   const container = document.getElementById('app-dock-container');
   const dock = document.querySelector('.magnification-dock');
   const items = document.querySelectorAll('.dock-item');
-  if (!container || !dock || !items.length) return;
+  if (!container || !dock || items.length === 0) return;
 
-  const baseSize = 52;
-  const maxSize = 80;
-  const maxDistance = 160;
+  const baseSize = 42;
+  const maxSize = 72;
+  const horizontalInfluence = 55;  // Only magnify when directly over/beside an item
+  const verticalInfluence = 45;   // Only magnify when physically on the dock
 
-  document.addEventListener('mousemove', (e) => {
-    const rect = dock.getBoundingClientRect();
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
+  let mouseX = null;
+  let mouseY = null;
+  let rafId = null;
 
-    // Detect if mouse is in the bottom dock's vertical active zone (within 200px of dock top)
-    const isNearDock = mouseY >= rect.top - 200 && mouseY <= rect.bottom + 100;
-
-    if (isNearDock) {
+  function updateDock() {
+    if (mouseX === null || mouseY === null) {
+      document.body.classList.remove('hide-custom-cursor');
       items.forEach(item => {
-        const itemRect = item.getBoundingClientRect();
-        const itemCenterX = itemRect.left + itemRect.width / 2;
-        const dist = Math.abs(mouseX - itemCenterX);
+        item.classList.add('is-resetting');
+        item.style.width = '';
+        item.style.height = '';
+      });
+      rafId = null;
+      return;
+    }
 
-        if (dist < maxDistance) {
-          const factor = 1 - (dist / maxDistance);
-          const smoothFactor = Math.sin(factor * Math.PI / 2);
-          const size = baseSize + (maxSize - baseSize) * smoothFactor;
-          
+    // --- BATCHED READS ---
+    const dockRect = dock.getBoundingClientRect();
+    const dockCenterY = dockRect.top + dockRect.height / 2;
+    const verticalDist = Math.abs(mouseY - dockCenterY);
+
+    // If mouse is too far vertically, reset items and restore custom cursor
+    if (verticalDist > verticalInfluence) {
+      document.body.classList.remove('hide-custom-cursor');
+      items.forEach(item => {
+        item.classList.add('is-resetting');
+        item.style.width = '';
+        item.style.height = '';
+      });
+      rafId = null;
+      return;
+    }
+
+    // Hide custom cursor and show browser cursor inside the active dock zone
+    document.body.classList.add('hide-custom-cursor');
+
+    // Smooth vertical scaling factor to damp/ease vertical transitions
+    const verticalRatio = 1 - (verticalDist / verticalInfluence);
+    const verticalEase = 0.5 - 0.5 * Math.cos(verticalRatio * Math.PI);
+
+    // Read all item centers in one single batch to avoid layout thrashing
+    const itemCenters = [];
+    for (let i = 0; i < items.length; i++) {
+      const rect = items[i].getBoundingClientRect();
+      itemCenters.push(rect.left + rect.width / 2);
+    }
+
+    // --- BATCHED WRITES ---
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const centerX = itemCenters[i];
+      const dx = Math.abs(mouseX - centerX);
+
+      if (dx < horizontalInfluence) {
+        const horizontalRatio = 1 - (dx / horizontalInfluence);
+        const horizontalEase = 0.5 - 0.5 * Math.cos(horizontalRatio * Math.PI);
+        const totalEase = horizontalEase * verticalEase;
+
+        if (totalEase > 0) {
+          item.classList.remove('is-resetting');
+          const size = baseSize + (maxSize - baseSize) * totalEase;
           item.style.width = `${size}px`;
           item.style.height = `${size}px`;
         } else {
-          item.style.width = `${baseSize}px`;
-          item.style.height = `${baseSize}px`;
+          item.classList.add('is-resetting');
+          item.style.width = '';
+          item.style.height = '';
         }
-      });
-    } else {
-      items.forEach(item => {
-        item.style.width = `${baseSize}px`;
-        item.style.height = `${baseSize}px`;
-      });
+      } else {
+        item.classList.add('is-resetting');
+        item.style.width = '';
+        item.style.height = '';
+      }
     }
-  });
 
-  dock.addEventListener('mouseleave', () => {
-    items.forEach(item => {
-      item.style.width = `${baseSize}px`;
-      item.style.height = `${baseSize}px`;
-    });
-  });
+    rafId = requestAnimationFrame(updateDock);
+  }
+
+  function handleMouseMove(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (!rafId) {
+      rafId = requestAnimationFrame(updateDock);
+    }
+  }
+
+  function handleMouseLeave() {
+    mouseX = null;
+    mouseY = null;
+    if (!rafId) {
+      rafId = requestAnimationFrame(updateDock);
+    }
+  }
+
+  // Bind strictly to the dock element — no early triggering from across the page
+  dock.addEventListener('mousemove', handleMouseMove, { passive: true });
+  dock.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+  window.addEventListener('blur', handleMouseLeave, { passive: true });
 })();
 
 /* ══════════════════════════════════════════════════════════════
@@ -1494,4 +1772,377 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
       hoxCard.style.setProperty('--mouse-y', '50%');
     });
   }
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   17. HEADING TYPOGRAPHY AND SCROLL TEXT ANIMATIONS
+   ══════════════════════════════════════════════════════════════ */
+(function initHeadingAndScrollAnimations() {
+  
+  // Helper to split text/html into character spans wrapped in word blocks to prevent breaking words (preserving tags)
+  function splitTextIntoLetters(element, delayStep, startDelay = 0) {
+    if (!element) return;
+    const html = element.innerHTML.trim();
+    element.innerHTML = '';
+    let charIndex = 0;
+    
+    function processWord(wordText) {
+      let result = '';
+      for (let j = 0; j < wordText.length; j++) {
+        const char = wordText[j];
+        const delay = startDelay + (charIndex * delayStep);
+        result += `<span class="letter" style="--delay: ${delay}ms;">${char}</span>`;
+        charIndex++;
+      }
+      return `<span class="word" style="display: inline-block; white-space: nowrap;">${result}</span>`;
+    }
+
+    let resultHtml = '';
+    let i = 0;
+    let currentWord = '';
+
+    while (i < html.length) {
+      if (html[i] === '<') {
+        if (currentWord) {
+          resultHtml += processWord(currentWord);
+          currentWord = '';
+        }
+        let tag = '';
+        while (i < html.length && html[i] !== '>') {
+          tag += html[i];
+          i++;
+        }
+        tag += '>';
+        i++;
+        resultHtml += tag;
+      } else if (html[i] === ' ') {
+        if (currentWord) {
+          resultHtml += processWord(currentWord);
+          currentWord = '';
+        }
+        resultHtml += ' ';
+        i++;
+      } else {
+        currentWord += html[i];
+        i++;
+      }
+    }
+    if (currentWord) {
+      resultHtml += processWord(currentWord);
+    }
+    element.innerHTML = resultHtml;
+  }
+
+  // Initialize letter splits
+  const storyHeading = document.querySelector('.story-heading');
+  if (storyHeading) {
+    splitTextIntoLetters(storyHeading, 20); // 20ms stagger for blur slide-up
+  }
+
+  const contactHeading = document.querySelector('.contact-heading');
+  if (contactHeading) {
+    splitTextIntoLetters(contactHeading, 20);
+  }
+
+  const storyPageTitle = document.querySelector('.story-page-title');
+  if (storyPageTitle) {
+    storyPageTitle.classList.add('typing-heading');
+    splitTextIntoLetters(storyPageTitle, 40, 0); // 40ms character typing delay
+  }
+
+  // Scroll-Driven Text Unfolding/Unblurring
+  const scrollAnimateElements = document.querySelectorAll('.story-body p, .editorial-col p, .editorial-lead');
+ 
+  // High-performance visible elements tracking (120Hz fluid scroll)
+  const activeElements = new Set();
+  
+  const textObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        activeElements.add(entry.target);
+        updateElementAnim(entry.target);
+      } else {
+        activeElements.delete(entry.target);
+        
+        // Handle elements inside hidden display:none containers gracefully (bounding box width/height are 0)
+        const rect = entry.target.getBoundingClientRect();
+        if (rect.width === 0 && rect.height === 0) {
+          entry.target.style.filter = 'blur(8px)';
+          entry.target.style.opacity = '0.15';
+          entry.target.style.transform = 'translateY(15px)';
+          return;
+        }
+
+        // Reset to initial state when far out of view
+        if (rect.top > window.innerHeight) {
+          entry.target.style.filter = 'blur(8px)';
+          entry.target.style.opacity = '0.15';
+          entry.target.style.transform = 'translateY(15px)';
+        } else {
+          entry.target.style.filter = 'blur(0px)';
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0px)';
+        }
+      }
+    });
+  }, { rootMargin: '120px 0px 120px 0px' });
+
+  scrollAnimateElements.forEach(el => textObserver.observe(el));
+
+  function updateElementAnim(el) {
+    try {
+      const rect = el.getBoundingClientRect();
+      const viewHeight = window.innerHeight;
+
+      // Start unblurring at 95% viewport height, fully sharp at 75%
+      const startPoint = viewHeight * 0.95;
+      const endPoint = viewHeight * 0.75;
+      const totalDistance = startPoint - endPoint;
+
+      const currentDistance = startPoint - rect.top;
+      const progress = Math.max(0, Math.min(1, currentDistance / totalDistance));
+
+      const blurVal = (1 - progress) * 8; // 8px blur down to 0px
+      const opacityVal = 0.15 + (progress * 0.85); // 0.15 opacity up to 1.0
+      const translateYVal = (1 - progress) * 15; // 15px down to 0px
+
+      el.style.filter = `blur(${blurVal}px)`;
+      el.style.opacity = opacityVal;
+      el.style.transform = `translateY(${translateYVal}px)`;
+    } catch (e) {}
+  }
+
+  function updateScrollTextAnimation() {
+    activeElements.forEach(updateElementAnim);
+  }
+ 
+  window.addEventListener('scroll', updateScrollTextAnimation, { passive: true });
+  window.addEventListener('resize', updateScrollTextAnimation, { passive: true });
+ 
+  // Expose update functions to window for routing triggers
+  window.updateScrollJourneyPaths = () => {
+    updateScrollTextAnimation();
+  };
+ 
+  // Initial trigger
+  setTimeout(updateScrollTextAnimation, 150);
+ 
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   18. COMING SOON MODAL CONTROLLER
+   ══════════════════════════════════════════════════════════════ */
+(function initComingSoonModal() {
+  const links = document.querySelectorAll('[data-coming-soon]');
+  const modal = document.getElementById('coming-soon-modal');
+  const platformLabel = document.getElementById('coming-soon-platform');
+  if (!modal || !platformLabel) return;
+
+  function showModal(platformName) {
+    platformLabel.textContent = platformName;
+    modal.classList.remove('is-hidden');
+    modal.offsetHeight; // force reflow
+    modal.classList.add('is-active');
+    document.body.classList.add('is-locked-modal');
+  }
+
+  function hideModal() {
+    modal.classList.remove('is-active');
+    setTimeout(() => {
+      modal.classList.add('is-hidden');
+      document.body.classList.remove('is-locked-modal');
+    }, 400);
+  }
+
+  links.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const platform = link.getAttribute('data-coming-soon');
+      showModal(platform);
+    });
+  });
+
+  const closeBtn = document.getElementById('modal-close-btn');
+  const ackBtn = document.getElementById('modal-ack-btn');
+  const backdrop = modal.querySelector('.modal-backdrop');
+
+  if (closeBtn) closeBtn.addEventListener('click', hideModal);
+  if (ackBtn) ackBtn.addEventListener('click', hideModal);
+  if (backdrop) backdrop.addEventListener('click', hideModal);
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   19. DYNASTY WORLD ISSUE (DWI) TWITTER TIMELINE FEED
+   ══════════════════════════════════════════════════════════════ */
+(function initTwitterFeed() {
+  const container = document.getElementById('twitter-feed-container');
+  if (!container) return;
+
+  const mockTweets = [
+    {
+      id: 1,
+      time: "2h",
+      text: "The new collection 'Aljeno Natura' is undergoing final rendering steps. Ancestral spirit colliding with digital cyberpunk realities. Get ready. #SonDynasty #DynastyWorld",
+      image: "assets/images/Red_Gold_Modern_Dragon_Lunar_New_Year_Instagram_Post_2.png",
+      likes: 142,
+      retweets: 48,
+      replies: 12,
+      liked: false,
+      retweeted: false
+    },
+    {
+      id: 2,
+      time: "1d",
+      text: "Honored to be featured in the upcoming Dynasty World Issue cover. A tribute to modern street style and the South African creative renaissance. #DynastyVibe #DWI",
+      likes: 298,
+      retweets: 89,
+      replies: 24,
+      liked: false,
+      retweeted: false
+    },
+    {
+      id: 3,
+      time: "3d",
+      text: "Art is not confined to canvas. It exists in the movements of bodies, the architecture of cities, the mechanics of sound, and the fashion of the dynasty. Watch the soundscapes drop soon. #SonDynasty",
+      likes: 412,
+      retweets: 110,
+      replies: 35,
+      liked: false,
+      retweeted: false
+    }
+  ];
+
+  function renderTweets() {
+    container.innerHTML = mockTweets.map(tweet => {
+      const mediaHtml = tweet.image 
+        ? `<div class="tweet-media"><img src="${tweet.image}" alt="Tweet media"></div>`
+        : '';
+        
+      return `
+        <a href="https://x.com/msangambe1" target="_blank" rel="noopener noreferrer" class="tweet-card" data-id="${tweet.id}">
+          <div class="tweet-card-header">
+            <img class="tweet-avatar" src="SONDYNASTY-removebg-preview.png" alt="Avatar">
+            <div class="tweet-user-info">
+              <span class="tweet-display-name">Msangambe Sigudla</span>
+              <span class="tweet-username">@msangambe1 · ${tweet.time}</span>
+            </div>
+            <svg class="tweet-x-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </div>
+          <div class="tweet-content">
+            <p>${formatTweetText(tweet.text)}</p>
+            ${mediaHtml}
+          </div>
+          <div class="tweet-actions">
+            <div class="tweet-action tweet-action--reply" aria-label="Reply">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.064.065.093.155.076.244l-.38 2.056a.43.43 0 00.569.482l2.36-.93a.278.278 0 01.222.012c1.077.585 2.316.906 3.617.906z" /></svg>
+              <span>${tweet.replies}</span>
+            </div>
+            <div class="tweet-action tweet-action--retweet" aria-label="Retweet">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.656 48.656 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7C4.547 9.547 4.5 10.768 4.5 12s.047 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7C19.453 14.453 19.5 13.232 19.5 12z" /><path stroke-linecap="round" stroke-linejoin="round" d="M9 10.5l3-3 3 3M15 13.5l-3 3-3-3" /></svg>
+              <span>${tweet.retweets}</span>
+            </div>
+            <div class="tweet-action tweet-action--like" aria-label="Like">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+              <span>${tweet.likes}</span>
+            </div>
+          </div>
+        </a>
+      `;
+    }).join('');
+  }
+
+  function formatTweetText(text) {
+    return text
+      .replace(/(#[a-zA-Z0-9_]+)/g, '<span class="tweet-hashtag">$1</span>')
+      .replace(/(@[a-zA-Z0-9_]+)/g, '<span class="tweet-mention">$1</span>');
+  }
+
+  renderTweets();
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   20. DYNASTY WORLD ISSUE (DWI) INSTAGRAM FEED
+   ══════════════════════════════════════════════════════════════ */
+(function initInstagramFeed() {
+  const container = document.getElementById('instagram-feed-container');
+  if (!container) return;
+
+  const mockPosts = [
+    {
+      id: 1,
+      image: "assets/images/modelling/ZEBRA.jpeg",
+      location: "Pretoria, South Africa",
+      likes: 1248,
+      liked: false,
+      caption: "FORZA DYNASTY! 🦾 The ancestral cyberpunk realism in the new age. Cover story for the Dynasty World Issue. Concept & Art Direction by Son Dynasty Archive.",
+      time: "2 HOURS AGO",
+      comments: [
+        { username: "q_sigudla", text: "hard 🔥" },
+        { username: "gcwala_archive", text: "elite style." }
+      ]
+    },
+    {
+      id: 2,
+      image: "assets/images/modelling/CIG.jpeg",
+      location: "Johannesburg, South Africa",
+      likes: 982,
+      liked: false,
+      caption: "Shadow play and editorial tones. Modelling for the new age archive. Styling by Msangambe.",
+      time: "1 DAY AGO",
+      comments: [
+        { username: "sondynasty", text: "Classic look 🪐" }
+      ]
+    }
+  ];
+
+  function renderPosts() {
+    container.innerHTML = mockPosts.map(post => {
+      const commentsHtml = post.comments.map(c => `
+        <div class="ig-comment">
+          <span class="username">${c.username}</span>
+          <span>${c.text}</span>
+        </div>
+      `).join('');
+
+      return `
+        <a href="https://www.instagram.com/msangambe_" target="_blank" rel="noopener noreferrer" class="instagram-post-card" data-id="${post.id}">
+          <div class="ig-card-header">
+            <img class="ig-avatar" src="assets/images/modelling/OG.jpeg" alt="Avatar">
+            <div class="ig-post-meta">
+              <span class="ig-username">msangambe_</span>
+              <span class="ig-location">${post.location}</span>
+            </div>
+          </div>
+          <div class="ig-media">
+            <img src="${post.image}" alt="Instagram post">
+          </div>
+          <div class="ig-actions">
+            <div class="ig-actions-left">
+              <div class="ig-action-btn ig-action-btn--like" aria-label="Like">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+              </div>
+              <div class="ig-action-btn" aria-label="Comment">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.064.065.093.155.076.244l-.38 2.056a.43.43 0 00.569.482l2.36-.93a.278.278 0 01.222.012c1.077.585 2.316.906 3.617.906z" /></svg>
+              </div>
+            </div>
+          </div>
+          <div class="ig-likes-count">${post.likes.toLocaleString()} likes</div>
+          <div class="ig-caption">
+            <span class="username">msangambe_</span>
+            <span>${formatCaptionText(post.caption)}</span>
+          </div>
+          ${post.comments.length ? `<div class="ig-comments-list">${commentsHtml}</div>` : ''}
+          <div class="ig-time">${post.time}</div>
+        </a>
+      `;
+    }).join('');
+  }
+
+  function formatCaptionText(text) {
+    return text
+      .replace(/(#[a-zA-Z0-9_]+)/g, '<span class="tweet-hashtag">$1</span>')
+      .replace(/(@[a-zA-Z0-9_]+)/g, '<span class="tweet-mention">$1</span>');
+  }
+
+  renderPosts();
 })();

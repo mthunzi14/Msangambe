@@ -1,0 +1,15 @@
+# Large media files
+*.mp4
+*.mp3
+*.wav
+*.mov
+*.zip
+*.tar.gz
+
+# Temporary or system directories
+.remember/
+scratch/
+.DS_Store
+Thumbs.db
+node_modules/
+.gemini/
