@@ -5456,8 +5456,8 @@ body.is-locked-modal {
 
 .dwi-container {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr; /* Optimized balanced layout */
-  gap: 0px 24px; /* Clean spacing gap */
+  grid-template-columns: 1fr 3.2fr 1fr; /* Widen middle column to make cover art larger */
+  gap: 0px 16px; /* 0px row gap and 16px column gap for tightest layout spacing */
   width: 100%;
   max-width: 1720px; /* Expanded maximum page width significantly */
   margin: 0 auto;
@@ -5477,7 +5477,9 @@ body.is-locked-modal {
 .dwi-col {
   display: flex;
   flex-direction: column;
-  height: 100%; /* Ensure columns stretch to match grid row height */
+  gap: 30px;
+  justify-content: flex-start;
+  min-height: 0; /* Enable grid items to shrink and overflow scroll */
 }
 
 /* Left Column - Newspaper / High-Class Magazine List Format */
@@ -5491,7 +5493,7 @@ body.is-locked-modal {
 
 .dwi-article-img-wrap {
   position: relative;
-  flex: 0 0 125px; /* Balanced premium size for magazine issue layout */
+  flex: 0 0 135px; /* Enlarged editorial image to fit the wider column */
   aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: 4px;
@@ -5550,13 +5552,11 @@ body.is-locked-modal {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Center cover vertically within stretched column */
   text-align: center;
   background: transparent; /* Seamless off-white — no white card */
   padding: 0;
   box-sizing: border-box;
   width: 100%;
-  height: 100%; /* Stretch wrapper to match stretched column height */
 }
 
 .dwi-brand-title {
@@ -5935,7 +5935,8 @@ body.is-locked-modal {
 .dwi-twitter-feed {
   display: flex;
   flex-direction: column;
-  height: 100%; /* Auto-stretches to match the grid row height exactly */
+  height: 100%; /* Stretch to fill column height dynamically */
+  min-height: 0; /* Allow feed to shrink and scroll */
   background: var(--off-white); /* Native off-white theme background */
   color: var(--black);
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -6049,12 +6050,6 @@ body.is-locked-modal {
   .dwi-col--left {
     display: none;
   }
-  .dwi-twitter-feed {
-    height: 700px; /* Aligns vertically with scaled cover */
-  }
-  .coming-soon-cover {
-    max-width: 500px; /* Prevent scaling out of bounds on tablets */
-  }
 }
 
 @media (max-width: 768px) {
@@ -6119,8 +6114,6 @@ body.is-locked-modal {
 /* DWI COMING SOON OVERLAYS */
 .coming-soon-cover {
   width: 100%;
-  max-width: 650px; /* Let cover grow larger to utilize space efficiently */
-  margin: 0 auto; /* Ensure centered layout alignment */
   aspect-ratio: 5 / 7;
   background: #000000;
   display: flex;
@@ -7069,13 +7062,6 @@ html {
 /* ══════════════════════════════════════════════════════════════
    DWI LAYOUT AND PERFORMANCE ALIGNMENTS
    ══════════════════════════════════════════════════════════════ */
-
-.dwi-col--left {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-}
 
 .dwi-cultural-description {
   grid-column: 1 / -1; /* Spans across all 3 grid columns to center properly */
