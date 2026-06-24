@@ -5492,7 +5492,7 @@ body.is-locked-modal {
 
 .dwi-article-img-wrap {
   position: relative;
-  flex: 0 0 135px; /* Enlarged editorial image to fit the wider column */
+  flex: 0 0 105px; /* Reduced width to align left-hand blocks to 800px total height */
   aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: 4px;
@@ -5934,7 +5934,7 @@ body.is-locked-modal {
 .dwi-twitter-feed {
   display: flex;
   flex-direction: column;
-  height: 100%; /* Stretch to fill column height */
+  height: 800px; /* Constrain height to align with left column and cover */
   background: var(--off-white); /* Native off-white theme background */
   color: var(--black);
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -6048,7 +6048,12 @@ body.is-locked-modal {
   .dwi-col--left {
     display: none;
   }
-  /* Cover brand styling removed as logo is in full-width header zone */
+  .dwi-twitter-feed {
+    height: 700px;
+  }
+  .coming-soon-cover {
+    max-width: 500px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -6113,6 +6118,8 @@ body.is-locked-modal {
 /* DWI COMING SOON OVERLAYS */
 .coming-soon-cover {
   width: 100%;
+  max-width: 570px;
+  margin: 0 auto;
   aspect-ratio: 5 / 7;
   background: #000000;
   display: flex;
@@ -6973,12 +6980,12 @@ html {
 
 @keyframes description-glow {
   0%, 100% {
-    text-shadow: 0 0 4px rgba(0, 0, 0, 0.03);
-    opacity: 0.8;
+    opacity: 0.75;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
   }
   50% {
-    text-shadow: 0 0 15px rgba(0, 0, 0, 0.12);
     opacity: 1;
+    text-shadow: 0 0 22px rgba(0, 0, 0, 0.15), 0 0 35px rgba(0, 0, 0, 0.08);
   }
 }
 
@@ -7059,12 +7066,31 @@ html {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   DWI LAYOUT AND PERFORMANCE ALIGNMENTS
+   ══════════════════════════════════════════════════════════════ */
+
+.dwi-col--left {
+  gap: 25px !important; /* Perfect gap to align 5 blocks to 800px height */
+}
+
+.dwi-cultural-description {
+  grid-column: 1 / -1; /* Spans across all 3 grid columns to center properly */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 40px;
+  box-sizing: border-box;
+}
+
+/* ══════════════════════════════════════════════════════════════
    120HZ GLOBAL PERFORMANCE OVERRIDES — ADDITIONAL ELEMENTS
    ══════════════════════════════════════════════════════════════ */
 
 .dwi-footer-img-wrap,
 .dwi-footer-product-img,
-.dwi-description-text {
+.dwi-description-text,
+.dwi-cultural-description {
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   backface-visibility: hidden;
