@@ -1,34 +1,117 @@
 [
   {
     "id": 1,
-    "time": "1h",
-    "text": "Dynasty World Issue is launching very soon. Coming soon cover and video placeholder are now active on the portal. Get ready.",
-    "likes": 24,
-    "retweets": 8,
-    "replies": 3
+    "time": "Jan 25",
+    "isRepost": false,
+    "user": {
+      "name": "‘son dynasty’",
+      "handle": "@msangambe1",
+      "avatar": "SONDYNASTY-removebg-preview.png"
+    },
+    "text": "Squeaky"
   },
   {
     "id": 2,
-    "time": "2h",
-    "text": "Don't forget the limited 10 t-shirts for sale at launch. Also including 50 limited signed cover posters. First come, first served.",
-    "likes": 42,
-    "retweets": 15,
-    "replies": 6
+    "time": "Jan 25",
+    "isRepost": true,
+    "repostedBy": "‘son dynasty’",
+    "user": {
+      "name": "alexei",
+      "handle": "@alexeixbt",
+      "avatar": "assets/images/modelling/CIG.jpeg"
+    },
+    "text": "study why successful people cut off their family"
   },
   {
     "id": 3,
-    "time": "2d",
-    "text": "Bridging the ancient ancestral plane with the cold, precise grid of modern digital cybernetics. #SonDynasty #PretoriaUnderworld",
-    "likes": 88,
-    "retweets": 31,
-    "replies": 12
+    "time": "Jan 25",
+    "isRepost": true,
+    "repostedBy": "‘son dynasty’",
+    "user": {
+      "name": "MR OSBATT",
+      "handle": "@corneliusbirkin",
+      "avatar": "assets/images/modelling/HOP.jpeg"
+    },
+    "text": "don’t let internet losers\njudge you for the process"
   },
   {
     "id": 4,
-    "time": "5d",
-    "text": "For all bookings and collaborations, reach out via email: sondynastyent@gmail.com. New visualizer drops after launch.",
-    "likes": 67,
-    "retweets": 19,
-    "replies": 4
+    "time": "Jan 24",
+    "isRepost": true,
+    "repostedBy": "‘son dynasty’",
+    "user": {
+      "name": "Artzchillect",
+      "handle": "@Artzchillect",
+      "avatar": "assets/images/modelling/JAGUAR.jpeg"
+    },
+    "text": "The details are not in the canvas; they are in the frequency."
+  },
+  {
+    "id": 5,
+    "time": "May 11, 2019",
+    "isRepost": true,
+    "repostedBy": "‘son dynasty’",
+    "user": {
+      "name": "YOON",
+      "handle": "@YOON_AMBUSH",
+      "avatar": "assets/images/modelling/BLACK.jpeg"
+    },
+    "text": "Rihanna launching Fenty w/ LVMH is symbolic of a seismic shift in how we view, sustain, and rewrite the canons of European prestige and history. We must understan the need to embrace new, global definitions of what constitutes prestige, history, and luxury 💚"
+  },
+  {
+    "id": 6,
+    "time": "Jan 23",
+    "isRepost": false,
+    "user": {
+      "name": "‘son dynasty’",
+      "handle": "@msangambe1",
+      "avatar": "SONDYNASTY-removebg-preview.png"
+    },
+    "text": "Biggest rule I’ve learnt so far:\nYour privacy is your peace. \nStop comparing yourself to others. \nThe others who are loud about it. \nYou never know what people are constantly trying to prove to other people. \nYou never know what external validation people are looking for."
+  },
+  {
+    "id": 7,
+    "time": "Jan 22",
+    "isRepost": false,
+    "user": {
+      "name": "‘son dynasty’",
+      "handle": "@msangambe1",
+      "avatar": "SONDYNASTY-removebg-preview.png"
+    },
+    "text": "The same niggas using calling me gay as an insult are the same niggas who’s girls be tryna sleep with me🤣🤣 I’m sorry for laughing this hard"
+  },
+  {
+    "id": 8,
+    "time": "Jan 21",
+    "isRepost": true,
+    "repostedBy": "‘son dynasty’",
+    "user": {
+      "name": "Shtreetwear",
+      "handle": "@Shtreetwear",
+      "avatar": "assets/images/modelling/KOINZ.jpeg"
+    },
+    "text": "A conceptual landscape of modern silhouettes."
+  },
+  {
+    "id": 9,
+    "time": "Jan 21",
+    "isRepost": false,
+    "user": {
+      "name": "‘son dynasty’",
+      "handle": "@msangambe1",
+      "avatar": "SONDYNASTY-removebg-preview.png"
+    },
+    "text": "Create"
+  },
+  {
+    "id": 10,
+    "time": "Jan 21",
+    "isRepost": false,
+    "user": {
+      "name": "‘son dynasty’",
+      "handle": "@msangambe1",
+      "avatar": "SONDYNASTY-removebg-preview.png"
+    },
+    "text": "Mango city"
   }
 ]

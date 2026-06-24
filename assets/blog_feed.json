@@ -1,60 +1,30 @@
 [
   {
     "id": 1,
-    "date": "Jan 25",
-    "tag": "POST",
-    "title": "Squeaky"
+    "date": "JUN 24, 2026",
+    "tag": "ANNOUNCEMENT",
+    "title": "Dynasty World Issue Coming Soon",
+    "content": "We are finalized on replacing the main cover art and broadcast video with blacked-out 'Coming Soon' states as we prepare for the physical launch. Get ready for the complete visual reveal."
   },
   {
     "id": 2,
-    "date": "Jan 23",
-    "tag": "POST",
-    "title": "Biggest rule I've learnt so far:",
-    "body": "Your privacy is your peace. Stop comparing yourself to others. The others who are loud about it. You never know what people are constantly trying to prove to other people. You never know what external validation people are looking for."
+    "date": "JUN 24, 2026",
+    "tag": "MERCHANDISE",
+    "title": "Limited T-Shirts & Signed Posters",
+    "content": "We are dropping a limited collection of 10 heavyweight black T-shirts for sale at launch, along with 50 limited signed cover posters. All pieces will be serialized and signed."
   },
   {
     "id": 3,
-    "date": "Jan 22",
-    "tag": "POST",
-    "title": "The same niggas calling me gay as an insult are the same niggas who's girls be tryna sleep with me 🤣🤣🤣 I'm sorry for laughing this hard"
+    "date": "JUN 20, 2026",
+    "tag": "EDITORIAL",
+    "title": "Techno/Animal Spirit Alignment",
+    "content": "Bridging the ancient ancestral plane with the cold, precise grid of modern digital cybernetics. High-fashion rituals from Pretoria to the world."
   },
   {
     "id": 4,
-    "date": "Jan 21",
-    "tag": "POST",
-    "title": "Create"
-  },
-  {
-    "id": 5,
-    "date": "Jan 21",
-    "tag": "POST",
-    "title": "Mango city"
-  },
-  {
-    "id": 6,
-    "date": "Jan 25",
-    "tag": "REPOST",
-    "title": "study why successful people cut off their family",
-    "body": "via @alexeixbt"
-  },
-  {
-    "id": 7,
-    "date": "Jan 25",
-    "tag": "REPOST",
-    "title": "don't let internet losers judge you for the process",
-    "body": "via @corneliusbirkin"
-  },
-  {
-    "id": 8,
-    "date": "Jan 24",
-    "tag": "REPOST",
-    "title": "via @Artzchillect"
-  },
-  {
-    "id": 9,
-    "date": "May 2019",
-    "tag": "REPOST",
-    "title": "Rihanna launching Fenty w/ LVMH is symbolic of a seismic shift in how we view, sustain, and rewrite the canons of European prestige and history.",
-    "body": "We must understand the need to embrace new, global definitions of what constitutes prestige, history, and luxury 💚 — via @YOON_AMBUSH"
+    "date": "JUN 15, 2026",
+    "tag": "CONTACT",
+    "title": "Bookings & Collaborations",
+    "content": "For all bookings and creative collaborations, reach out to the editorial team via email at: sondynastyent@gmail.com. New music visualizer drops after launch."
   }
 ]
