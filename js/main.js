@@ -2002,8 +2002,9 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
     }
 
     container.innerHTML = posts.map(post => {
+      const isRepost = post.tag === 'REPOST';
       const tagHTML = post.tag
-        ? '<span class="chronicle-tag">' + post.tag + '</span>'
+        ? '<span class="chronicle-tag' + (isRepost ? ' chronicle-tag--repost' : '') + '">' + post.tag + '</span>'
         : '';
       const bodyText = post.body || post.content || '';
       const bodyHTML = bodyText

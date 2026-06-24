@@ -6648,3 +6648,319 @@ body.is-locked-modal {
     gap: 48px;
   }
 }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   DWI TABLE OF CONTENTS â€” LEFT COLUMN
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+.dwi-toc-header {
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.dwi-toc-eyebrow {
+  font-family: 'Raleway', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: var(--silver-deep);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.dwi-toc-issue-title {
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--black);
+  margin: 0 0 4px;
+}
+
+.dwi-toc-issue-date {
+  font-family: 'Raleway', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--silver-deep);
+  margin: 0;
+}
+
+/* TOC List */
+.dwi-toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.dwi-toc-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  transition: opacity 0.25s ease;
+  will-change: opacity;
+}
+
+.dwi-toc-entry:last-child {
+  border-bottom: none;
+}
+
+.dwi-toc-entry:hover {
+  opacity: 0.65;
+}
+
+.dwi-toc-num {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--silver-deep);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+  padding-top: 2px;
+  min-width: 22px;
+}
+
+.dwi-toc-details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dwi-toc-cat {
+  font-family: 'Raleway', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--silver-deep);
+  text-transform: uppercase;
+}
+
+.dwi-toc-title {
+  font-family: 'Cinzel', serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--black);
+  line-height: 1.45;
+}
+
+.dwi-toc-author {
+  font-family: 'Raleway', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--silver-deep);
+  opacity: 0.7;
+}
+
+/* Archive Section */
+.dwi-archive-block {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dwi-archive-entry {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: opacity, transform;
+}
+
+.dwi-archive-entry:hover {
+  opacity: 0.7;
+  transform: translateX(3px);
+}
+
+.dwi-archive-cover-wrap {
+  width: 56px;
+  height: 72px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.dwi-archive-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.dwi-archive-entry:hover .dwi-archive-cover {
+  transform: scale(1.06);
+}
+
+.dwi-archive-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dwi-archive-num {
+  font-family: 'Raleway', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--silver-deep);
+  opacity: 0.65;
+}
+
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   SON DYNASTY X FEED â€” RIGHT PANEL UPDATES
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+/* Override: remove eyebrow pulsing dot, style handle */
+.dwi-chronicle-handle {
+  font-family: 'Raleway', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--silver-deep);
+  font-weight: 600;
+}
+
+/* X Logo link */
+.dwi-x-logo-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: var(--black);
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.dwi-x-logo-link:hover {
+  background: var(--black);
+  color: var(--off-white);
+  transform: scale(1.08);
+}
+
+.dwi-x-icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+/* REPOST tag variant */
+.chronicle-tag--repost {
+  background: transparent;
+  color: var(--silver-deep);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* Full height feed panel */
+.dwi-col--right {
+  display: flex;
+  flex-direction: column;
+}
+
+.dwi-chronicle-feed {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.dwi-chronicle-body {
+  flex: 1;
+  min-height: 0;
+}
+
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   DWI CULTURE TEXT â€” LARGER + BREATHING GLOW
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+.dwi-culture-text {
+  font-size: 16px !important;
+  line-height: 2 !important;
+}
+
+@keyframes culture-glow {
+  0%, 100% {
+    text-shadow: none;
+    opacity: 0.85;
+  }
+  50% {
+    text-shadow: 0 0 18px rgba(0, 0, 0, 0.18), 0 0 35px rgba(0, 0, 0, 0.08);
+    opacity: 1;
+  }
+}
+
+.dwi-culture-glow {
+  animation: culture-glow 4s ease-in-out infinite;
+  will-change: opacity;
+}
+
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   PRODUCT IMAGES â€” CLEAN WHITE BACKGROUND
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+/* Override the dark background from previous styles */
+.dwi-product-img-wrap {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+.dwi-product-img {
+  padding: 12px !important;
+  mix-blend-mode: multiply;
+}
+
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   120HZ GLOBAL PERFORMANCE OVERRIDES
+   â€” All transitions use GPU-composited properties only
+   â€” cubic-bezier tuned for high-refresh display feel
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+/* Promote elements that animate to their own compositor layer */
+.dwi-archive-entry,
+.dwi-archive-cover,
+.dwi-x-logo-link,
+.dwi-toc-entry,
+.dwi-product-img-wrap,
+.chronicle-card,
+.dwi-coming-soon-text {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Ensure all transitions use only transform/opacity (GPU) */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Force smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* High-refresh scroll containers */
+.dwi-chronicle-body,
+.dwi-toc-list {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
