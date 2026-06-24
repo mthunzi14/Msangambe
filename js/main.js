@@ -12,6 +12,28 @@
 const $ = (sel, ctx) => (ctx || document).querySelector(sel);
 const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
+function alignDwiTwitterFeedHeight() {
+  const cover = document.querySelector('.coming-soon-cover');
+  const twitterFeed = document.querySelector('.dwi-twitter-feed');
+  if (!cover || !twitterFeed) return;
+
+  if (window.innerWidth > 768) {
+    const height = cover.offsetHeight;
+    if (height > 0) {
+      twitterFeed.style.height = height + 'px';
+    }
+  } else {
+    twitterFeed.style.height = '';
+  }
+}
+
+window.addEventListener('resize', () => {
+  const dwiPage = document.querySelector('#dwi');
+  if (dwiPage && dwiPage.style.display !== 'none') {
+    alignDwiTwitterFeedHeight();
+  }
+});
+
 /* ══════════════════════════════════════════════════════════════
    1. CUSTOM CURSOR
    Dot follows mouse instantly. Ring lerps toward dot via rAF.
@@ -283,6 +305,11 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
           target.style.display = displayMode;
           target.offsetHeight; // force reflow
           target.classList.add('is-visible');
+
+          if (id === '#dwi') {
+            alignDwiTwitterFeedHeight();
+            setTimeout(alignDwiTwitterFeedHeight, 100);
+          }
         }
 
         // Toggle footer and nav dark theme classes
@@ -400,6 +427,11 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
           void titleEl.offsetWidth; // force reflow
           titleEl.classList.add('play-typing');
         }
+      }
+
+      if (initialHash === '#dwi') {
+        alignDwiTwitterFeedHeight();
+        setTimeout(alignDwiTwitterFeedHeight, 100);
       }
     }
 
