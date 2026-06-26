@@ -2204,6 +2204,45 @@ button {
   color: var(--silver);
 }
 
+/* CardSwap Showcase stack container */
+.art-card-swap-container {
+  position: relative;
+  width: 480px;
+  height: 360px;
+  margin: 60px auto 100px;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.art-card-swap-container .art-cell {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 480px;
+  height: 360px;
+  border-radius: 12px;
+  border: 1px solid var(--grey-mid);
+  background: var(--grey-light);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  backface-visibility: hidden;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.art-card-swap-container .art-cell .art-media-wrap,
+.art-card-swap-container .art-cell .art-placeholder {
+  aspect-ratio: auto !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.art-card-swap-container .art-cell:hover {
+  border-color: var(--silver);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), var(--glow-sm);
+}
+
 /* ─────────────────────────────────────────────────────────────
    15. THE JOURNAL
 ───────────────────────────────────────────────────────────── */
@@ -2804,8 +2843,15 @@ body.is-locked .site-footer {
 
   .section--visual-art { padding: 80px 6vw; }
 
-  .visual-art-grid {
-    grid-template-columns: 1fr;
+  .art-card-swap-container {
+    width: 290px;
+    height: 220px;
+    margin: 40px auto 60px;
+  }
+
+  .art-card-swap-container .art-cell {
+    width: 290px;
+    height: 220px;
   }
 
   .visual-art-heading { font-size: 36px; }

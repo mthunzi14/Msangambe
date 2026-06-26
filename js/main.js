@@ -312,6 +312,10 @@ window.addEventListener('resize', () => {
             alignDwiTwitterFeedHeight();
             setTimeout(alignDwiTwitterFeedHeight, 100);
           }
+
+          if (id === '#visual-art' && window.reinitArtCardSwapPositions) {
+            window.reinitArtCardSwapPositions();
+          }
         }
 
         // Toggle footer and nav dark theme classes
@@ -434,6 +438,10 @@ window.addEventListener('resize', () => {
       if (initialHash === '#dwi') {
         alignDwiTwitterFeedHeight();
         setTimeout(alignDwiTwitterFeedHeight, 100);
+      }
+
+      if (initialHash === '#visual-art' && window.reinitArtCardSwapPositions) {
+        window.reinitArtCardSwapPositions();
       }
     }
 
@@ -864,6 +872,14 @@ window.addEventListener('resize', () => {
     const dwiCover = e.target.closest('.dwi-cover-wrapper');
 
     if (artCell) {
+      if (window.getFrontArtCard && window.getFrontArtCard() !== artCell) {
+        if (window.bringArtCardToFront) {
+          const allArt = $$('.art-cell');
+          const idx = allArt.indexOf(artCell);
+          window.bringArtCardToFront(idx);
+        }
+        return;
+      }
       const allArt = $$('.art-cell');
       const idx = allArt.indexOf(artCell);
       openLightbox(allArt, idx);
@@ -2142,4 +2158,193 @@ window.addEventListener('resize', () => {
   }
 
   renderPosts();
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   21. VISUAL ART CARD SWAP DECK CONTROLLER (GSAP)
+   ══════════════════════════════════════════════════════════════ */
+(function initArtCardSwap() {
+  const container = document.querySelector('.art-card-swap-container');
+  if (!container) return;
+
+  const cards = [...container.querySelectorAll('.art-cell')];
+  const total = cards.length;
+  if (total < 2) return;
+
+  let order = Array.from({ length: total }, (_, i) => i);
+  let isAnimating = false;
+  let intervalId = 0;
+  const swapDelay = 5000;
+
+  function makeSlot(i, distX, distY, totalCount) {
+    return {
+      x: i * distX,
+      y: -i * distY,
+      z: -i * distX * 1.5,
+      zIndex: totalCount - i
+    };
+  }
+
+  function initPositions() {
+    const isMobile = window.innerWidth <= 768;
+    const distX = isMobile ? 20 : 40;
+    const distY = isMobile ? 20 : 40;
+    const skewAmount = isMobile ? 3 : 4;
+
+    order.forEach((idx, i) => {
+      const el = cards[idx];
+      if (el) {
+        gsap.killTweensOf(el);
+        const slot = makeSlot(i, distX, distY, total);
+        gsap.set(el, {
+          x: slot.x,
+          y: slot.y,
+          z: slot.z,
+          xPercent: -50,
+          yPercent: -50,
+          skewY: skewAmount,
+          transformOrigin: 'center center',
+          zIndex: slot.zIndex,
+          force3D: true
+        });
+      }
+    });
+  }
+
+  function swap() {
+    if (isAnimating || order.length < 2) return;
+    isAnimating = true;
+
+    const [front, ...rest] = order;
+    const elFront = cards[front];
+    if (!elFront) {
+      isAnimating = false;
+      return;
+    }
+
+    const isMobile = window.innerWidth <= 768;
+    const distX = isMobile ? 20 : 40;
+    const distY = isMobile ? 20 : 40;
+    const skewAmount = isMobile ? 3 : 4;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        order = [...rest, front];
+        isAnimating = false;
+      }
+    });
+
+    // 1. Drop the front card down
+    tl.to(elFront, {
+      y: '+=500',
+      duration: 0.8,
+      ease: 'power2.inOut'
+    });
+
+    // 2. Slide the remaining cards forward
+    tl.addLabel('promote', '-=0.45');
+    rest.forEach((idx, i) => {
+      const el = cards[idx];
+      if (!el) return;
+      const slot = makeSlot(i, distX, distY, total);
+      tl.set(el, { zIndex: slot.zIndex }, 'promote');
+      tl.to(el, {
+        x: slot.x,
+        y: slot.y,
+        z: slot.z,
+        skewY: skewAmount,
+        duration: 0.8,
+        ease: 'power2.inOut'
+      }, `promote+=${i * 0.1}`);
+    });
+
+    // 3. Return the front card to the back slot
+    const backSlot = makeSlot(total - 1, distX, distY, total);
+    tl.addLabel('return', 'promote+=0.5');
+    tl.call(() => {
+      gsap.set(elFront, { zIndex: backSlot.zIndex });
+    }, undefined, 'return');
+
+    tl.to(elFront, {
+      x: backSlot.x,
+      y: backSlot.y,
+      z: backSlot.z,
+      skewY: skewAmount,
+      duration: 0.8,
+      ease: 'power2.inOut'
+    }, 'return');
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    intervalId = window.setInterval(swap, swapDelay);
+  }
+
+  function stopAutoplay() {
+    if (intervalId) {
+      window.clearInterval(intervalId);
+      intervalId = 0;
+    }
+  }
+
+  // Mouse enter/leave listeners to pause/resume autoplay
+  container.addEventListener('mouseenter', stopAutoplay);
+  container.addEventListener('mouseleave', startAutoplay);
+
+  // Resize listener
+  window.addEventListener('resize', () => {
+    const visArt = document.querySelector('#visual-art');
+    if (visArt && visArt.style.display !== 'none') {
+      initPositions();
+    }
+  });
+
+  // Global APIs for the click handler integration
+  window.getFrontArtCard = () => cards[order[0]];
+  window.bringArtCardToFront = (clickedCardIndex) => {
+    const pos = order.indexOf(clickedCardIndex);
+    if (pos <= 0 || isAnimating) return;
+    isAnimating = true;
+
+    // Pause autoplay during manual interaction
+    stopAutoplay();
+
+    const rest = order.slice(pos);
+    const frontSegment = order.slice(0, pos);
+    order = [...rest, ...frontSegment];
+
+    const isMobile = window.innerWidth <= 768;
+    const distX = isMobile ? 20 : 40;
+    const distY = isMobile ? 20 : 40;
+    const skewAmount = isMobile ? 3 : 4;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        isAnimating = false;
+        startAutoplay(); // Resume autoplay
+      }
+    });
+
+    order.forEach((idx, i) => {
+      const el = cards[idx];
+      if (!el) return;
+      const slot = makeSlot(i, distX, distY, total);
+      tl.set(el, { zIndex: slot.zIndex }, 0);
+      tl.to(el, {
+        x: slot.x,
+        y: slot.y,
+        z: slot.z,
+        skewY: skewAmount,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, 0);
+    });
+  };
+
+  // Expose wrapper for transition re-init
+  window.reinitArtCardSwapPositions = initPositions;
+
+  // Initialize on page load and trigger autoplay
+  initPositions();
+  startAutoplay();
 })();
