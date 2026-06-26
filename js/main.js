@@ -20,10 +20,12 @@ function alignDwiTwitterFeedHeight() {
   if (window.innerWidth > 768) {
     const height = cover.offsetHeight;
     if (height > 0) {
-      twitterFeed.style.height = height + 'px';
+      twitterFeed.style.height = 'auto';
+      twitterFeed.style.maxHeight = height + 'px';
     }
   } else {
     twitterFeed.style.height = '';
+    twitterFeed.style.maxHeight = '';
   }
 }
 
