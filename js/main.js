@@ -2024,6 +2024,7 @@ window.addEventListener('resize', () => {
     })
     .then(posts => {
       renderBlogPosts(posts);
+      alignDwiTwitterFeedHeight();
     })
     .catch(error => {
       console.error('Error loading blog posts:', error);
