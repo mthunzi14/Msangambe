@@ -14,7 +14,7 @@ const $$ = (sel, ctx) => [...(ctx || document).querySelectorAll(sel)];
 
 function alignDwiTwitterFeedHeight() {
   const cover = document.querySelector('.coming-soon-cover');
-  const twitterFeed = document.querySelector('.dwi-twitter-feed');
+  const twitterFeed = document.querySelector('.dwi-chronicle-feed') || document.querySelector('.dwi-twitter-feed');
   if (!cover || !twitterFeed) return;
 
   if (window.innerWidth > 768) {
@@ -2007,79 +2007,51 @@ window.addEventListener('resize', () => {
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   19. DYNASTY WORLD ISSUE (DWI) TWITTER TIMELINE FEED
+   19. DYNASTY WORLD ISSUE (DWI) BLOG FEED
    ══════════════════════════════════════════════════════════════ */
-(function initLiveTwitterFeed() {
-  const container = document.getElementById('twitter-feed-container');
+(function initLiveBlogFeed() {
+  const container = document.getElementById('chronicle-feed-container');
   if (!container) return;
 
-  fetch('assets/tweets.json')
+  fetch('assets/blog_feed.json')
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       return response.json();
     })
-    .then(tweets => {
-      renderTweets(tweets);
+    .then(posts => {
+      renderBlogPosts(posts);
     })
     .catch(error => {
-      console.error('Error loading tweets:', error);
-      container.innerHTML = `<div class="dwi-twitter-loading">Error loading live feed.</div>`;
+      console.error('Error loading blog posts:', error);
+      container.innerHTML = `<div class="dwi-chronicle-loading">Error loading blog feed.</div>`;
     });
 
-  function renderTweets(tweets) {
-    if (!tweets || tweets.length === 0) {
-      container.innerHTML = `<div class="dwi-twitter-loading">No tweets found.</div>`;
+  function renderBlogPosts(posts) {
+    if (!posts || posts.length === 0) {
+      container.innerHTML = `<div class="dwi-chronicle-loading">No blog posts found.</div>`;
       return;
     }
 
-    container.innerHTML = tweets.map(tweet => {
-      let repostHeaderHtml = '';
-      if (tweet.isRepost) {
-        repostHeaderHtml = `
-          <div class="tweet-repost-header">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M4.5 9h15a1 1 0 011 1v4a1 1 0 01-1 1h-4v2h4a3 3 0 003-3v-4a3 3 0 00-3-3h-15v-3L1 8l4 4V9zm15 6h-15a1 1 0 01-1-1v-4a1 1 0 011-1h4V7h-4a3 3 0 00-3 3v4a3 3 0 003 3h15v3l4-4-4-4v3z"/></svg>
-            <span>${tweet.repostedBy} reposted</span>
-          </div>`;
-      }
-
+    container.innerHTML = posts.map(post => {
       return `
-        <div class="tweet-card">
-          ${repostHeaderHtml}
-          <div class="tweet-card-header">
-            <img class="tweet-avatar" src="${tweet.user.avatar}" alt="Avatar">
-            <div class="tweet-user-info">
-              <span class="tweet-display-name">${tweet.user.name}</span>
-              <span class="tweet-username">${tweet.user.handle} · ${tweet.time}</span>
-            </div>
+        <div class="chronicle-card">
+          <div class="chronicle-card-meta">
+            <span class="chronicle-tag">${post.tag}</span>
+            <span class="chronicle-date">${post.date}</span>
           </div>
-          <div class="tweet-content">
-            <p>${formatTweetText(tweet.text)}</p>
-          </div>
-          <div class="tweet-actions">
-            <div class="tweet-action" aria-label="Reply">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.064.065.093.155.076.244l-.38 2.056a.43.43 0 00.569.482l2.36-.93a.278.278 0 01.222.012c1.077.585 2.316.906 3.617.906z" /></svg>
-              <span>${tweet.replies || ''}</span>
-            </div>
-            <div class="tweet-action" aria-label="Retweet">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.656 48.656 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7C4.547 9.547 4.5 10.768 4.5 12s.047 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7C19.453 14.453 19.5 13.232 19.5 12z" /><path stroke-linecap="round" stroke-linejoin="round" d="M9 10.5l3-3 3 3M15 13.5l-3 3-3-3" /></svg>
-              <span>${tweet.retweets || ''}</span>
-            </div>
-            <div class="tweet-action" aria-label="Like">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
-              <span>${tweet.likes || ''}</span>
-            </div>
-          </div>
+          <h4 class="chronicle-headline">${post.title}</h4>
+          <p class="chronicle-body">${formatBlogText(post.content)}</p>
         </div>
       `;
     }).join('');
   }
 
-  function formatTweetText(text) {
+  function formatBlogText(text) {
     return text
-      .replace(/(#[a-zA-Z0-9_]+)/g, '<span class="tweet-hashtag">$1</span>')
-      .replace(/(@[a-zA-Z0-9_]+)/g, '<span class="tweet-hashtag">$1</span>');
+      .replace(/(#[a-zA-Z0-9_]+)/g, '<span class="chronicle-hashtag">$1</span>')
+      .replace(/(@[a-zA-Z0-9_]+)/g, '<span class="chronicle-mention">$1</span>');
   }
 })();
 /* ══════════════════════════════════════════════════════════════
