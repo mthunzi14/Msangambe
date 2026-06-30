@@ -2125,6 +2125,7 @@ button {
   line-height: 1.15;
   color: var(--black);
   margin-bottom: 16px;
+  animation: title-glow-pulse 4s ease-in-out infinite alternate;
 }
 
 .visual-art-sub {
@@ -7290,7 +7291,7 @@ html {
 
 .section--visual-art-gallery {
   padding: 140px 4vw 80px;
-  background: var(--white);
+  background: var(--off-white); /* Consistent off-white background color */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -7298,16 +7299,11 @@ html {
   box-sizing: border-box;
 }
 
-.visual-art-heading {
-  font-family: 'Cinzel', serif;
-  font-weight: 400;
-  font-size: clamp(32px, 5vw, 56px);
-  color: var(--black);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  margin: 12px 0 16px;
+.section--visual-art-gallery .section-stamp {
   text-align: center;
-  line-height: 1.1;
+  align-self: center;
+  margin-bottom: 30px;
+  width: 100%;
 }
 
 .visual-art-sub {
