@@ -357,6 +357,8 @@ window.addEventListener('resize', () => {
       }
 
       setTimeout(() => {
+        window.isCanvasActive = true; // Resume WebGL loop when returning to main layout sections
+
         // Hide all SPA pages
         SPA_PAGES.forEach(pageId => {
           const el = document.querySelector(pageId);
