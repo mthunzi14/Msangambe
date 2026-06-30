@@ -7243,7 +7243,7 @@ html {
 .dwi-product-price {
   font-family: 'Raleway', sans-serif;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--black);
   margin-top: 10px;
   letter-spacing: 0.1em;
@@ -7363,12 +7363,12 @@ html {
 .gallery-media-wrap {
   position: relative;
   width: 100%;
-  overflow: hidden;
-  border-radius: 8px;
-  background: var(--grey-light);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, box-shadow;
+  overflow: visible; /* Prevent shadow clipping */
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
   transform-style: preserve-3d;
 }
 
@@ -7376,7 +7376,8 @@ html {
   width: 100%;
   height: auto;
   display: block;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 8px; /* Apply rounded corners directly to the image */
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08); /* Apply shadow directly to the image */
   object-fit: contain;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   backface-visibility: hidden;
@@ -7386,6 +7387,7 @@ html {
 .gallery-hover-overlay {
   position: absolute;
   inset: 0;
+  border-radius: 8px; /* Match image rounded corners */
   background: rgba(10, 10, 10, 0.55);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
