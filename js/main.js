@@ -118,7 +118,7 @@ window.addEventListener('resize', () => {
   const burger     = $('.nav-burger');
   const mobileMenu = $('#mobile-menu');
   const mobileClose = $('.mobile-close');
-  const SPA_PAGES = ['#dwi', '#story-page', '#modelling', '#visual-art', '#sound', '#hox', '#contact'];
+  const SPA_PAGES = ['#dwi', '#story-page', '#modelling', '#visual-art', '#visual-art-gallery', '#sound', '#hox', '#contact'];
   if (!nav) return;
 
   let lastScroll  = 0;
@@ -864,6 +864,7 @@ window.addEventListener('resize', () => {
 
   document.addEventListener('click', (e) => {
     const artCell = e.target.closest('.art-cell');
+    const galleryCell = e.target.closest('.gallery-cell');
     const modelCell = e.target.closest('.model-cell');
     const playerCover = e.target.closest('#player-cover');
     const dwiCover = e.target.closest('.dwi-cover-wrapper');
@@ -880,6 +881,10 @@ window.addEventListener('resize', () => {
       const allArt = $$('.art-cell');
       const idx = allArt.indexOf(artCell);
       openLightbox(allArt, idx);
+    } else if (galleryCell) {
+      const allGallery = $$('.gallery-cell');
+      const idx = allGallery.indexOf(galleryCell);
+      openLightbox(allGallery, idx);
     } else if (modelCell) {
       const allModels = $$('.model-cell');
       const idx = allModels.indexOf(modelCell);
@@ -1485,7 +1490,7 @@ window.addEventListener('resize', () => {
         window.isCanvasActive = true; // Resume WebGL loop
         
         // Hide all SPA pages if active and restore main wrapper
-        const pages = ['#dwi', '#story-page', '#modelling', '#visual-art', '#sound', '#hox', '#contact'];
+        const pages = ['#dwi', '#story-page', '#modelling', '#visual-art', '#visual-art-gallery', '#sound', '#hox', '#contact'];
         pages.forEach(pageId => {
           const el = document.querySelector(pageId);
           if (el) {
