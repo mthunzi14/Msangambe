@@ -2270,6 +2270,8 @@ window.addEventListener('resize', () => {
       duration: 0.8,
       ease: 'power2.inOut'
     }, 'return');
+  }
+
   // Wheel scroll handler (for desktop scrolling)
   container.addEventListener('wheel', (e) => {
     if (isAnimating) return;
