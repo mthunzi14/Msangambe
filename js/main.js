@@ -57,18 +57,18 @@ window.addEventListener('resize', () => {
   document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
-    dot.style.transform = `translate(calc(${mouseX}px - 50%), calc(${mouseY}px - 50%))`;
+    dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
   });
 
   (function rafLoop() {
     ringX = lerp(ringX, mouseX, LERP);
     ringY = lerp(ringY, mouseY, LERP);
-    ring.style.transform = `translate(calc(${ringX}px - 50%), calc(${ringY}px - 50%))`;
+    ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
     
     const tooltip = document.getElementById('medallion-prompt');
     if (tooltip) {
       const isActive = tooltip.classList.contains('is-active');
-      tooltip.style.transform = `translate(calc(${ringX}px - 50%), calc(${ringY}px - 50%)) translateY(40px) scale(${isActive ? 1.0 : 0.9})`;
+      tooltip.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) translateY(40px) scale(${isActive ? 1.0 : 0.9})`;
     }
     
     requestAnimationFrame(rafLoop);
@@ -823,7 +823,6 @@ window.addEventListener('resize', () => {
 
   function updateLightboxMedia() {
     if (currentIndex < 0 || currentIndex >= currentItems.length) return;
-    mediaBox.innerHTML = '';
     const item = currentItems[currentIndex];
     const type = item.getAttribute('data-media-type') || 'image';
     const src  = item.getAttribute('data-media-src');
@@ -834,6 +833,7 @@ window.addEventListener('resize', () => {
     metaEl.textContent  = meta;
 
     if (type === 'video') {
+      mediaBox.innerHTML = '';
       const video = document.createElement('video');
       video.src = src;
       video.autoplay = true;
@@ -843,10 +843,21 @@ window.addEventListener('resize', () => {
       video.controls = true;
       mediaBox.appendChild(video);
     } else {
-      const img = document.createElement('img');
+      // Decode image asynchronously to eliminate UI thread lag and frame drops
+      const img = new Image();
       img.src = src;
       img.alt = title;
-      mediaBox.appendChild(img);
+      img.decode().then(() => {
+        if (currentItems[currentIndex] === item) {
+          mediaBox.innerHTML = '';
+          mediaBox.appendChild(img);
+        }
+      }).catch(() => {
+        if (currentItems[currentIndex] === item) {
+          mediaBox.innerHTML = '';
+          mediaBox.appendChild(img);
+        }
+      });
     }
   }
 
@@ -2239,12 +2250,12 @@ window.addEventListener('resize', () => {
     // 1. Drop the front card down
     tl.to(elFront, {
       y: '+=500',
-      duration: 0.8,
-      ease: 'power2.inOut'
+      duration: 0.45,
+      ease: 'power3.inOut'
     });
 
     // 2. Slide the remaining cards forward
-    tl.addLabel('promote', '-=0.45');
+    tl.addLabel('promote', '-=0.25');
     rest.forEach((idx, i) => {
       const el = cards[idx];
       if (!el) return;
@@ -2255,14 +2266,14 @@ window.addEventListener('resize', () => {
         y: slot.y,
         z: slot.z,
         skewY: skewAmount,
-        duration: 0.8,
-        ease: 'power2.inOut'
-      }, `promote+=${i * 0.1}`);
+        duration: 0.45,
+        ease: 'power3.out'
+      }, `promote+=${i * 0.05}`);
     });
 
     // 3. Return the front card to the back slot
     const backSlot = makeSlot(total - 1, distX, distY, total);
-    tl.addLabel('return', 'promote+=0.5');
+    tl.addLabel('return', 'promote+=0.25');
     tl.call(() => {
       gsap.set(elFront, { zIndex: backSlot.zIndex });
     }, undefined, 'return');
@@ -2272,8 +2283,8 @@ window.addEventListener('resize', () => {
       y: backSlot.y,
       z: backSlot.z,
       skewY: skewAmount,
-      duration: 0.8,
-      ease: 'power2.inOut'
+      duration: 0.45,
+      ease: 'power3.out'
     }, 'return');
   }
 
@@ -2345,8 +2356,8 @@ window.addEventListener('resize', () => {
         y: slot.y,
         z: slot.z,
         skewY: skewAmount,
-        duration: 0.8,
-        ease: 'power2.out'
+        duration: 0.45,
+        ease: 'power3.out'
       }, 0);
     });
   };
@@ -2356,4 +2367,84 @@ window.addEventListener('resize', () => {
 
   // Initialize on page load (autoplay disabled)
   initPositions();
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   22. VISUAL ART GALLERY PARALLAX AND 3D TILT LOOP
+   ══════════════════════════════════════════════════════════════ */
+(function initGalleryParallax() {
+  let ticking = false;
+
+  function updateParallax() {
+    const gallery = document.getElementById('visual-art-gallery');
+    if (!gallery || gallery.style.display === 'none') {
+      ticking = false;
+      return;
+    }
+
+    const isMobile = window.innerWidth <= 768;
+    const scrollY = window.scrollY;
+    const viewHeight = window.innerHeight;
+
+    // 1. Column Parallax (Left: 1.2x, Center: 1.0x, Right: 1.4x)
+    if (!isMobile) {
+      const colLeft = document.querySelector('.gallery-column--left');
+      const colRight = document.querySelector('.gallery-column--right');
+      if (colLeft) {
+        // Translate up by 20% of scroll position
+        colLeft.style.transform = `translate3d(0, ${-scrollY * 0.2}px, 0)`;
+      }
+      if (colRight) {
+        // Translate up by 40% of scroll position
+        colRight.style.transform = `translate3d(0, ${-scrollY * 0.4}px, 0)`;
+      }
+    } else {
+      // Reset translation on mobile stack
+      document.querySelectorAll('.gallery-column').forEach(col => {
+        col.style.transform = '';
+      });
+    }
+
+    // 2. Scroll-Linked 3D Cell Tilt (lean forward as they enter from bottom, lean back as they exit top)
+    const cells = document.querySelectorAll('.gallery-cell');
+    cells.forEach(cell => {
+      const rect = cell.getBoundingClientRect();
+      
+      // Calculate item center distance from viewport center
+      const cellCenter = rect.top + rect.height / 2;
+      const distanceFromCenter = cellCenter - viewHeight / 2;
+      
+      // Normalize distance between -1 and 1
+      const maxDist = viewHeight / 2 + rect.height / 2;
+      const normalized = Math.max(-1, Math.min(1, distanceFromCenter / maxDist));
+      
+      // Maximum tilt angle (leaning amount)
+      const maxTilt = 12; // degrees
+      const tiltAngle = normalized * maxTilt; // positive leans forward, negative leans back
+      
+      const mediaWrap = cell.querySelector('.gallery-media-wrap');
+      if (mediaWrap) {
+        mediaWrap.style.transform = `perspective(1000px) rotateX(${tiltAngle}deg)`;
+      }
+    });
+
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  window.addEventListener('hashchange', () => {
+    if (window.location.hash === '#visual-art-gallery') {
+      setTimeout(updateParallax, 80);
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    updateParallax();
+  });
 })();
