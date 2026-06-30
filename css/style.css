@@ -2209,7 +2209,7 @@ button {
   position: relative;
   width: 480px;
   height: 360px;
-  margin: 60px auto 100px;
+  margin: 180px auto 100px;
   perspective: 1200px;
   transform-style: preserve-3d;
 }
@@ -2846,7 +2846,7 @@ body.is-locked .site-footer {
   .art-card-swap-container {
     width: 290px;
     height: 220px;
-    margin: 40px auto 60px;
+    margin: 100px auto 60px;
   }
 
   .art-card-swap-container .art-cell {
