@@ -17,15 +17,10 @@ function alignDwiTwitterFeedHeight() {
   const twitterFeed = document.querySelector('.dwi-chronicle-feed') || document.querySelector('.dwi-twitter-feed');
   if (!cover || !twitterFeed) return;
 
-  if (window.innerWidth > 768) {
-    const height = cover.offsetHeight;
-    if (height > 0) {
-      twitterFeed.style.height = 'auto';
-      twitterFeed.style.maxHeight = height + 'px';
-    }
-  } else {
-    twitterFeed.style.height = '';
-    twitterFeed.style.maxHeight = '';
+  const height = cover.offsetHeight;
+  if (height > 0) {
+    twitterFeed.style.height = 'auto';
+    twitterFeed.style.maxHeight = height + 'px';
   }
 }
 
@@ -2273,23 +2268,33 @@ window.addEventListener('resize', () => {
       duration: 0.8,
       ease: 'power2.inOut'
     }, 'return');
-  }
+  // Wheel scroll handler (for desktop scrolling)
+  container.addEventListener('wheel', (e) => {
+    if (isAnimating) return;
 
-  function startAutoplay() {
-    stopAutoplay();
-    intervalId = window.setInterval(swap, swapDelay);
-  }
-
-  function stopAutoplay() {
-    if (intervalId) {
-      window.clearInterval(intervalId);
-      intervalId = 0;
+    // Filter out very small scroll inputs (trackpad drift)
+    if (Math.abs(e.deltaY) > 5) {
+      e.preventDefault();
+      swap();
     }
-  }
+  }, { passive: false });
 
-  // Mouse enter/leave listeners to pause/resume autoplay
-  container.addEventListener('mouseenter', stopAutoplay);
-  container.addEventListener('mouseleave', startAutoplay);
+  // Touch swipe handler (for mobile scrolling/gestures on container)
+  let touchStartY = 0;
+  container.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  container.addEventListener('touchend', (e) => {
+    if (isAnimating) return;
+    const touchEndY = e.changedTouches[0].clientY;
+    const diffY = touchEndY - touchStartY;
+    
+    // Swipe threshold (30px up or down)
+    if (Math.abs(diffY) > 30) {
+      swap();
+    }
+  }, { passive: true });
 
   // Resize listener
   window.addEventListener('resize', () => {
@@ -2306,9 +2311,6 @@ window.addEventListener('resize', () => {
     if (pos <= 0 || isAnimating) return;
     isAnimating = true;
 
-    // Pause autoplay during manual interaction
-    stopAutoplay();
-
     const rest = order.slice(pos);
     const frontSegment = order.slice(0, pos);
     order = [...rest, ...frontSegment];
@@ -2321,7 +2323,6 @@ window.addEventListener('resize', () => {
     const tl = gsap.timeline({
       onComplete: () => {
         isAnimating = false;
-        startAutoplay(); // Resume autoplay
       }
     });
 
@@ -2344,7 +2345,6 @@ window.addEventListener('resize', () => {
   // Expose wrapper for transition re-init
   window.reinitArtCardSwapPositions = initPositions;
 
-  // Initialize on page load and trigger autoplay
+  // Initialize on page load (autoplay disabled)
   initPositions();
-  startAutoplay();
 })();

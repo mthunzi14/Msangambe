@@ -6089,51 +6089,75 @@ body.is-locked-modal {
 /* RESPONSIVE LAYOUT BREAKPOINTS */
 @media (max-width: 1024px) {
   .dwi-container {
-    grid-template-columns: 1.2fr 1fr;
-    gap: 30px;
-    padding: 20px 4vw;
+    grid-template-columns: 1fr 3.2fr 1fr; /* Keep 3 columns side-by-side */
+    gap: 0px 12px;
+    padding: 0 2vw 30px;
   }
   .dwi-col--left {
-    display: none;
+    display: flex;
+  }
+  .dwi-article-block {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .dwi-article-img-wrap {
+    flex: 0 0 auto;
+    width: 100%;
+    aspect-ratio: 3 / 4;
   }
 }
 
 @media (max-width: 768px) {
   .dwi-container {
-    grid-template-columns: 1fr;
-    gap: 35px;
-    padding: 10px 4vw;
+    grid-template-columns: 1.1fr 3.2fr 1.1fr; /* Keep 3 columns side-by-side */
+    gap: 0px 8px;
+    padding: 0 1.5vw 20px;
   }
   .dwi-col--left {
     display: flex;
-    gap: 24px;
-  }
-  .dwi-article-block {
     gap: 16px;
   }
+  .dwi-article-block {
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
   .dwi-article-img-wrap {
-    flex: 0 0 90px;
+    flex: 0 0 auto;
+    width: 100%;
+    aspect-ratio: 3 / 4;
   }
   .dwi-article-title {
-    font-size: 15px;
+    font-size: 10px;
+    line-height: 1.25;
+  }
+  .dwi-article-label {
+    font-size: 8px;
   }
   .dwi-cover-wrapper {
-    padding: 20px;
+    padding: 0;
   }
   .dwi-brand-title {
-    font-size: 38px;
-  }
-  .dwi-twitter-feed {
-    height: 480px;
+    font-size: 24px;
   }
   .dwi-page-footer {
-    flex-direction: column;
-    gap: 12px;
-    text-align: center;
+    flex-direction: row; /* Match desktop side-by-side layout */
+    justify-content: space-around;
+    gap: 16px;
     padding: 20px 0;
   }
-  .dwi-footer-left, .dwi-footer-right {
+  .dwi-footer-column {
+    flex: 1;
+  }
+  .dwi-footer-img-wrap {
+    width: 110px; /* Scale down to fit mobile screens side-by-side */
+    height: 110px;
+  }
+  .dwi-footer-text {
+    font-size: 8px;
     text-align: center;
+    line-height: 1.3;
   }
 }
 
