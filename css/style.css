@@ -6271,8 +6271,8 @@ body.is-locked-modal {
   }
   
   .dwi-footer-img-wrap {
-    width: 120px; /* Scaled up on stacked view to show shirts clearly */
-    height: 120px;
+    width: 85px; /* Scaled down to fit mobile screens side-by-side */
+    height: 85px;
   }
   
   .dwi-footer-text {
