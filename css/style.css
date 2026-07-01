@@ -5600,7 +5600,8 @@ body.is-locked-modal {
   aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
 }
 
@@ -7896,14 +7897,14 @@ html {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  align-items: flex-end;
+  align-items: center; /* Centered layout for clean alignment */
   width: 100%;
   margin-top: 10px;
 }
 
 .dwi-product-meta-wrap .dwi-price-container {
   margin-top: 0 !important;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .dwi-size-selector {
@@ -7914,8 +7915,8 @@ html {
 
 .dwi-size-btn {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.15); /* Visible black borders on light background */
+  color: rgba(0, 0, 0, 0.6);
   width: 28px;
   height: 28px;
   font-family: 'Raleway', sans-serif;
@@ -7930,14 +7931,14 @@ html {
 }
 
 .dwi-size-btn:hover {
-  border-color: rgba(255, 255, 255, 0.4);
-  color: var(--white);
+  border-color: rgba(0, 0, 0, 0.4);
+  color: var(--black);
 }
 
 .dwi-size-btn.active {
-  background: var(--white);
-  color: var(--black);
-  border-color: var(--white);
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
 }
 
 .dwi-size-selector-placeholder {
@@ -7946,8 +7947,8 @@ html {
 
 .dwi-add-to-cart-btn {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.15); /* Visible black borders on light background */
+  color: var(--black);
   padding: 8px 18px;
   font-size: 9px;
   letter-spacing: 0.15em;
@@ -7960,10 +7961,10 @@ html {
 }
 
 .dwi-add-to-cart-btn:hover {
-  background: var(--white);
-  color: var(--black);
-  border-color: var(--white);
-  box-shadow: var(--glow-white-sm);
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Floating nav item indicator */
@@ -8000,10 +8001,17 @@ html {
 }
 
 @media (max-width: 768px) {
+  .dwi-container {
+    display: flex;
+    flex-direction: column;
+    gap: 56px !important; /* Enlarged gap between columns/cards */
+    padding: 0 4vw 40px;
+  }
   .dwi-video-section {
     order: 3 !important;
     width: 100% !important;
-    margin-top: 10px !important;
+    margin-top: 24px !important; /* Increased spacing above/below video */
+    margin-bottom: 24px !important;
   }
   .dwi-col--left {
     order: 4 !important;
