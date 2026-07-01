@@ -65,48 +65,93 @@ window.addEventListener('resize', () => {
     dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
   });
 
-  document.addEventListener('touchmove', (e) => {
-    if (document.body.classList.contains('is-locked')) {
-      e.preventDefault();
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchStartTime = 0;
+  let touchHoldTimeout = null;
+  let hasDraggedOrHeld = false;
+
+  function showTouchCursor() {
+    dot.style.opacity = '1';
+    ring.style.opacity = '1';
+    const prompt = document.getElementById('medallion-prompt');
+    if (prompt && document.body.classList.contains('is-locked')) {
+      prompt.classList.add('is-active');
     }
-    if (e.touches.length > 0) {
-      mouseX = e.touches[0].clientX;
-      mouseY = e.touches[0].clientY;
-      dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-      dot.style.opacity = '1';
-      ring.style.opacity = '1';
-      
-      const prompt = document.getElementById('medallion-prompt');
-      if (prompt && document.body.classList.contains('is-locked')) {
-        prompt.classList.add('is-active');
-      }
-    }
-  }, { passive: false });
+  }
 
   document.addEventListener('touchstart', (e) => {
-    if (document.body.classList.contains('is-locked')) {
-      e.preventDefault();
-    }
-    if (e.touches.length > 0) {
-      mouseX = e.touches[0].clientX;
-      mouseY = e.touches[0].clientY;
-      dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-      dot.style.opacity = '1';
-      ring.style.opacity = '1';
-      
-      const prompt = document.getElementById('medallion-prompt');
-      if (prompt && document.body.classList.contains('is-locked')) {
-        prompt.classList.add('is-active');
+    if (!document.body.classList.contains('is-locked')) return;
+    
+    // Prevent default touch down scroll behaviors
+    e.preventDefault();
+
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    touchStartTime = Date.now();
+    hasDraggedOrHeld = false;
+
+    // Immediately update mouse coordinates so the medallion tilts to where they tapped
+    mouseX = (touch.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+    mouseY = (touch.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+    dot.style.transform = `translate3d(${touch.clientX}px, ${touch.clientY}px, 0) translate(-50%, -50%)`;
+
+    // Start a timer. If they hold their finger for 220ms, it triggers the hover custom cursor and tooltip
+    clearTimeout(touchHoldTimeout);
+    touchHoldTimeout = setTimeout(() => {
+      hasDraggedOrHeld = true;
+      showTouchCursor();
+    }, 220);
+  }, { passive: false });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!document.body.classList.contains('is-locked')) return;
+    
+    e.preventDefault();
+
+    const touch = e.touches[0];
+    mouseX = (touch.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+    mouseY = (touch.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+    dot.style.transform = `translate3d(${touch.clientX}px, ${touch.clientY}px, 0) translate(-50%, -50%)`;
+
+    const diffX = touch.clientX - touchStartX;
+    const diffY = touch.clientY - touchStartY;
+    const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+
+    // If they drag beyond a small jitter threshold (e.g. 8px), show the custom cursor and tooltip immediately
+    if (distance > 8) {
+      if (!hasDraggedOrHeld) {
+        hasDraggedOrHeld = true;
+        clearTimeout(touchHoldTimeout);
+        showTouchCursor();
       }
     }
   }, { passive: false });
 
-  document.addEventListener('touchend', () => {
+  document.addEventListener('touchend', (e) => {
+    if (!document.body.classList.contains('is-locked')) return;
+
+    clearTimeout(touchHoldTimeout);
+
+    const touch = e.changedTouches[0];
+    const diffX = touch.clientX - touchStartX;
+    const diffY = touch.clientY - touchStartY;
+    const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+    const duration = Date.now() - touchStartTime;
+
+    // Fade out custom cursor items immediately
     dot.style.opacity = '0';
     ring.style.opacity = '0';
-    
     const prompt = document.getElementById('medallion-prompt');
     if (prompt) prompt.classList.remove('is-active');
+
+    // If it was a quick tap (duration < 250ms and distance < 12px), enter Dynasty World!
+    if (duration < 250 && distance < 12) {
+      if (window.triggerDynastyWorldEntry) {
+        window.triggerDynastyWorldEntry();
+      }
+    }
   });
 
   (function rafLoop() {
@@ -1534,68 +1579,78 @@ window.addEventListener('resize', () => {
     }
   }
 
+  function triggerEntryTransition() {
+    if (isTransitioning) return;
+    isTransitioning = true;
+    transitionDirection = 1;
+    transitionStartTime = clock.getElapsedTime();
+    
+    // Hide tooltip
+    const prompt = document.getElementById('medallion-prompt');
+    if (prompt) prompt.classList.remove('is-active');
+    
+    // Reset custom cursor hover status
+    const ring = document.querySelector('.cursor-ring');
+    if (ring) ring.classList.remove('is-hovering');
+    
+    // Trigger white screen flash fade-in (starts at 700ms, reaches solid white at 1500ms)
+    setTimeout(() => {
+      const flash = document.getElementById('flash-overlay');
+      if (flash) flash.classList.add('is-active');
+    }, 700);
+
+    // At 1500ms (fully solid white): hide #home, unlock body, nav, scroll, and reset scene
+    setTimeout(() => {
+      // Hide the home section to lock scroll up capability
+      const homeSection = document.getElementById('home');
+      if (homeSection) homeSection.style.display = 'none';
+      
+      window.isCanvasActive = false; // Pause WebGL loop
+
+      document.body.classList.remove('is-locked');
+      
+      const nav = document.getElementById('main-nav');
+      if (nav) nav.classList.remove('is-landing');
+
+      // Scroll to top instantly (since #home is hidden, top of #story is 0)
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      
+      // Reset medallion and camera parameters in Three.js scene (invisible under solid white)
+      if (emblemGroup) {
+        emblemGroup.scale.set(1, 1, 1);
+        emblemGroup.position.set(0, 0, 0);
+      }
+      camera.position.z = 5.5;
+      
+      isTransitioning = false;
+      isHoveringMedallion = false;
+      
+      // Fade out white flash overlay
+      const flash = document.getElementById('flash-overlay');
+      if (flash) flash.classList.remove('is-active');
+
+      // Play entrance animation for story heading
+      const storyHeading = document.querySelector('.story-heading');
+      if (storyHeading) {
+        storyHeading.classList.remove('play-entrance');
+        void storyHeading.offsetWidth; // force reflow
+        storyHeading.classList.add('play-entrance');
+      }
+      
+    }, 1500);
+  }
+
+  window.triggerDynastyWorldEntry = triggerEntryTransition;
+
   function onHomeSectionClick(e) {
     // If user clicked nav or a button/link inside home, bypass
     if (e.target.closest('a, button')) return;
 
+    // Touch devices handle entrance exclusively via tap/touchend check inside initCursor
+    if (navigator.maxTouchPoints > 0) return;
+
     if (document.body.classList.contains('is-locked') && !isTransitioning) {
-      isTransitioning = true;
-      transitionDirection = 1;
-      transitionStartTime = clock.getElapsedTime();
-      
-      // Hide tooltip
-      const prompt = document.getElementById('medallion-prompt');
-      if (prompt) prompt.classList.remove('is-active');
-      
-      // Reset custom cursor hover status
-      const ring = document.querySelector('.cursor-ring');
-      if (ring) ring.classList.remove('is-hovering');
-      
-      // Trigger white screen flash fade-in (starts at 700ms, reaches solid white at 1500ms)
-      setTimeout(() => {
-        const flash = document.getElementById('flash-overlay');
-        if (flash) flash.classList.add('is-active');
-      }, 700);
-
-      // At 1500ms (fully solid white): hide #home, unlock body, nav, scroll, and reset scene
-      setTimeout(() => {
-        // Hide the home section to lock scroll up capability
-        const homeSection = document.getElementById('home');
-        if (homeSection) homeSection.style.display = 'none';
-        
-        window.isCanvasActive = false; // Pause WebGL loop
-
-        document.body.classList.remove('is-locked');
-        
-        const nav = document.getElementById('main-nav');
-        if (nav) nav.classList.remove('is-landing');
-
-        // Scroll to top instantly (since #home is hidden, top of #story is 0)
-        window.scrollTo({ top: 0, behavior: 'auto' });
-        
-        // Reset medallion and camera parameters in Three.js scene (invisible under solid white)
-        if (emblemGroup) {
-          emblemGroup.scale.set(1, 1, 1);
-          emblemGroup.position.set(0, 0, 0);
-        }
-        camera.position.z = 5.5;
-        
-        isTransitioning = false;
-        isHoveringMedallion = false;
-        
-        // Fade out white flash overlay
-        const flash = document.getElementById('flash-overlay');
-        if (flash) flash.classList.remove('is-active');
-
-        // Play entrance animation for story heading
-        const storyHeading = document.querySelector('.story-heading');
-        if (storyHeading) {
-          storyHeading.classList.remove('play-entrance');
-          void storyHeading.offsetWidth; // force reflow
-          storyHeading.classList.add('play-entrance');
-        }
-        
-      }, 1500);
+      triggerEntryTransition();
     }
   }
 
