@@ -2352,7 +2352,7 @@ window.addEventListener('resize', () => {
     });
   }
 
-  function swap() {
+  function swap(direction = 'down') {
     if (isAnimating || order.length < 2) return;
     isAnimating = true;
 
@@ -2372,15 +2372,23 @@ window.addEventListener('resize', () => {
       onComplete: () => {
         order = [...rest, front];
         isAnimating = false;
+        gsap.set(elFront, { rotation: 0 });
       }
     });
 
-    // 1. Drop the front card down
-    tl.to(elFront, {
-      y: '+=500',
-      duration: 0.45,
-      ease: 'power3.inOut'
-    });
+    // 1. Move/Swipe the front card away based on direction
+    let animateProps = { duration: 0.45, ease: 'power3.inOut' };
+    if (direction === 'left') {
+      animateProps.x = '-=600';
+      animateProps.rotation = -12;
+    } else if (direction === 'right') {
+      animateProps.x = '+=600';
+      animateProps.rotation = 12;
+    } else {
+      animateProps.y = '+=600';
+    }
+
+    tl.to(elFront, animateProps);
 
     // 2. Slide the remaining cards forward
     tl.addLabel('promote', '-=0.25');
@@ -2423,24 +2431,38 @@ window.addEventListener('resize', () => {
     // Filter out very small scroll inputs (trackpad drift)
     if (Math.abs(e.deltaY) > 5) {
       e.preventDefault();
-      swap();
+      swap('down');
     }
   }, { passive: false });
 
-  // Touch swipe handler (for mobile scrolling/gestures on container)
+  // Touch swipe handler (for mobile/tablet swipes on container)
+  let touchStartX = 0;
   let touchStartY = 0;
   container.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
   }, { passive: true });
 
   container.addEventListener('touchend', (e) => {
     if (isAnimating) return;
+    const touchEndX = e.changedTouches[0].clientX;
     const touchEndY = e.changedTouches[0].clientY;
+    const diffX = touchEndX - touchStartX;
     const diffY = touchEndY - touchStartY;
     
-    // Swipe threshold (30px up or down)
-    if (Math.abs(diffY) > 30) {
-      swap();
+    // Check if horizontal swipe is dominant
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      if (Math.abs(diffX) > 35) {
+        if (diffX > 0) {
+          swap('right');
+        } else {
+          swap('left');
+        }
+      }
+    } else {
+      if (Math.abs(diffY) > 35) {
+        swap('down');
+      }
     }
   }, { passive: true });
 
