@@ -1392,7 +1392,13 @@ window.addEventListener('resize', () => {
     // 7. EVENT LISTENERS
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('mousemove', onMouseMove);
-    canvas.addEventListener('click', onCanvasClick);
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('touchstart', onTouchMove, { passive: true });
+    
+    const homeSection = document.getElementById('home');
+    if (homeSection) {
+      homeSection.addEventListener('click', onHomeSectionClick);
+    }
     
     const navLogo = document.querySelector('.nav-logo');
     if (navLogo) {
@@ -1464,8 +1470,23 @@ window.addEventListener('resize', () => {
     mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
   }
 
-  function onCanvasClick() {
-    if (isHoveringMedallion && !isTransitioning) {
+  function onTouchMove(event) {
+    if (event.touches.length > 0) {
+      const touch = event.touches[0];
+      mouseX = (touch.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+      mouseY = (touch.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+      
+      // Normalized coordinates for raycaster
+      mouseVector.x = (touch.clientX / window.innerWidth) * 2 - 1;
+      mouseVector.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+    }
+  }
+
+  function onHomeSectionClick(e) {
+    // If user clicked nav or a button/link inside home, bypass
+    if (e.target.closest('a, button')) return;
+
+    if (document.body.classList.contains('is-locked') && !isTransitioning) {
       isTransitioning = true;
       transitionDirection = 1;
       transitionStartTime = clock.getElapsedTime();
@@ -1640,29 +1661,36 @@ window.addEventListener('resize', () => {
 
     // Raycast hover tracking (only while landing page is locked active)
     if (emblemGroup && !isTransitioning && document.body.classList.contains('is-locked')) {
+      // Keep tooltip visible at all times on the landing page to guide user clicks
+      const prompt = document.getElementById('medallion-prompt');
+      if (prompt) prompt.classList.add('is-active');
+
       raycaster.setFromCamera(mouseVector, camera);
       const intersects = raycaster.intersectObjects([coinMesh, logoMesh]);
       
       if (intersects.length > 0) {
         if (!isHoveringMedallion) {
           isHoveringMedallion = true;
-          const prompt = document.getElementById('medallion-prompt');
-          if (prompt) prompt.classList.add('is-active');
           const ring = document.querySelector('.cursor-ring');
           if (ring) ring.classList.add('is-hovering');
         }
       } else {
         if (isHoveringMedallion) {
           isHoveringMedallion = false;
-          const prompt = document.getElementById('medallion-prompt');
-          if (prompt) prompt.classList.remove('is-active');
           const ring = document.querySelector('.cursor-ring');
           if (ring) ring.classList.remove('is-hovering');
         }
       }
+    } else {
+      // Hide tooltip when not on landing page or transitioning
+      const prompt = document.getElementById('medallion-prompt');
+      if (prompt) prompt.classList.remove('is-active');
     }
 
     // Apply transformation logic
+    const baseScale = window.innerWidth < 768 ? 1.35 : 1.0;
+    const targetScale = 3.2;
+
     if (isTransitioning) {
       const t = clock.getElapsedTime() - transitionStartTime;
       const duration = 1.5; // 1.5s total transition
@@ -1676,7 +1704,7 @@ window.addEventListener('resize', () => {
       if (transitionDirection === 1) {
         // Zooming in (entering)
         camera.position.z = 5.5 - ease * 4.3; // zoom from 5.5 to 1.2
-        const currentScale = 1.0 + ease * 2.2; // scale from 1.0 to 3.2
+        const currentScale = baseScale + ease * (targetScale - baseScale);
         if (emblemGroup) {
           emblemGroup.scale.set(currentScale, currentScale, currentScale);
           const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
@@ -1686,7 +1714,7 @@ window.addEventListener('resize', () => {
       } else {
         // Zooming out (returning)
         camera.position.z = 1.2 + ease * 4.3; // zoom out from 1.2 to 5.5
-        const currentScale = 3.2 - ease * 2.2; // scale down from 3.2 to 1.0
+        const currentScale = targetScale - ease * (targetScale - baseScale);
         if (emblemGroup) {
           emblemGroup.scale.set(currentScale, currentScale, currentScale);
           const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
@@ -1707,7 +1735,10 @@ window.addEventListener('resize', () => {
         const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
         emblemGroup.rotation.y = pivotY + targetX * 0.45;
         emblemGroup.rotation.x = targetY * 0.35;
-        emblemGroup.scale.set(1, 1, 1);
+        
+        // Dynamic breathing pulse for organic interactive feel
+        const pulse = 1.0 + Math.sin(elapsedTime * 2.0) * 0.035;
+        emblemGroup.scale.set(baseScale * pulse, baseScale * pulse, baseScale * pulse);
       }
       if (camera) {
         camera.position.z = 5.5;
