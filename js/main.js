@@ -1028,6 +1028,7 @@ window.addEventListener('resize', () => {
     const modelCell = e.target.closest('.model-cell');
     const playerCover = e.target.closest('#player-cover');
     const dwiCover = e.target.closest('.dwi-cover-wrapper');
+    const dwiProduct = e.target.closest('.dwi-product-trigger');
 
     if (artCell) {
       if (window.getFrontArtCard && window.getFrontArtCard() !== artCell) {
@@ -1053,6 +1054,8 @@ window.addEventListener('resize', () => {
       openLightbox([playerCover], 0);
     } else if (dwiCover) {
       openLightbox([dwiCover], 0);
+    } else if (dwiProduct) {
+      openLightbox([dwiProduct], 0);
     }
   });
 
