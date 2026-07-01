@@ -5435,16 +5435,17 @@ body.hide-custom-cursor .cursor-ring {
 
 .modal-close-btn {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 28px;
-  height: 28px;
+  top: 12px;
+  right: 12px;
+  width: 44px; /* Larger clickable touch target */
+  height: 44px;
   background: transparent;
   border: none;
   cursor: none !important;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10;
 }
 
 .modal-close-btn span {
@@ -5453,6 +5454,7 @@ body.hide-custom-cursor .cursor-ring {
   height: 1px;
   background-color: rgba(255, 255, 255, 0.5);
   transition: background-color 0.3s ease, transform 0.3s ease;
+  pointer-events: none; /* Block spans from capturing mouse/touch events */
 }
 
 .modal-close-btn span:nth-child(1) {

@@ -2054,18 +2054,21 @@ window.addEventListener('resize', () => {
 
     if (isPreviewEnd) {
       if (accentLabel) accentLabel.textContent = '( PRE-SAVE ACTIVE )';
-      if (heading) heading.textContent = 'DEMO PREVIEW ENDED';
+      if (heading) heading.textContent = 'PRE-SAVE COMING SOON';
       if (message) {
         message.innerHTML = `You have finished your 30-second preview of <span class="modal-highlight">${trackTitle}</span>. Pre-save the official release now on Spotify, Apple Music, and SoundCloud to unlock the full track on launch day.`;
       }
-      if (ackBtn) ackBtn.textContent = 'PRE-SAVE NOW';
+      if (ackBtn) ackBtn.style.display = 'none'; // No button needed in this card view
     } else {
       if (accentLabel) accentLabel.textContent = '( TRANSMISSION DELAYED )';
       if (heading) heading.textContent = 'FREQUENCY COMING SOON';
       if (message) {
         message.innerHTML = `This channel is currently being calibrated. The official Son Dynasty frequency will launch on <span id="coming-soon-platform" class="modal-highlight">${platformName}</span> shortly.`;
       }
-      if (ackBtn) ackBtn.textContent = 'SECURE ACCESS';
+      if (ackBtn) {
+        ackBtn.style.display = 'inline-block';
+        ackBtn.textContent = 'SECURE ACCESS';
+      }
     }
 
     modal.classList.remove('is-hidden');
