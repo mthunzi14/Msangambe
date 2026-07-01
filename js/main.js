@@ -92,9 +92,9 @@ window.addEventListener('resize', () => {
     touchStartTime = Date.now();
     hasDraggedOrHeld = false;
 
-    // Immediately update mouse coordinates so the medallion tilts to where they tapped
-    mouseX = (touch.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
-    mouseY = (touch.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+    // Immediately update mouse coordinates so the custom cursor ring moves to where they tapped
+    mouseX = touch.clientX;
+    mouseY = touch.clientY;
     dot.style.transform = `translate3d(${touch.clientX}px, ${touch.clientY}px, 0) translate(-50%, -50%)`;
 
     // Start a timer. If they hold their finger for 220ms, it triggers the hover custom cursor and tooltip
@@ -111,8 +111,8 @@ window.addEventListener('resize', () => {
     e.preventDefault();
 
     const touch = e.touches[0];
-    mouseX = (touch.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
-    mouseY = (touch.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+    mouseX = touch.clientX;
+    mouseY = touch.clientY;
     dot.style.transform = `translate3d(${touch.clientX}px, ${touch.clientY}px, 0) translate(-50%, -50%)`;
 
     const diffX = touch.clientX - touchStartX;
