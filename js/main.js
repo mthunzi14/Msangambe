@@ -988,6 +988,7 @@ window.addEventListener('resize', () => {
   let currentTrackIndex = 0;
   let isPlaying  = false;
   let isTuned    = false;
+  const previewedTracks = new Set();
 
   /* ── LIBRARY RENDER ─────────────────────────────────────── */
   function renderLibrary() {
@@ -1068,6 +1069,20 @@ window.addEventListener('resize', () => {
 
   /* ── PLAY / PAUSE ───────────────────────────────────────── */
   function playTrack() {
+    const currentTrack = tracks[currentTrackIndex];
+    if (!isTuned && previewedTracks.has(currentTrack.title)) {
+      isPlaying = false;
+      playIcon.classList.remove('is-hidden');
+      pauseIcon.classList.add('is-hidden');
+      if (discWrapper) discWrapper.classList.remove('spinning');
+      if (waveform)    waveform.classList.remove('playing');
+      $$('.library-track-waveform').forEach(w => w.classList.remove('playing'));
+      if (window.showComingSoonModal) {
+        window.showComingSoonModal('', true, currentTrack.title);
+      }
+      return;
+    }
+
     isPlaying = true;
     audio.play().catch(() => {});
     playIcon.classList.add('is-hidden');
@@ -1121,6 +1136,19 @@ window.addEventListener('resize', () => {
 
   audio.addEventListener('timeupdate', () => {
     const c = audio.currentTime, d = audio.duration;
+    
+    // 30 seconds preview limit for catalog tracks
+    if (!isTuned && c >= 30) {
+      audio.currentTime = 30;
+      pauseTrack();
+      const currentTrack = tracks[currentTrackIndex];
+      previewedTracks.add(currentTrack.title);
+      if (window.showComingSoonModal) {
+        window.showComingSoonModal('', true, currentTrack.title);
+      }
+      return;
+    }
+
     if (d && isFinite(d)) {
       scrubSlider.value = (c / d) * 100;
       currentText.textContent = fmt(c);
@@ -1138,7 +1166,13 @@ window.addEventListener('resize', () => {
   audio.addEventListener('ended', nextTrack);
 
   scrubSlider.addEventListener('input', () => {
-    if (audio.duration) audio.currentTime = (scrubSlider.value / 100) * audio.duration;
+    if (audio.duration) {
+      let targetTime = (scrubSlider.value / 100) * audio.duration;
+      if (!isTuned && targetTime > 30) {
+        targetTime = 30;
+      }
+      audio.currentTime = targetTime;
+    }
   });
 
   volumeSlider.addEventListener('input', () => {
@@ -2012,13 +2046,35 @@ window.addEventListener('resize', () => {
   const platformLabel = document.getElementById('coming-soon-platform');
   if (!modal || !platformLabel) return;
 
-  function showModal(platformName) {
-    platformLabel.textContent = platformName;
+  function showModal(platformName, isPreviewEnd = false, trackTitle = '') {
+    const accentLabel = modal.querySelector('.modal-accent-label');
+    const heading = modal.querySelector('.modal-heading');
+    const message = modal.querySelector('.modal-message');
+    const ackBtn = modal.querySelector('.modal-acknowledge-btn');
+
+    if (isPreviewEnd) {
+      if (accentLabel) accentLabel.textContent = '( PRE-SAVE ACTIVE )';
+      if (heading) heading.textContent = 'DEMO PREVIEW ENDED';
+      if (message) {
+        message.innerHTML = `You have finished your 30-second preview of <span class="modal-highlight">${trackTitle}</span>. Pre-save the official release now on Spotify, Apple Music, and SoundCloud to unlock the full track on launch day.`;
+      }
+      if (ackBtn) ackBtn.textContent = 'PRE-SAVE NOW';
+    } else {
+      if (accentLabel) accentLabel.textContent = '( TRANSMISSION DELAYED )';
+      if (heading) heading.textContent = 'FREQUENCY COMING SOON';
+      if (message) {
+        message.innerHTML = `This channel is currently being calibrated. The official Son Dynasty frequency will launch on <span id="coming-soon-platform" class="modal-highlight">${platformName}</span> shortly.`;
+      }
+      if (ackBtn) ackBtn.textContent = 'SECURE ACCESS';
+    }
+
     modal.classList.remove('is-hidden');
     modal.offsetHeight; // force reflow
     modal.classList.add('is-active');
     document.body.classList.add('is-locked-modal');
   }
+
+  window.showComingSoonModal = showModal;
 
   function hideModal() {
     modal.classList.remove('is-active');
