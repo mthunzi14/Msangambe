@@ -86,16 +86,20 @@ window.addEventListener('resize', () => {
     // Prevent default touch down scroll behaviors
     e.preventDefault();
 
-    const touch = e.touches[0];
+    const touch = e.touches ? e.touches[0] : null;
+    if (!touch) return;
+
     touchStartX = touch.clientX;
     touchStartY = touch.clientY;
     touchStartTime = Date.now();
     hasDraggedOrHeld = false;
 
     // Immediately update mouse coordinates so the custom cursor ring moves to where they tapped
-    mouseX = touch.clientX;
-    mouseY = touch.clientY;
-    dot.style.transform = `translate3d(${touch.clientX}px, ${touch.clientY}px, 0) translate(-50%, -50%)`;
+    if (typeof touch.clientX === 'number' && !isNaN(touch.clientX)) {
+      mouseX = touch.clientX;
+      mouseY = touch.clientY;
+      dot.style.transform = `translate3d(${touch.clientX}px, ${touch.clientY}px, 0) translate(-50%, -50%)`;
+    }
 
     // Start a timer. If they hold their finger for 220ms, it triggers the hover custom cursor and tooltip
     clearTimeout(touchHoldTimeout);
@@ -110,10 +114,14 @@ window.addEventListener('resize', () => {
     
     e.preventDefault();
 
-    const touch = e.touches[0];
-    mouseX = touch.clientX;
-    mouseY = touch.clientY;
-    dot.style.transform = `translate3d(${touch.clientX}px, ${touch.clientY}px, 0) translate(-50%, -50%)`;
+    const touch = e.touches ? e.touches[0] : null;
+    if (!touch) return;
+
+    if (typeof touch.clientX === 'number' && !isNaN(touch.clientX)) {
+      mouseX = touch.clientX;
+      mouseY = touch.clientY;
+      dot.style.transform = `translate3d(${touch.clientX}px, ${touch.clientY}px, 0) translate(-50%, -50%)`;
+    }
 
     const diffX = touch.clientX - touchStartX;
     const diffY = touch.clientY - touchStartY;
@@ -134,7 +142,9 @@ window.addEventListener('resize', () => {
 
     clearTimeout(touchHoldTimeout);
 
-    const touch = e.changedTouches[0];
+    const touch = (e.changedTouches && e.changedTouches[0]) || (e.touches && e.touches[0]);
+    if (!touch) return;
+
     const diffX = touch.clientX - touchStartX;
     const diffY = touch.clientY - touchStartY;
     const distance = Math.sqrt(diffX * diffX + diffY * diffY);
@@ -155,16 +165,23 @@ window.addEventListener('resize', () => {
   });
 
   (function rafLoop() {
-    ringX = lerp(ringX, mouseX, LERP);
-    ringY = lerp(ringY, mouseY, LERP);
-    ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
-    
-    const tooltip = document.getElementById('medallion-prompt');
-    if (tooltip) {
-      const isActive = tooltip.classList.contains('is-active');
-      tooltip.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) translateY(40px) scale(${isActive ? 1.0 : 0.9})`;
+    if (typeof mouseX === 'number' && !isNaN(mouseX) && typeof mouseY === 'number' && !isNaN(mouseY)) {
+      if (isNaN(ringX) || isNaN(ringY)) {
+        ringX = mouseX;
+        ringY = mouseY;
+      } else {
+        ringX = lerp(ringX, mouseX, LERP);
+        ringY = lerp(ringY, mouseY, LERP);
+      }
+      
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+      
+      const tooltip = document.getElementById('medallion-prompt');
+      if (tooltip) {
+        const isActive = tooltip.classList.contains('is-active');
+        tooltip.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) translateY(40px) scale(${isActive ? 1.0 : 0.9})`;
+      }
     }
-    
     requestAnimationFrame(rafLoop);
   })();
 

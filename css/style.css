@@ -536,6 +536,15 @@ button {
   margin-bottom: 48px;
 }
 
+@keyframes menu-glow-pulse {
+  from {
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.04);
+  }
+  to {
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.2), 0 0 14px rgba(0, 0, 0, 0.1);
+  }
+}
+
 .mobile-nav-links a {
   font-family: 'Cinzel', serif;
   font-size: 22px;
@@ -545,6 +554,7 @@ button {
   color: var(--black);
   padding: 8px 16px;
   transition: color 0.3s ease, letter-spacing 0.3s ease;
+  animation: menu-glow-pulse 3s ease-in-out infinite alternate;
 }
 
 .mobile-nav-links a:hover {
@@ -3967,7 +3977,6 @@ body.is-locked {
   left: 0;
   pointer-events: none;
   z-index: 10000;
-  transform: translate(-50%, -50%) translateY(40px) scale(0.9);
   background: rgba(0, 0, 0, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(8px);
@@ -3979,14 +3988,12 @@ body.is-locked {
   letter-spacing: 0.2em;
   border-radius: 4px;
   opacity: 0;
-  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 
 .cursor-tooltip.is-active {
   opacity: 1;
-  transform: translate(-50%, -50%) translateY(40px) scale(1);
 }
 
 /* Fullscreen Transition Overlay */
