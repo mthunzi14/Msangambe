@@ -66,28 +66,47 @@ window.addEventListener('resize', () => {
   });
 
   document.addEventListener('touchmove', (e) => {
+    if (document.body.classList.contains('is-locked')) {
+      e.preventDefault();
+    }
     if (e.touches.length > 0) {
       mouseX = e.touches[0].clientX;
       mouseY = e.touches[0].clientY;
       dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
       dot.style.opacity = '1';
       ring.style.opacity = '1';
+      
+      const prompt = document.getElementById('medallion-prompt');
+      if (prompt && document.body.classList.contains('is-locked')) {
+        prompt.classList.add('is-active');
+      }
     }
-  }, { passive: true });
+  }, { passive: false });
 
   document.addEventListener('touchstart', (e) => {
+    if (document.body.classList.contains('is-locked')) {
+      e.preventDefault();
+    }
     if (e.touches.length > 0) {
       mouseX = e.touches[0].clientX;
       mouseY = e.touches[0].clientY;
       dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
       dot.style.opacity = '1';
       ring.style.opacity = '1';
+      
+      const prompt = document.getElementById('medallion-prompt');
+      if (prompt && document.body.classList.contains('is-locked')) {
+        prompt.classList.add('is-active');
+      }
     }
-  }, { passive: true });
+  }, { passive: false });
 
   document.addEventListener('touchend', () => {
     dot.style.opacity = '0';
     ring.style.opacity = '0';
+    
+    const prompt = document.getElementById('medallion-prompt');
+    if (prompt) prompt.classList.remove('is-active');
   });
 
   (function rafLoop() {
@@ -1422,8 +1441,8 @@ window.addEventListener('resize', () => {
     // 7. EVENT LISTENERS
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('touchstart', onTouchMove, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
+    window.addEventListener('touchstart', onTouchMove, { passive: false });
     
     const homeSection = document.getElementById('home');
     if (homeSection) {
@@ -1501,6 +1520,9 @@ window.addEventListener('resize', () => {
   }
 
   function onTouchMove(event) {
+    if (document.body.classList.contains('is-locked')) {
+      event.preventDefault();
+    }
     if (event.touches.length > 0) {
       const touch = event.touches[0];
       mouseX = (touch.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
@@ -1691,22 +1713,28 @@ window.addEventListener('resize', () => {
 
     // Raycast hover tracking (only while landing page is locked active)
     if (emblemGroup && !isTransitioning && document.body.classList.contains('is-locked')) {
-      // Keep tooltip visible at all times on the landing page to guide user clicks
-      const prompt = document.getElementById('medallion-prompt');
-      if (prompt) prompt.classList.add('is-active');
-
       raycaster.setFromCamera(mouseVector, camera);
       const intersects = raycaster.intersectObjects([coinMesh, logoMesh]);
       
       if (intersects.length > 0) {
         if (!isHoveringMedallion) {
           isHoveringMedallion = true;
+          // Desktop hover tooltip activation (only if non-touch!)
+          if (navigator.maxTouchPoints === 0) {
+            const prompt = document.getElementById('medallion-prompt');
+            if (prompt) prompt.classList.add('is-active');
+          }
           const ring = document.querySelector('.cursor-ring');
           if (ring) ring.classList.add('is-hovering');
         }
       } else {
         if (isHoveringMedallion) {
           isHoveringMedallion = false;
+          // Desktop hover tooltip deactivation (only if non-touch!)
+          if (navigator.maxTouchPoints === 0) {
+            const prompt = document.getElementById('medallion-prompt');
+            if (prompt) prompt.classList.remove('is-active');
+          }
           const ring = document.querySelector('.cursor-ring');
           if (ring) ring.classList.remove('is-hovering');
         }
