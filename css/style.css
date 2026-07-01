@@ -2756,11 +2756,18 @@ body.is-locked .site-footer {
    20. RESPONSIVE — MOBILE (max-width: 768px)
 ───────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  /* Hide custom cursor and medallion prompt tooltip on touch/mobile devices */
+  /* Hide custom cursor and medallion prompt tooltip on mobile except when locked on landing page */
   .cursor-dot,
   .cursor-ring,
   #medallion-prompt {
     display: none !important;
+  }
+  body.is-locked .cursor-dot,
+  body.is-locked .cursor-ring {
+    display: block !important;
+  }
+  body.is-locked #medallion-prompt.is-active {
+    display: block !important;
   }
 
   /* 15% smaller logo globe on mobile */

@@ -37,13 +37,18 @@ window.addEventListener('resize', () => {
    Disabled on touch devices. Scales on hover + pulses on click.
    ══════════════════════════════════════════════════════════════ */
 (function initCursor() {
-  if (navigator.maxTouchPoints > 0) return;
-
   const dot  = $('.cursor-dot');
   const ring = $('.cursor-ring');
   if (!dot || !ring) return;
 
-  document.body.style.cursor = 'none';
+  if (navigator.maxTouchPoints === 0) {
+    document.body.style.cursor = 'none';
+  }
+
+  const prompt = document.getElementById('medallion-prompt');
+  if (prompt && navigator.maxTouchPoints > 0) {
+    prompt.textContent = 'TAP TO ENTER DYNASTY WORLD';
+  }
 
   let mouseX = window.innerWidth  / 2;
   let mouseY = window.innerHeight / 2;
@@ -58,6 +63,31 @@ window.addEventListener('resize', () => {
     mouseX = e.clientX;
     mouseY = e.clientY;
     dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+  });
+
+  document.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 0) {
+      mouseX = e.touches[0].clientX;
+      mouseY = e.touches[0].clientY;
+      dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+      dot.style.opacity = '1';
+      ring.style.opacity = '1';
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 0) {
+      mouseX = e.touches[0].clientX;
+      mouseY = e.touches[0].clientY;
+      dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+      dot.style.opacity = '1';
+      ring.style.opacity = '1';
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', () => {
+    dot.style.opacity = '0';
+    ring.style.opacity = '0';
   });
 
   (function rafLoop() {
