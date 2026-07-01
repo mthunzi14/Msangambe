@@ -256,6 +256,11 @@ window.addEventListener('resize', () => {
     const link = e.target.closest('a[href^="#"]');
     if (!link) return;
 
+    // Let onLogoClick handle the nav-logo clicks exclusively
+    if (link.classList.contains('nav-logo')) {
+      return;
+    }
+
     const id = link.getAttribute('href');
     if (id === '#') return;
 
@@ -1494,7 +1499,10 @@ window.addEventListener('resize', () => {
 
       // 1. Trigger white flash overlay fade-in (takes 800ms to go solid white)
       const flash = document.getElementById('flash-overlay');
-      if (flash) flash.classList.add('is-active');
+      if (flash) {
+        flash.classList.remove('is-fast'); // Ensure slow/smooth transition back to landing
+        flash.classList.add('is-active');
+      }
 
       // 2. At 800ms (fully white): restore #home, lock scroll, lock nav, scroll to top instantly, reset scene to zoom-in values
       setTimeout(() => {
