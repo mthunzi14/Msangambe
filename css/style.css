@@ -7530,9 +7530,9 @@ html {
    29. SIMULATED STORE & SHOPPING CART DRAWER
    ══════════════════════════════════════════════════════════════ */
 
-/* Widen grid layout to 4 columns to place YouTube Vlog column in between */
+/* Restore clean grid layout to 3 columns with YouTube Vlog nested in middle column */
 .dwi-container {
-  grid-template-columns: 1.25fr 1.6fr 3.2fr 1.25fr !important;
+  grid-template-columns: 1.25fr 3.2fr 1.25fr !important;
 }
 
 .dwi-video-section {
@@ -7547,7 +7547,7 @@ html {
 .dwi-video-placeholder,
 .coming-soon-video {
   width: 100% !important;
-  aspect-ratio: 5 / 7 !important;
+  aspect-ratio: 16 / 9 !important; /* Cinematic widescreen ratio */
   height: auto !important;
   background: #000000 !important;
 }
@@ -8019,13 +8019,8 @@ html {
 /* Responsive Overrides */
 @media (max-width: 1024px) {
   .dwi-container {
-    grid-template-columns: 1.2fr 1.5fr 3fr 1.2fr !important;
-    gap: 0px 12px;
-  }
-  .dwi-video-placeholder,
-  .coming-soon-video {
-    aspect-ratio: 5 / 7 !important;
-    height: auto !important;
+    grid-template-columns: 1.2fr 3fr 1.2fr !important;
+    gap: 0px 16px;
   }
 }
 
@@ -8036,19 +8031,19 @@ html {
     gap: 56px !important; /* Enlarged gap between columns/cards */
     padding: 0 4vw 40px;
   }
-  .dwi-video-section {
-    order: 3 !important;
-    width: 100% !important;
-    margin-top: 24px !important; /* Increased spacing above/below video */
-    margin-bottom: 24px !important;
+  .dwi-col--middle {
+    order: 1 !important;
+    display: flex;
+    flex-direction: column;
+    gap: 32px !important;
   }
   .dwi-col--left {
-    order: 4 !important;
+    order: 2 !important;
   }
-  .dwi-video-placeholder,
-  .coming-soon-video {
-    aspect-ratio: 16 / 9 !important;
-    height: auto !important;
+  .dwi-video-section {
+    width: 100% !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
   }
   .lightbox-caption {
     max-height: 140px !important;
