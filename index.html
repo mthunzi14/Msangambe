@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;600;700&family=Raleway:wght@200;300;400;500&family=Alex+Brush&family=Italianno&family=Dancing+Script:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=1.3.5">
+  <link rel="stylesheet" href="css/style.css?v=1.3.6">
 </head>
 <body class="is-locked">
 
@@ -53,6 +53,7 @@
         <li><a href="#visual-art" class="nav-link">ART</a></li>
         <li><a href="#hox"        class="nav-link">HOX</a></li>
         <li><a href="#contact"    class="nav-link">CONTACT</a></li>
+        <li class="nav-cart-item"><a href="#cart" class="nav-link nav-cart-trigger">BAG <span class="cart-count">(0)</span></a></li>
       </ul>
 
       <button class="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -82,6 +83,7 @@
         <li><a href="#visual-art">ART</a></li>
         <li><a href="#hox">HOX</a></li>
         <li><a href="#contact">CONTACT</a></li>
+        <li><a href="#cart" class="mobile-cart-trigger">BAG <span class="cart-count">(0)</span></a></li>
       </ul>
     </nav>
   </div>
@@ -208,12 +210,12 @@
       Rendered from mind,<br>minted into existence.
     </h2>
     <p class="visual-art-sub reveal">
-      3D rendered art. NFT showroom.<br>
+      Mixing art from the cyber-creating, world-augmenting, raw street world.<br>
       Coming from the imagination of Msangambe Sigudla.
     </p>
 
     <div class="art-card-swap-container">
-      <figure class="art-cell reveal-scale" style="--i:0" data-media-type="image" data-media-src="Art/QUATRO.jpeg" data-title="QUATRO" data-meta="2026 · VISUAL ART">
+      <figure class="art-cell reveal-scale" style="--i:0" data-media-type="image" data-media-src="Art/QUATRO.jpeg" data-title="QUATRO" data-artist="Son Dynasty" data-subject="Visual Art" data-date-made="04 April 2025" data-date-published="01 November 2025" data-notes="A structural exploration of form, light, and dimension. Part of the first dynasty world series." data-meta="2026 · VISUAL ART">
         <div class="art-media-wrap">
           <img src="Art/QUATRO.jpeg" alt="Quatro" class="art-image">
         </div>
@@ -222,7 +224,7 @@
           <span class="art-meta label">2026 · VISUAL ART</span>
         </figcaption>
       </figure>
-      <figure class="art-cell reveal-scale" style="--i:1" data-media-type="image" data-media-src="Art/GCWALA.jpeg" data-title="GCWALA" data-meta="2026 · VISUAL ART">
+      <figure class="art-cell reveal-scale" style="--i:1" data-media-type="image" data-media-src="Art/GCWALA.jpeg" data-title="GCWALA" data-artist="Son Dynasty" data-subject="Visual Art" data-date-made="12 August 2025" data-date-published="01 November 2025" data-notes="Reflecting pure energy and street aesthetics in digital space." data-meta="2026 · VISUAL ART">
         <div class="art-media-wrap">
           <img src="Art/GCWALA.jpeg" alt="Gcwala" class="art-image">
         </div>
@@ -231,7 +233,7 @@
           <span class="art-meta label">2026 · VISUAL ART</span>
         </figcaption>
       </figure>
-      <figure class="art-cell reveal-scale" style="--i:2" data-media-type="image" data-media-src="Art/ALLPURP.jpeg" data-title="ALLPURP" data-meta="2026 · VISUAL ART">
+      <figure class="art-cell reveal-scale" style="--i:2" data-media-type="image" data-media-src="Art/ALLPURP.jpeg" data-title="ALLPURP" data-artist="Son Dynasty" data-subject="Visual Art" data-date-made="08 September 2025" data-date-published="01 November 2025" data-notes="Deep purple hues and metallic curvature representing cosmic streetwear structure." data-meta="2026 · VISUAL ART">
         <div class="art-media-wrap">
           <img src="Art/ALLPURP.jpeg" alt="Allpurp" class="art-image">
         </div>
@@ -263,35 +265,35 @@
     <div class="gallery-grid-row">
       <!-- COLUMN 1: LEFT -->
       <div class="gallery-column gallery-column--left">
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/QUATRO.jpeg" data-title="QUATRO" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/QUATRO.jpeg" data-title="QUATRO" data-artist="Son Dynasty" data-subject="Visual Art" data-date-made="04 April 2025" data-date-published="01 November 2025" data-notes="A structural exploration of form, light, and dimension. Part of the first dynasty world series." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/QUATRO.jpeg" alt="Quatro" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
         
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/COLOUR.jpeg" data-title="COLOUR" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/COLOUR.jpeg" data-title="COLOUR" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="11 May 2025" data-date-published="01 November 2025" data-notes="Exploring vibrant chromatic spectrum overlays onto chrome anatomical shapes." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/COLOUR.jpeg" alt="Colour" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/L.jpeg" data-title="L" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/L.jpeg" data-title="L" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="18 July 2025" data-date-published="01 November 2025" data-notes="Geometric and structural study of letterforms reimagined as industrial architecture." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/L.jpeg" alt="L" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/QUATRO 2.jpeg" data-title="QUATRO 2" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/QUATRO 2.jpeg" data-title="QUATRO 2" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="05 April 2025" data-date-published="01 November 2025" data-notes="The secondary evolution of the Quatro sequence, featuring deeper shadows and metallic distress." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/QUATRO 2.jpeg" alt="Quatro 2" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/SKY.jpeg" data-title="SKY" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/SKY.jpeg" data-title="SKY" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="22 June 2025" data-date-published="01 November 2025" data-notes="Reflective chrome textures mirror a digital sky simulator, exploring artificial infinity." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/SKY.jpeg" alt="Sky" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
@@ -303,21 +305,21 @@
 
       <!-- COLUMN 2: CENTER -->
       <div class="gallery-column gallery-column--center">
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/GCWALA.jpeg" data-title="GCWALA" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/GCWALA.jpeg" data-title="GCWALA" data-artist="Son Dynasty" data-subject="Visual Art" data-date-made="12 August 2025" data-date-published="01 November 2025" data-notes="Reflecting pure energy and street aesthetics in digital space." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/GCWALA.jpeg" alt="Gcwala" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/COUPLE.jpeg" data-title="COUPLE" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/COUPLE.jpeg" data-title="COUPLE" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="14 February 2025" data-date-published="01 November 2025" data-notes="Dual structures intersecting in three-dimensional coordinates, symbolizing digital intimacy." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/COUPLE.jpeg" alt="Couple" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/OCEAN.jpeg" data-title="OCEAN" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/OCEAN.jpeg" data-title="OCEAN" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="03 October 2025" data-date-published="01 November 2025" data-notes="Fluid dynamics and liquid chrome simulations evoking a digitized ocean floor." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/OCEAN.jpeg" alt="Ocean" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
@@ -325,21 +327,21 @@
         </figure>
 
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/SLICED.jpeg" data-title="SLICED" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/SLICED.jpeg" data-title="SLICED" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="29 January 2025" data-date-published="01 November 2025" data-notes="Anatomical dissection of digital meshes, revealing hollow cores and wireframes." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/SLICED.jpeg" alt="Sliced" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/THEFAM.jpeg" data-title="THE FAM" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/THEFAM.jpeg" data-title="THE FAM" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="09 November 2025" data-date-published="01 November 2025" data-notes="A collaborative grouping of wireframe figures standing in cybernetic unity." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/THEFAM.jpeg" alt="The Fam" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/WhatsApp Image 2026-06-30 at 2.27.39 PM.jpeg" data-title="GENESIS" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/WhatsApp Image 2026-06-30 at 2.27.39 PM.jpeg" data-title="animali alieno natura" data-artist="Son Dynasty" data-subject="Visual Art" data-date-made="24 March 2024" data-date-published="01 November 2025" data-notes="“Animali Natura” ~animalistic nature. The original statement emerges from kind of being uncovered from the industrial-like matter that surrounds it. Crossing out “animali” with the blood of humans highlights both human connectivity with natural life and our desire to alienate ourselves from it. Bringing Irony through “alieno” written with the blood of a human. Bringing about the new statement: “Alieno Natura” ~alienated nature. With the “grey matter” splattered alongside to a drip, this represents war and rebellion as humans often demonstrate rebellion through graffiti. What’s also ironic is that the term “grey matter” refers to tissue in the brain and spinal cord that contains nerve cells. This piece highlights not only the evolution of being, but the rebellion of it. Does this mean that, as a species, we have an identity crisis? Well, personally I think that human life experience is growing and expanding our consciousness to be able to exist within multiple dimensions all at once. Without creating more of what destroys itself. The Furthering of the understanding of what exists far within and far beyond makes the rebellion itself beautiful to me." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/WhatsApp Image 2026-06-30 at 2.27.39 PM.jpeg" alt="Genesis" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
@@ -349,49 +351,49 @@
 
       <!-- COLUMN 3: RIGHT -->
       <div class="gallery-column gallery-column--right">
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/ALLPURP.jpeg" data-title="ALLPURP" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/ALLPURP.jpeg" data-title="ALLPURP" data-artist="Son Dynasty" data-subject="Visual Art" data-date-made="08 September 2025" data-date-published="01 November 2025" data-notes="Deep purple hues and metallic curvature representing cosmic streetwear structure." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/ALLPURP.jpeg" alt="Allpurp" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/GRAPHIC.jpeg" data-title="GRAPHIC" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/GRAPHIC.jpeg" data-title="GRAPHIC" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="21 October 2025" data-date-published="01 November 2025" data-notes="Contrast study utilizing heavy noise filters and high-exposure lighting." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/GRAPHIC.jpeg" alt="Graphic" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/PURPLE.jpeg" data-title="PURPLE" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/PURPLE.jpeg" data-title="PURPLE" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="07 September 2025" data-date-published="01 November 2025" data-notes="Atmospheric violet emissions surrounding organic fluid structures." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/PURPLE.jpeg" alt="Purple" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/SEPH.jpeg" data-title="SEPH" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/SEPH.jpeg" data-title="SEPH" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="16 April 2025" data-date-published="01 November 2025" data-notes="Crystalline structure representing pure form reflections and transparency." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/SEPH.jpeg" alt="Seph" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/SLICED2.jpeg" data-title="SLICED 2" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/SLICED2.jpeg" data-title="SLICED 2" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="30 January 2025" data-date-published="01 November 2025" data-notes="Secondary study of sliced mesh architecture with internal glowing emissives." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/SLICED2.jpeg" alt="Sliced 2" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/TOURIN.jpeg" data-title="TOURIN" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/TOURIN.jpeg" data-title="TOURIN" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="01 December 2025" data-date-published="01 November 2025" data-notes="A traveler silhouette walking through digital landscape coordinates." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/TOURIN.jpeg" alt="Tourin" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
           </div>
         </figure>
 
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/SPEED.jpeg" data-title="SPEED" data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/SPEED.jpeg" data-title="SPEED" data-artist="Son Dynasty" data-subject="3D Art" data-date-made="14 February 2025" data-date-published="01 November 2025" data-notes="A cyber-augmentation study capturing speed and motion through chrome layers and structural distortion. Exploring the boundary between organic fluidity and digital velocity." data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/SPEED.jpeg" alt="Speed" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
@@ -886,43 +888,59 @@
       <div class="dwi-article-block reveal-scale">
         <div class="dwi-article-img-wrap">
           <img src="assets/images/modelling/CIG.jpeg" alt="June Issue" loading="lazy">
+          <div class="dwi-coming-soon-overlay">
+            <span class="dwi-coming-soon-text">COMING SOON</span>
+          </div>
         </div>
         <div class="dwi-article-text">
-          <span class="dwi-article-label label">ISSUE NO. 05</span>
-          <h3 class="dwi-article-title">June Dynasty Issue '26</h3>
+          <h3 class="dwi-article-title">June 2026</h3>
         </div>
       </div>
 
       <div class="dwi-article-block reveal-scale">
         <div class="dwi-article-img-wrap">
           <img src="assets/images/modelling/HOP.jpeg" alt="May Issue" loading="lazy">
+          <div class="dwi-coming-soon-overlay">
+            <span class="dwi-coming-soon-text">COMING SOON</span>
+          </div>
         </div>
         <div class="dwi-article-text">
-          <span class="dwi-article-label label">ISSUE NO. 04</span>
-          <h3 class="dwi-article-title">May Dynasty Issue '26</h3>
+          <h3 class="dwi-article-title">May 2026</h3>
         </div>
       </div>
 
       <div class="dwi-article-block reveal-scale">
         <div class="dwi-article-img-wrap">
           <img src="assets/images/modelling/BLACK.jpeg" alt="April Issue" loading="lazy">
+          <div class="dwi-coming-soon-overlay">
+            <span class="dwi-coming-soon-text">COMING SOON</span>
+          </div>
         </div>
         <div class="dwi-article-text">
-          <span class="dwi-article-label label">ISSUE NO. 03</span>
-          <h3 class="dwi-article-title">April Dynasty Issue '26</h3>
+          <h3 class="dwi-article-title">April 2026</h3>
         </div>
       </div>
 
       <div class="dwi-article-block reveal-scale">
         <div class="dwi-article-img-wrap">
           <img src="assets/images/modelling/JAGUAR.jpeg" alt="March Issue" loading="lazy">
+          <div class="dwi-coming-soon-overlay">
+            <span class="dwi-coming-soon-text">COMING SOON</span>
+          </div>
         </div>
         <div class="dwi-article-text">
-          <span class="dwi-article-label label">ISSUE NO. 02</span>
-          <h3 class="dwi-article-title">March Dynasty Issue '26</h3>
+          <h3 class="dwi-article-title">March 2026</h3>
         </div>
       </div>
+    </div>
 
+    <!-- IN-BETWEEN COLUMN: YOUTUBE VIDEO SECTION -->
+    <div class="dwi-video-section reveal-scale">
+      <div class="dwi-video-placeholder coming-soon-video">
+        <div class="dwi-coming-soon-overlay">
+          <span class="dwi-coming-soon-text">COMING SOON</span>
+        </div>
+      </div>
     </div>
 
     <!-- MIDDLE COLUMN: DWI COVER -->
@@ -938,7 +956,6 @@
 
     <!-- RIGHT COLUMN: BLOG ONLY -->
     <div class="dwi-col dwi-col--right">
-
       <!-- DYNASTY CHRONICLE / BLOG PANEL -->
       <div class="dwi-chronicle-feed reveal-right">
         <!-- Chronicle Header -->
@@ -952,38 +969,44 @@
           <div class="dwi-chronicle-loading">Loading blog...</div>
         </div>
       </div>
-
     </div>
 
-    <!-- BOTTOM VIDEO SECTION -->
-    <div class="dwi-video-section reveal-scale">
-      <div class="dwi-video-placeholder coming-soon-video">
-        <div class="dwi-coming-soon-overlay">
-          <span class="dwi-coming-soon-text">COMING SOON</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- BOTTOM EDITORIAL FOOTER -->
+    <!-- BOTTOM EDITORIAL FOOTER & SIMULATED STORE -->
     <div class="dwi-page-footer reveal-scale">
       <div class="dwi-footer-column dwi-footer-left">
         <span class="dwi-footer-text">LIMITED SIGNED T-SHIRTS</span>
         <div class="dwi-footer-img-wrap">
           <img src="assets/images/white_tshirt_mockup.png" alt="Limited Edition White T-shirt" class="dwi-footer-product-img">
         </div>
-        <div class="dwi-price-container">
-          <span class="dwi-product-price label">R799.99</span>
-          <span class="dwi-product-stock-left label">10 LEFT</span>
+        <div class="dwi-product-meta-wrap">
+          <div class="dwi-price-container">
+            <span class="dwi-product-price label">R799.99</span>
+            <span class="dwi-product-stock-left label">10 LEFT</span>
+          </div>
+          <!-- Size Selector buttons -->
+          <div class="dwi-size-selector">
+            <button class="dwi-size-btn active" data-size="S">S</button>
+            <button class="dwi-size-btn" data-size="M">M</button>
+            <button class="dwi-size-btn" data-size="L">L</button>
+            <button class="dwi-size-btn" data-size="XL">XL</button>
+          </div>
+          <button class="dwi-add-to-cart-btn label" data-product-id="tshirt" data-product-name="Msangambe Signature T-Shirt" data-product-price="799.99">ADD TO BAG</button>
         </div>
       </div>
+
       <div class="dwi-footer-column dwi-footer-right">
         <span class="dwi-footer-text">LIMITED 50 SIGNED COVER POSTERS</span>
         <div class="dwi-footer-img-wrap">
           <img src="assets/images/white_poster_mockup.png" alt="Limited Edition Signed White Poster" class="dwi-footer-product-img">
         </div>
-        <div class="dwi-price-container">
-          <span class="dwi-product-price label">R399.99</span>
-          <span class="dwi-product-stock-left label">50 LEFT</span>
+        <div class="dwi-product-meta-wrap">
+          <div class="dwi-price-container">
+            <span class="dwi-product-price label">R399.99</span>
+            <span class="dwi-product-stock-left label">50 LEFT</span>
+          </div>
+          <!-- Spacer to align buttons perfectly -->
+          <div class="dwi-size-selector-placeholder"></div>
+          <button class="dwi-add-to-cart-btn label" data-product-id="poster" data-product-name="Limited Cover Poster" data-product-price="399.99">ADD TO BAG</button>
         </div>
       </div>
     </div>
@@ -1003,6 +1026,41 @@
   </div>
 </main>
 
+  <!-- SHOPPING CART DRAWER -->
+  <div id="shopping-cart-drawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="cart-drawer-backdrop"></div>
+    <div class="cart-drawer-content">
+      <header class="cart-drawer-header">
+        <span class="cart-drawer-title label">YOUR BAG (<span class="cart-count">0</span>)</span>
+        <button class="cart-drawer-close" aria-label="Close Bag">
+          <span></span><span></span>
+        </button>
+      </header>
+      
+      <div class="cart-drawer-body">
+        <!-- Empty Cart State -->
+        <div class="cart-empty-state">
+          <p class="cart-empty-message">Your bag is empty.</p>
+          <button class="cart-continue-shopping-btn label">CONTINUE SHOPPING</button>
+        </div>
+        
+        <!-- Cart Items List -->
+        <ul class="cart-items-list" role="list">
+          <!-- Injected dynamically -->
+        </ul>
+      </div>
+      
+      <footer class="cart-drawer-footer">
+        <div class="cart-total-row">
+          <span class="cart-total-label label">SUBTOTAL</span>
+          <span class="cart-total-price label">R0.00</span>
+        </div>
+        <p class="cart-footer-note">Shipping & taxes calculated at checkout.</p>
+        <button class="cart-checkout-btn label">PROCEED TO CHECKOUT</button>
+      </footer>
+    </div>
+  </div>
+
   <!-- CINEMATIC LIGHTBOX MODAL -->
   <div id="dynasty-lightbox" class="lightbox-modal is-hidden" aria-hidden="true" role="dialog">
     <div class="lightbox-backdrop"></div>
@@ -1020,8 +1078,23 @@
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </button>
       <div class="lightbox-caption">
-        <h3 id="lightbox-title">MEDIA TITLE</h3>
-        <p id="lightbox-meta" class="label">MEDIA CATEGORY · YEAR</p>
+        <div class="lightbox-basic-info">
+          <h3 id="lightbox-title">MEDIA TITLE</h3>
+          <p id="lightbox-meta" class="label">MEDIA CATEGORY · YEAR</p>
+        </div>
+        <div id="lightbox-art-details" class="lightbox-art-details" style="display: none;">
+          <div class="lightbox-details-grid">
+            <div class="lightbox-detail-item"><span class="detail-label">Name of art:</span> <span id="detail-name"></span></div>
+            <div class="lightbox-detail-item"><span class="detail-label">Artist:</span> <span id="detail-artist"></span></div>
+            <div class="lightbox-detail-item"><span class="detail-label">Subject:</span> <span id="detail-subject"></span></div>
+            <div class="lightbox-detail-item"><span class="detail-label">Date made:</span> <span id="detail-date-made"></span></div>
+            <div class="lightbox-detail-item"><span class="detail-label">Date published:</span> <span id="detail-date-published"></span></div>
+          </div>
+          <div class="lightbox-notes-wrap">
+            <span class="detail-label">Artists Notes:</span>
+            <p id="detail-notes" class="detail-notes-text"></p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1120,6 +1193,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="js/main.js?v=1.3.5"></script>
+  <script src="js/main.js?v=1.3.6"></script>
 </body>
 </html>

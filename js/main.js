@@ -948,6 +948,39 @@ window.addEventListener('resize', () => {
     titleEl.textContent = title;
     metaEl.textContent  = meta;
 
+    // Check for advanced art details
+    const artist = item.getAttribute('data-artist');
+    const subject = item.getAttribute('data-subject');
+    const dateMade = item.getAttribute('data-date-made');
+    const datePublished = item.getAttribute('data-date-published');
+    const notes = item.getAttribute('data-notes');
+
+    const detailsEl = document.getElementById('lightbox-art-details');
+    const basicEl = lightbox.querySelector('.lightbox-basic-info');
+
+    if (artist) {
+      if (basicEl) basicEl.style.display = 'none';
+      if (detailsEl) {
+        detailsEl.style.display = 'block';
+        const dName = document.getElementById('detail-name');
+        const dArtist = document.getElementById('detail-artist');
+        const dSubject = document.getElementById('detail-subject');
+        const dMade = document.getElementById('detail-date-made');
+        const dPub = document.getElementById('detail-date-published');
+        const dNotes = document.getElementById('detail-notes');
+
+        if (dName) dName.textContent = title;
+        if (dArtist) dArtist.textContent = artist;
+        if (dSubject) dSubject.textContent = subject || 'Visual Art';
+        if (dMade) dMade.textContent = dateMade || '';
+        if (dPub) dPub.textContent = datePublished || '';
+        if (dNotes) dNotes.textContent = notes || '';
+      }
+    } else {
+      if (basicEl) basicEl.style.display = 'block';
+      if (detailsEl) detailsEl.style.display = 'none';
+    }
+
     if (type === 'video') {
       mediaBox.innerHTML = '';
       const video = document.createElement('video');
@@ -2212,6 +2245,12 @@ window.addEventListener('resize', () => {
     const heading = modal.querySelector('.modal-heading');
     const message = modal.querySelector('.modal-message');
     const ackBtn = modal.querySelector('.modal-acknowledge-btn');
+    const inputField = document.getElementById('coming-soon-email-input');
+    const formGroup = modal.querySelector('.modal-email-form');
+
+    // Reset default visibility for regular modal triggers
+    if (inputField) inputField.style.display = 'block';
+    if (formGroup) formGroup.style.display = 'flex';
 
     if (isPreviewEnd) {
       if (accentLabel) accentLabel.textContent = '( PRE-SAVE ACTIVE )';
@@ -2697,4 +2736,221 @@ window.addEventListener('resize', () => {
   window.addEventListener('resize', () => {
     updateParallax();
   });
+
+  /* ══════════════════════════════════════════════════════════════
+     30. SIMULATED CART & STORE CONTROLLER
+     ══════════════════════════════════════════════════════════════ */
+  let cart = [];
+
+  const cartDrawer = document.getElementById('shopping-cart-drawer');
+  const cartBackdrop = cartDrawer ? cartDrawer.querySelector('.cart-drawer-backdrop') : null;
+  const cartContent = cartDrawer ? cartDrawer.querySelector('.cart-drawer-content') : null;
+  const cartCloseBtn = cartDrawer ? cartDrawer.querySelector('.cart-drawer-close') : null;
+  const cartEmptyState = cartDrawer ? cartDrawer.querySelector('.cart-empty-state') : null;
+  const cartItemsList = cartDrawer ? cartDrawer.querySelector('.cart-items-list') : null;
+  const cartTotalPrice = cartDrawer ? cartDrawer.querySelector('.cart-total-price') : null;
+  const cartCheckoutBtn = cartDrawer ? cartDrawer.querySelector('.cart-checkout-btn') : null;
+  const cartContinueBtn = cartDrawer ? cartDrawer.querySelector('.cart-continue-shopping-btn') : null;
+
+  // Toggle Cart Drawer
+  function openCartDrawer() {
+    if (!cartDrawer) return;
+    cartDrawer.classList.add('is-active');
+    cartDrawer.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCartDrawer() {
+    if (!cartDrawer) return;
+    cartDrawer.classList.remove('is-active');
+    cartDrawer.setAttribute('aria-hidden', 'true');
+    if (!document.body.classList.contains('is-locked')) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Bind Openers
+  document.querySelectorAll('.nav-cart-trigger, .mobile-cart-trigger').forEach(trigger => {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      openCartDrawer();
+      const mobileMenu = document.getElementById('mobile-menu');
+      const burger = document.querySelector('.nav-burger');
+      if (mobileMenu && mobileMenu.classList.contains('is-active')) {
+        mobileMenu.classList.remove('is-active');
+        if (burger) {
+          burger.classList.remove('is-active');
+          burger.setAttribute('aria-expanded', 'false');
+        }
+      }
+    });
+  });
+
+  // Bind Closers
+  if (cartCloseBtn) cartCloseBtn.addEventListener('click', closeCartDrawer);
+  if (cartBackdrop) cartBackdrop.addEventListener('click', closeCartDrawer);
+  if (cartContinueBtn) cartContinueBtn.addEventListener('click', closeCartDrawer);
+
+  // Size Selector
+  document.querySelectorAll('.dwi-size-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const parent = this.closest('.dwi-size-selector');
+      if (parent) {
+        parent.querySelectorAll('.dwi-size-btn').forEach(b => b.classList.remove('active'));
+      }
+      this.classList.add('active');
+    });
+  });
+
+  // Render Cart contents
+  function renderCart() {
+    if (!cartItemsList || !cartEmptyState || !cartTotalPrice) return;
+
+    cartItemsList.innerHTML = '';
+    const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+    document.querySelectorAll('.cart-count').forEach(badge => {
+      badge.textContent = `(${totalQty})`;
+    });
+
+    if (cart.length === 0) {
+      cartEmptyState.style.display = 'flex';
+      cartItemsList.style.display = 'none';
+      cartTotalPrice.textContent = 'R0.00';
+      return;
+    }
+
+    cartEmptyState.style.display = 'none';
+    cartItemsList.style.display = 'flex';
+
+    let subtotal = 0;
+
+    cart.forEach((item, index) => {
+      subtotal += parseFloat(item.price) * item.qty;
+
+      const li = document.createElement('li');
+      li.className = 'cart-item';
+      
+      const isTshirt = item.id === 'tshirt';
+      const imgSrc = isTshirt ? 'assets/images/white_tshirt_mockup.png' : 'assets/images/white_poster_mockup.png';
+
+      li.innerHTML = `
+        <div class="cart-item-img-wrap">
+          <img src="${imgSrc}" alt="${item.name}" class="cart-item-img">
+        </div>
+        <div class="cart-item-details">
+          <div class="cart-item-title-row">
+            <div>
+              <h4 class="cart-item-name">${item.name}</h4>
+              ${item.size ? `<span class="cart-item-size label">SIZE: ${item.size}</span>` : ''}
+            </div>
+            <span class="cart-item-price label">R${(parseFloat(item.price) * item.qty).toFixed(2)}</span>
+          </div>
+          <div class="cart-item-qty-row">
+            <div class="cart-qty-control">
+              <button class="cart-qty-btn decrease-btn" data-index="${index}">-</button>
+              <span class="cart-qty-val">${item.qty}</span>
+              <button class="cart-qty-btn increase-btn" data-index="${index}">+</button>
+            </div>
+            <button class="cart-item-remove-btn label" data-index="${index}">REMOVE</button>
+          </div>
+        </div>
+      `;
+      cartItemsList.appendChild(li);
+    });
+
+    cartTotalPrice.textContent = `R${subtotal.toFixed(2)}`;
+
+    // Quantity events
+    cartItemsList.querySelectorAll('.increase-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const idx = parseInt(this.getAttribute('data-index'));
+        cart[idx].qty++;
+        renderCart();
+      });
+    });
+
+    cartItemsList.querySelectorAll('.decrease-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const idx = parseInt(this.getAttribute('data-index'));
+        if (cart[idx].qty > 1) {
+          cart[idx].qty--;
+        } else {
+          cart.splice(idx, 1);
+        }
+        renderCart();
+      });
+    });
+
+    cartItemsList.querySelectorAll('.cart-item-remove-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const idx = parseInt(this.getAttribute('data-index'));
+        cart.splice(idx, 1);
+        renderCart();
+      });
+    });
+  }
+
+  // Add to Bag buttons
+  document.querySelectorAll('.dwi-add-to-cart-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const id = this.getAttribute('data-product-id');
+      const name = this.getAttribute('data-product-name');
+      const price = this.getAttribute('data-product-price');
+      
+      let size = null;
+      if (id === 'tshirt') {
+        const activeSizeBtn = document.querySelector('.dwi-size-btn.active');
+        size = activeSizeBtn ? activeSizeBtn.getAttribute('data-size') : 'M';
+      }
+
+      const existing = cart.find(item => item.id === id && item.size === size);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ id, name, price, qty: 1, size });
+      }
+
+      renderCart();
+      
+      // Delay drawer open for better micro-interaction feel
+      setTimeout(openCartDrawer, 150);
+    });
+  });
+
+  // Simulated Checkout Alert popup
+  if (cartCheckoutBtn) {
+    cartCheckoutBtn.addEventListener('click', () => {
+      closeCartDrawer();
+      
+      const modal = document.getElementById('coming-soon-modal');
+      if (modal) {
+        const accentLabel = modal.querySelector('.modal-accent-label');
+        const heading = modal.querySelector('.modal-heading');
+        const message = modal.querySelector('.modal-message');
+        const ackBtn = modal.querySelector('.modal-acknowledge-btn');
+        const inputField = document.getElementById('coming-soon-email-input');
+        const formGroup = modal.querySelector('.modal-email-form');
+        
+        if (accentLabel) accentLabel.textContent = '( DYNASTY STORE )';
+        if (heading) heading.textContent = 'CHECKOUT SIMULATED';
+        if (message) {
+          message.innerHTML = 'This transaction is simulated for showroom review. The actual payment and order fulfillment integration is coming soon!';
+        }
+        
+        if (inputField) inputField.style.display = 'none';
+        if (formGroup) formGroup.style.display = 'none';
+        
+        if (ackBtn) {
+          ackBtn.style.display = 'inline-block';
+          ackBtn.textContent = 'SECURE ACCESS';
+        }
+
+        modal.classList.remove('is-hidden');
+        modal.offsetHeight;
+        modal.classList.add('is-active');
+        document.body.classList.add('is-locked-modal');
+      }
+    });
+  }
+
 })();
