@@ -6271,8 +6271,8 @@ body.is-locked-modal {
   }
   
   .dwi-footer-img-wrap {
-    width: 85px; /* Scaled down to fit mobile screens side-by-side */
-    height: 85px;
+    width: 85px !important; /* Force scale down on mobile viewports */
+    height: 85px !important;
   }
   
   .dwi-footer-text {
