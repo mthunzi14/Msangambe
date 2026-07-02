@@ -5606,10 +5606,8 @@ body.hide-custom-cursor .cursor-ring {
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
 }
 
-html.is-locked-modal,
 body.is-locked-modal {
   overflow: hidden !important;
-  height: 100% !important;
 }
 
 /* ══════════════════════════════════════════════════════════════

@@ -927,7 +927,6 @@ window.addEventListener('resize', () => {
     updateLightboxMedia();
     lightbox.classList.remove('is-hidden');
     lightbox.setAttribute('aria-hidden', 'false');
-    document.documentElement.classList.add('is-locked-modal');
     document.body.classList.add('is-locked-modal');
   }
 
@@ -935,7 +934,6 @@ window.addEventListener('resize', () => {
     lightbox.classList.add('is-hidden');
     lightbox.setAttribute('aria-hidden', 'true');
     mediaBox.innerHTML = '';
-    document.documentElement.classList.remove('is-locked-modal');
     document.body.classList.remove('is-locked-modal');
   }
 
