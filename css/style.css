@@ -8099,11 +8099,27 @@ html {
   }
   .lightbox-media-container {
     max-width: 100% !important;
-    max-height: 50vh !important;
+    max-height: none !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 16px !important;
   }
   .lightbox-media-container img,
   .lightbox-media-container video {
     max-height: 50vh !important;
+    width: auto !important;
+    height: auto !important;
+  }
+  .lightbox-sub-nav {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    margin: 8px auto 0 !important;
+    display: inline-flex !important;
   }
   .lightbox-caption {
     margin-top: 0 !important;
