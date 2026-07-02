@@ -1064,10 +1064,31 @@ window.addEventListener('resize', () => {
   if (nextBtn)  nextBtn.addEventListener('click', showNext);
   if (prevBtn)  prevBtn.addEventListener('click', showPrev);
 
-  lightbox.addEventListener('click', (e) => {
+  let isMouseDownOnCloseTarget = false;
+  let mouseDownX = 0;
+  let mouseDownY = 0;
+
+  lightbox.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return; // Only left clicks
     if (e.target === lightbox || e.target.classList.contains('lightbox-content-wrapper')) {
-      closeLightbox();
+      isMouseDownOnCloseTarget = true;
+      mouseDownX = e.clientX;
+      mouseDownY = e.clientY;
+    } else {
+      isMouseDownOnCloseTarget = false;
     }
+  });
+
+  lightbox.addEventListener('mouseup', (e) => {
+    if (!isMouseDownOnCloseTarget) return;
+    const dist = Math.hypot(e.clientX - mouseDownX, e.clientY - mouseDownY);
+    // If the mouse has moved less than 8px, treat it as a direct singular tap/click
+    if (dist < 8) {
+      if (e.target === lightbox || e.target.classList.contains('lightbox-content-wrapper')) {
+        closeLightbox();
+      }
+    }
+    isMouseDownOnCloseTarget = false;
   });
 
   document.addEventListener('keydown', (e) => {
