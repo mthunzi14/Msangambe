@@ -3405,12 +3405,12 @@ body.is-locked .site-footer {
   position: fixed;
   inset: 0;
   z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block; /* Allows natural block vertical expansion for scrollbars */
+  overflow-y: auto;
   opacity: 1;
   visibility: visible;
   transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-overflow-scrolling: touch;
 }
 
 .lightbox-modal.is-hidden {
@@ -3420,9 +3420,9 @@ body.is-locked .site-footer {
 }
 
 .lightbox-backdrop {
-  position: absolute;
+  position: fixed; /* Keeps backdrop fixed behind scrolling content */
   inset: 0;
-  background: rgba(10,10,10,0.92);
+  background: rgba(10,10,10,0.94);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
@@ -3430,28 +3430,39 @@ body.is-locked .site-footer {
 .lightbox-content-wrapper {
   position: relative;
   z-index: 2;
-  width: 85%;
-  max-width: 900px;
-  height: 100%;
+  width: 90%;
+  max-width: 800px;
+  min-height: 80vh; /* Takes up most of viewport height to center short media */
+  margin: 10vh auto; /* Centers wrapper vertically within viewport margin */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* Center-aligns image box */
+  box-sizing: border-box;
 }
 
 .lightbox-close {
-  position: absolute;
-  top: -40px;
-  right: 0;
-  width: 32px;
-  height: 32px;
+  position: fixed; /* Viewport-fixed so it stays at top-right while scrolling text */
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: none;
-  background: transparent;
-  border: none;
+  background: rgba(10, 10, 10, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  z-index: 10005;
+  transition: background 0.3s;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .lightbox-close span {
@@ -3465,7 +3476,7 @@ body.is-locked .site-footer {
 .lightbox-close span:last-child  { transform: translateY(-0.5px) rotate(-45deg); }
 
 .lightbox-arrow {
-  position: absolute;
+  position: fixed; /* Fixed relative to viewport to stay centered while scrolling */
   top: 50%;
   transform: translateY(-50%);
   color: var(--silver);
@@ -3474,11 +3485,12 @@ body.is-locked .site-footer {
   padding: 10px;
   background: transparent;
   border: none;
+  z-index: 10005;
 }
 
 .lightbox-arrow:hover { color: var(--white); }
-.lightbox-arrow--prev { left: -60px; }
-.lightbox-arrow--next { right: -60px; }
+.lightbox-arrow--prev { left: 24px; }
+.lightbox-arrow--next { right: 24px; }
 
 .lightbox-media-container {
   width: auto;
@@ -3512,20 +3524,15 @@ body.is-locked .site-footer {
 }
 
 .lightbox-caption {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 95%;
+  position: relative;
+  width: 100%;
   max-width: 650px;
-  max-height: 220px; /* Limits height to avoid overlapping centered image */
-  overflow-y: auto;
-  background: rgba(10, 10, 10, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
-  padding: 16px 20px;
+  margin-top: 30px; /* Space directly below the image container */
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  padding: 0;
   box-sizing: border-box;
   z-index: 10;
   text-align: left;
@@ -8045,10 +8052,16 @@ html {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
   }
+  .lightbox-content-wrapper {
+    margin: 6vh auto 4vh auto !important;
+    min-height: 85vh !important;
+    width: 92% !important;
+  }
   .lightbox-caption {
-    max-height: 140px !important;
-    bottom: 12px !important;
-    padding: 10px 14px !important;
+    margin-top: 20px !important;
+    padding: 0 8px !important;
+    max-height: none !important;
+    bottom: auto !important;
   }
 }
 
