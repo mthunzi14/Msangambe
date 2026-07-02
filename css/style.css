@@ -3427,6 +3427,24 @@ body.is-locked .site-footer {
   -webkit-backdrop-filter: blur(16px);
 }
 
+/* Custom sleek scrollbar for Lightbox Modal */
+.lightbox-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lightbox-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.lightbox-modal::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.lightbox-modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.30);
+}
+
 .lightbox-content-wrapper {
   position: relative;
   z-index: 2;
@@ -3437,7 +3455,7 @@ body.is-locked .site-footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Center-aligns image box */
+  justify-content: flex-start !important; /* Stack items from the top to guarantee zero overlap */
   box-sizing: border-box;
 }
 
@@ -3496,7 +3514,7 @@ body.is-locked .site-footer {
   width: auto;
   max-width: 90vw;
   height: auto;
-  max-height: 80vh;
+  max-height: 65vh; /* Restricted slightly to balance screen space with description card */
   aspect-ratio: auto !important;
   display: flex;
   align-items: center;
@@ -3516,7 +3534,7 @@ body.is-locked .site-footer {
 .lightbox-media-container img,
 .lightbox-media-container video {
   max-width: 100%;
-  max-height: 80vh;
+  max-height: 65vh; /* Match container height constraint */
   width: auto;
   height: auto;
   object-fit: contain;
@@ -3528,14 +3546,16 @@ body.is-locked .site-footer {
   width: 100%;
   max-width: 650px;
   margin-top: 30px; /* Space directly below the image container */
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: none;
-  padding: 0;
+  background: rgba(255, 255, 255, 0.03) !important; /* Premium glassmorphic background panel */
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  padding: 24px 30px !important;
   box-sizing: border-box;
   z-index: 10;
   text-align: left;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
 }
 
 .lightbox-caption,
@@ -8059,9 +8079,10 @@ html {
   }
   .lightbox-caption {
     margin-top: 20px !important;
-    padding: 0 8px !important;
+    padding: 16px 20px !important;
     max-height: none !important;
     bottom: auto !important;
+    width: 100% !important;
   }
 }
 
