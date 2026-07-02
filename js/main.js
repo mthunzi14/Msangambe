@@ -956,8 +956,29 @@ window.addEventListener('resize', () => {
     const datePublished = item.getAttribute('data-date-published');
     const notes = item.getAttribute('data-notes');
 
+    // Check for sub-gallery media
+    const subSrc = item.getAttribute('data-sub-media');
+    const subTitle = item.getAttribute('data-sub-title');
+    const subDateMade = item.getAttribute('data-sub-date-made');
+    const subDatePublished = item.getAttribute('data-sub-date-published');
+    const subNotes = item.getAttribute('data-sub-notes');
+
     const detailsEl = document.getElementById('lightbox-art-details');
     const basicEl = lightbox.querySelector('.lightbox-basic-info');
+
+    function updateCardDetails(activeTitle, activeDateMade, activeDatePublished, activeNotes) {
+      if (detailsEl && detailsEl.style.display !== 'none') {
+        const dName = document.getElementById('detail-name');
+        const dMade = document.getElementById('detail-date-made');
+        const dPub = document.getElementById('detail-date-published');
+        const dNotes = document.getElementById('detail-notes');
+
+        if (dName) dName.textContent = activeTitle;
+        if (dMade) dMade.textContent = activeDateMade || '';
+        if (dPub) dPub.textContent = activeDatePublished || '';
+        if (dNotes) dNotes.textContent = activeNotes || '';
+      }
+    }
 
     if (artist) {
       if (basicEl) basicEl.style.display = 'none';
@@ -1001,13 +1022,58 @@ window.addEventListener('resize', () => {
         if (currentItems[currentIndex] === item) {
           mediaBox.innerHTML = '';
           mediaBox.appendChild(img);
+          
+          if (subSrc) {
+            injectSubNav();
+          }
         }
       }).catch(() => {
         if (currentItems[currentIndex] === item) {
           mediaBox.innerHTML = '';
           mediaBox.appendChild(img);
+          
+          if (subSrc) {
+            injectSubNav();
+          }
         }
       });
+
+      function injectSubNav() {
+        const subNav = document.createElement('div');
+        subNav.className = 'lightbox-sub-nav';
+
+        const btn0 = document.createElement('button');
+        btn0.className = 'sub-nav-btn active';
+        btn0.textContent = title.toUpperCase();
+
+        const btn1 = document.createElement('button');
+        btn1.className = 'sub-nav-btn';
+        btn1.textContent = subTitle.toUpperCase();
+
+        subNav.appendChild(btn0);
+        subNav.appendChild(btn1);
+        mediaBox.appendChild(subNav);
+
+        btn0.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (btn0.classList.contains('active')) return;
+          btn0.classList.add('active');
+          btn1.classList.remove('active');
+          img.src = src;
+          img.alt = title;
+          updateCardDetails(title, dateMade, datePublished, notes);
+        });
+
+        btn1.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (btn1.classList.contains('active')) return;
+          btn1.classList.add('active');
+          btn0.classList.remove('active');
+          img.src = subSrc;
+          img.alt = subTitle;
+          updateCardDetails(subTitle, subDateMade, subDatePublished, subNotes);
+        });
+      }
     }
   }
 
