@@ -3422,11 +3422,12 @@ body.is-locked .site-footer {
 }
 
 .lightbox-backdrop {
-  position: absolute; /* Stretch absolutely to fill the entire scrollable height of the modal */
+  position: fixed; /* Keeps backdrop fixed behind scrolling content */
   inset: 0;
   background: rgba(10,10,10,0.94);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  z-index: 1;
 }
 
 /* Custom sleek scrollbar for Lightbox Modal */
@@ -5604,8 +5605,10 @@ body.hide-custom-cursor .cursor-ring {
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
 }
 
+html.is-locked-modal,
 body.is-locked-modal {
   overflow: hidden !important;
+  height: 100% !important;
 }
 
 /* ══════════════════════════════════════════════════════════════

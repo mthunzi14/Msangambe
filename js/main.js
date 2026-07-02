@@ -927,17 +927,20 @@ window.addEventListener('resize', () => {
     updateLightboxMedia();
     lightbox.classList.remove('is-hidden');
     lightbox.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+    document.documentElement.classList.add('is-locked-modal');
+    document.body.classList.add('is-locked-modal');
   }
 
   function closeLightbox() {
     lightbox.classList.add('is-hidden');
     lightbox.setAttribute('aria-hidden', 'true');
     mediaBox.innerHTML = '';
-    document.body.style.overflow = '';
+    document.documentElement.classList.remove('is-locked-modal');
+    document.body.classList.remove('is-locked-modal');
   }
 
   function updateLightboxMedia() {
+    lightbox.scrollTop = 0; // Reset scroll position to top on media change
     if (currentIndex < 0 || currentIndex >= currentItems.length) return;
     const item = currentItems[currentIndex];
     const type = item.getAttribute('data-media-type') || 'image';
