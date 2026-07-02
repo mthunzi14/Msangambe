@@ -3509,10 +3509,10 @@ body.is-locked .site-footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: var(--black);
-  box-shadow: var(--glow-lg);
-  overflow: hidden;
+  border: none !important; /* Remove container border */
+  background: transparent !important; /* Remove container background */
+  box-shadow: none !important; /* Remove container box shadow */
+  overflow: visible !important; /* Allow the image drop shadow to float out */
   transform: scale(0.95);
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -3529,6 +3529,10 @@ body.is-locked .site-footer {
   height: auto;
   object-fit: contain;
   display: block;
+  border-radius: 12px !important; /* Premium rounded image corners */
+  border: 1px solid rgba(255, 255, 255, 0.15) !important; /* Glassmorphic border outline directly on the image */
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 255, 255, 0.08) !important; /* High contrast drop shadow and glowing outline directly on the image */
+  box-sizing: border-box !important;
 }
 
 /* Right Details Card (38% width with independent native scroll area) */
@@ -3537,21 +3541,21 @@ body.is-locked .site-footer {
   max-width: 38%;
   max-height: 80vh; /* Limits height to fit screen alongside image */
   overflow-y: auto; /* Independent native scrolling inside card */
-  background: rgba(255, 255, 255, 0.03) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.05) !important; /* Elevated frosted glassmorphic brightness */
+  backdrop-filter: blur(30px) !important; /* Intense premium blur filter */
+  -webkit-backdrop-filter: blur(30px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important; /* Clean glowing edge */
+  border-radius: 16px !important; /* Elegant rounded corners */
   padding: 24px 30px !important;
   box-sizing: border-box;
   z-index: 10;
   text-align: left;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important; /* Added signature Apple top-light bevel edge glow */
 }
 
 /* Sleek custom scrollbar inside the details card */
 .lightbox-caption::-webkit-scrollbar {
-  width: 4px;
+  width: 5px;
 }
 
 .lightbox-caption::-webkit-scrollbar-track {
@@ -3559,12 +3563,12 @@ body.is-locked .site-footer {
 }
 
 .lightbox-caption::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
 }
 
 .lightbox-caption::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.30);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .lightbox-caption,
