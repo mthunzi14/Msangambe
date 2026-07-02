@@ -3404,9 +3404,11 @@ body.is-locked .site-footer {
 .lightbox-modal {
   position: fixed;
   inset: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 10000;
   display: block; /* Allows natural block vertical expansion for scrollbars */
-  overflow-y: auto;
+  overflow-y: scroll; /* Force vertical scroll viewport to be active */
   opacity: 1;
   visibility: visible;
   transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s cubic-bezier(0.16, 1, 0.3, 1);
@@ -3420,7 +3422,7 @@ body.is-locked .site-footer {
 }
 
 .lightbox-backdrop {
-  position: fixed; /* Keeps backdrop fixed behind scrolling content */
+  position: absolute; /* Stretch absolutely to fill the entire scrollable height of the modal */
   inset: 0;
   background: rgba(10,10,10,0.94);
   backdrop-filter: blur(16px);
