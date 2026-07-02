@@ -1067,7 +1067,7 @@ window.addEventListener('resize', () => {
   if (prevBtn)  prevBtn.addEventListener('click', showPrev);
 
   lightbox.addEventListener('click', (e) => {
-    if (e.target.closest('.lightbox-backdrop') || e.target === lightbox) {
+    if (e.target === lightbox || e.target.classList.contains('lightbox-content-wrapper')) {
       closeLightbox();
     }
   });

@@ -3428,6 +3428,7 @@ body.is-locked .site-footer {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   z-index: 1;
+  pointer-events: none; /* Let scroll events pass through to parent lightbox-modal */
 }
 
 /* Custom sleek scrollbar for Lightbox Modal */
