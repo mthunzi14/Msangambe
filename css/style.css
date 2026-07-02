@@ -8119,7 +8119,7 @@ html {
 /* Lightbox Sub-gallery text button switcher overlay */
 .lightbox-sub-nav {
   position: absolute;
-  bottom: 24px;
+  top: calc(100% + 16px);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
