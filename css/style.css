@@ -8103,6 +8103,7 @@ html {
   .lightbox-caption {
     margin-top: 0 !important;
     padding: 16px 20px !important;
+    max-width: 100% !important; /* Allow card to expand to full screen width on mobile */
     max-height: none !important; /* Expand card fully on mobile scroll modal */
     overflow-y: visible !important;
     bottom: auto !important;
