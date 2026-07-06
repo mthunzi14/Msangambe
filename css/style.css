@@ -8175,3 +8175,9 @@ html {
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
+@media (max-width: 768px) {
+  .dwi-desktop-only {
+    display: none !important;
+  }
+}
+
