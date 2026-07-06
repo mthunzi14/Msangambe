@@ -1171,6 +1171,7 @@ window.addEventListener('resize', () => {
    ══════════════════════════════════════════════════════════════ */
 (function initAudioPlayer() {
   const audio          = $('#hidden-audio');
+  const radioAudio     = new Audio();
   const playBtn        = $('#player-play-btn');
   const playIcon       = $('#play-icon');
   const pauseIcon      = $('#pause-icon');
@@ -1268,6 +1269,8 @@ window.addEventListener('resize', () => {
   function disconnectRadio() {
     if (isTuned) {
       isTuned = false;
+      radioAudio.pause();
+      if (scrubSlider) scrubSlider.disabled = false;
       if (tuneBtn) {
         tuneBtn.textContent = 'TUNE IN FREQUENCY';
         tuneBtn.classList.remove('active');
@@ -1323,6 +1326,7 @@ window.addEventListener('resize', () => {
 
   /* ── PLAY / PAUSE ───────────────────────────────────────── */
   function playTrack() {
+    disconnectRadio();
     const currentTrack = tracks[currentTrackIndex];
     if (!isTuned && previewedTracks.has(currentTrack.title)) {
       isPlaying = false;
@@ -1417,14 +1421,7 @@ window.addEventListener('resize', () => {
     }
   });
 
-  audio.addEventListener('ended', () => {
-    if (isTuned) {
-      audio.currentTime = 0;
-      audio.play().catch(() => {});
-    } else {
-      nextTrack();
-    }
-  });
+  audio.addEventListener('ended', nextTrack);
 
   scrubSlider.addEventListener('input', () => {
     if (audio.duration) {
@@ -1437,65 +1434,52 @@ window.addEventListener('resize', () => {
   });
 
   volumeSlider.addEventListener('input', () => {
-    audio.volume = volumeSlider.value / 100;
+    const vol = volumeSlider.value / 100;
+    audio.volume = vol;
+    radioAudio.volume = vol;
   });
 
   /* ── RADIO TERMINAL ─────────────────────────────────────── */
   if (tuneBtn && visualizer && terminalText) {
     tuneBtn.addEventListener('click', () => {
       isTuned = !isTuned;
+      if (scrubSlider) scrubSlider.disabled = isTuned;
       if (isTuned) {
+        pauseTrack();
+        
         tuneBtn.textContent = 'DISCONNECT FREQUENCY';
         tuneBtn.classList.add('active');
         visualizer.classList.add('animating');
         terminalText.textContent = 'DYNASTY RADIO BROADCAST · ONLINE';
         
-        audio.src = 'assets/music/dynnnasty radio.mp3';
+        radioAudio.src = 'assets/music/dynnnasty radio.mp3';
+        radioAudio.loop = true;
         
         const onRadioMetadata = () => {
-          if (isTuned && (audio.src.includes('dynnnasty%20radio.mp3') || audio.src.includes('dynnnasty radio.mp3'))) {
-            const duration = audio.duration;
+          if (isTuned && (radioAudio.src.includes('dynnnasty%20radio.mp3') || radioAudio.src.includes('dynnnasty radio.mp3'))) {
+            const duration = radioAudio.duration;
             if (duration && isFinite(duration)) {
-              audio.currentTime = (Date.now() / 1000) % duration;
+              radioAudio.currentTime = (Date.now() / 1000) % duration;
             }
-            audio.play().catch(() => {});
-            isPlaying = true;
-            playIcon.classList.add('is-hidden');
-            pauseIcon.classList.remove('is-hidden');
-            if (discWrapper) discWrapper.classList.add('spinning');
-            if (waveform)    waveform.classList.add('playing');
+            radioAudio.play().catch(() => {});
           }
-          audio.removeEventListener('loadedmetadata', onRadioMetadata);
+          radioAudio.removeEventListener('loadedmetadata', onRadioMetadata);
         };
-        audio.addEventListener('loadedmetadata', onRadioMetadata);
+        radioAudio.addEventListener('loadedmetadata', onRadioMetadata);
 
-        if (audio.readyState >= 1) {
-          const duration = audio.duration;
+        if (radioAudio.readyState >= 1) {
+          const duration = radioAudio.duration;
           if (duration && isFinite(duration)) {
-            audio.currentTime = (Date.now() / 1000) % duration;
+            radioAudio.currentTime = (Date.now() / 1000) % duration;
           }
-          audio.play().catch(() => {});
-          isPlaying = true;
-          playIcon.classList.add('is-hidden');
-          pauseIcon.classList.remove('is-hidden');
-          if (discWrapper) discWrapper.classList.add('spinning');
-          if (waveform)    waveform.classList.add('playing');
+          radioAudio.play().catch(() => {});
         }
-
-        // Update player info
-        titleEl.textContent  = 'DYNASTY RADIO';
-        artistEl.textContent = 'LIVE BROADCAST';
-        prodEl.textContent   = 'Tuned into FM 99.8 MHz';
-        if (extraEl) extraEl.textContent = 'A welcoming frequency for the outcasts, destroyers, and creators.';
-        if (genreEl) genreEl.textContent = 'LIVE ARCHIVE';
-        coverEl.src          = 'assets/DWS2NOBG.png';
       } else {
         tuneBtn.textContent = 'TUNE IN FREQUENCY';
         tuneBtn.classList.remove('active');
         visualizer.classList.remove('animating');
         terminalText.textContent = 'DYNASTY RADIO BROADCAST · LIVE';
-        pauseTrack();
-        loadTrack(currentTrackIndex);
+        radioAudio.pause();
       }
     });
   }
