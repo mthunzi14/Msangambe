@@ -59,7 +59,14 @@ window.addEventListener('resize', () => {
 
   function lerp(a, b, t) { return a + (b - a) * t; }
 
+  window.hasMouseMoved = false;
+
   document.addEventListener('mousemove', (e) => {
+    if (!window.hasMouseMoved) {
+      window.hasMouseMoved = true;
+      dot.style.opacity = '1';
+      ring.style.opacity = '1';
+    }
     mouseX = e.clientX;
     mouseY = e.clientY;
     dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
@@ -2002,6 +2009,14 @@ window.addEventListener('resize', () => {
       // 2. At 800ms (fully white): restore #home, lock scroll, lock nav, scroll to top instantly, reset scene to zoom-in values
       setTimeout(() => {
         window.isCanvasActive = true; // Resume WebGL loop
+        window.hasMouseMoved = false;
+        isHoveringMedallion = false;
+        const cDot = document.querySelector('.cursor-dot');
+        const cRing = document.querySelector('.cursor-ring');
+        const cPrompt = document.getElementById('medallion-prompt');
+        if (cDot) cDot.style.opacity = '0';
+        if (cRing) cRing.style.opacity = '0';
+        if (cPrompt) cPrompt.classList.remove('is-active');
         
         // Hide all SPA pages if active and restore main wrapper
         const pages = ['#dwi', '#story-page', '#modelling', '#visual-art', '#visual-art-gallery', '#sound', '#hox', '#contact'];
@@ -2095,7 +2110,7 @@ window.addEventListener('resize', () => {
     targetY += (mouseY - targetY) * lerpFactor;
 
     // Raycast hover tracking (only while landing page is locked active)
-    if (emblemGroup && !isTransitioning && document.body.classList.contains('is-locked')) {
+    if (window.hasMouseMoved && emblemGroup && !isTransitioning && document.body.classList.contains('is-locked')) {
       raycaster.setFromCamera(mouseVector, camera);
       const intersects = raycaster.intersectObjects([coinMesh, logoMesh]);
       
