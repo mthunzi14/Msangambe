@@ -351,7 +351,7 @@ window.addEventListener('resize', () => {
   const mainWrapper = document.getElementById('main-content-wrapper');
   const flash = document.getElementById('flash-overlay');
 
-  function hideMainContentWrapper() {
+  window.hideMainContentWrapper = function() {
     const el = document.getElementById('main-content-wrapper');
     if (el) {
       el.style.visibility = 'hidden';
@@ -359,9 +359,9 @@ window.addEventListener('resize', () => {
       el.style.minHeight = '0';
       el.style.overflow = 'hidden';
     }
-  }
+  };
 
-  function showMainContentWrapper() {
+  window.showMainContentWrapper = function() {
     const el = document.getElementById('main-content-wrapper');
     if (el) {
       el.style.visibility = 'visible';
@@ -369,9 +369,9 @@ window.addEventListener('resize', () => {
       el.style.minHeight = '';
       el.style.overflow = '';
     }
-  }
+  };
 
-  function hideHomeSection() {
+  window.hideHomeSection = function() {
     const el = document.getElementById('home');
     if (el) {
       el.style.visibility = 'hidden';
@@ -379,9 +379,9 @@ window.addEventListener('resize', () => {
       el.style.minHeight = '0';
       el.style.overflow = 'hidden';
     }
-  }
+  };
 
-  function showHomeSection() {
+  window.showHomeSection = function() {
     const el = document.getElementById('home');
     if (el) {
       el.style.visibility = 'visible';
@@ -389,7 +389,7 @@ window.addEventListener('resize', () => {
       el.style.minHeight = '640px';
       el.style.overflow = '';
     }
-  }
+  };
 
   function setActiveNavLink(targetId) {
     const links = document.querySelectorAll('.nav-link, .mobile-nav-links a');
@@ -435,7 +435,7 @@ window.addEventListener('resize', () => {
       // If already on a subpage, switch immediately with 0ms delay and no flash!
       if (visiblePageId) {
         window.isCanvasActive = false;
-        hideMainContentWrapper();
+        window.hideMainContentWrapper();
 
         SPA_PAGES.forEach(pageId => {
           const el = document.querySelector(pageId);
@@ -498,7 +498,7 @@ window.addEventListener('resize', () => {
 
       setTimeout(() => {
         window.isCanvasActive = false;
-        hideMainContentWrapper();
+        window.hideMainContentWrapper();
 
         SPA_PAGES.forEach(pageId => {
           const el = document.querySelector(pageId);
@@ -578,8 +578,7 @@ window.addEventListener('resize', () => {
             el.style.display = 'none';
           }
         });
-
-        showMainContentWrapper();
+        window.showMainContentWrapper();
 
         const top = target.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT;
         window.scrollTo({ top, behavior: 'auto' });
@@ -615,7 +614,7 @@ window.addEventListener('resize', () => {
   if (initialHash && SPA_PAGES.includes(initialHash)) {
     window.isCanvasActive = false; // Pause WebGL loop if SPA subpage loaded directly
     // Hide main content wrapper
-    hideMainContentWrapper();
+    window.hideMainContentWrapper();
 
     // Hide all other SPA pages
     SPA_PAGES.forEach(pageId => {
@@ -1928,7 +1927,7 @@ window.addEventListener('resize', () => {
     // At 1500ms (fully solid white): hide #home, unlock body, nav, scroll, and reset scene
     setTimeout(() => {
       // Hide the home section to lock scroll up capability
-      hideHomeSection();
+      window.hideHomeSection();
       
       window.isCanvasActive = false; // Pause WebGL loop
 
@@ -2013,8 +2012,8 @@ window.addEventListener('resize', () => {
             el.style.display = 'none';
           }
         });
-        showMainContentWrapper();
-        showHomeSection();
+        window.showMainContentWrapper();
+        window.showHomeSection();
         onWindowResize();
 
         const storyHeading = document.querySelector('.story-heading');
