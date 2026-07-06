@@ -936,6 +936,7 @@ window.addEventListener('resize', () => {
     mediaBox.innerHTML = '';
     document.body.classList.remove('is-locked-modal');
   }
+  window.closeLightbox = closeLightbox;
 
   function updateLightboxMedia() {
     lightbox.scrollTop = 0; // Reset scroll position to top on media change
@@ -1263,8 +1264,26 @@ window.addEventListener('resize', () => {
     });
   }
 
+  /* ── DISCONNECT RADIO ───────────────────────────────────── */
+  function disconnectRadio() {
+    if (isTuned) {
+      isTuned = false;
+      if (tuneBtn) {
+        tuneBtn.textContent = 'TUNE IN FREQUENCY';
+        tuneBtn.classList.remove('active');
+      }
+      if (visualizer) {
+        visualizer.classList.remove('animating');
+      }
+      if (terminalText) {
+        terminalText.textContent = 'DYNASTY RADIO BROADCAST · LIVE';
+      }
+    }
+  }
+
   /* ── LOAD TRACK ─────────────────────────────────────────── */
   function loadTrack(index) {
+    disconnectRadio();
     const t = tracks[index];
     audio.src      = t.src;
     titleEl.textContent  = t.title;
@@ -1398,7 +1417,14 @@ window.addEventListener('resize', () => {
     }
   });
 
-  audio.addEventListener('ended', nextTrack);
+  audio.addEventListener('ended', () => {
+    if (isTuned) {
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    } else {
+      nextTrack();
+    }
+  });
 
   scrubSlider.addEventListener('input', () => {
     if (audio.duration) {
@@ -1423,8 +1449,46 @@ window.addEventListener('resize', () => {
         tuneBtn.classList.add('active');
         visualizer.classList.add('animating');
         terminalText.textContent = 'DYNASTY RADIO BROADCAST · ONLINE';
-        audio.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3';
-        playTrack();
+        
+        audio.src = 'assets/music/dynnnasty radio.mp3';
+        
+        const onRadioMetadata = () => {
+          if (isTuned && (audio.src.includes('dynnnasty%20radio.mp3') || audio.src.includes('dynnnasty radio.mp3'))) {
+            const duration = audio.duration;
+            if (duration && isFinite(duration)) {
+              audio.currentTime = (Date.now() / 1000) % duration;
+            }
+            audio.play().catch(() => {});
+            isPlaying = true;
+            playIcon.classList.add('is-hidden');
+            pauseIcon.classList.remove('is-hidden');
+            if (discWrapper) discWrapper.classList.add('spinning');
+            if (waveform)    waveform.classList.add('playing');
+          }
+          audio.removeEventListener('loadedmetadata', onRadioMetadata);
+        };
+        audio.addEventListener('loadedmetadata', onRadioMetadata);
+
+        if (audio.readyState >= 1) {
+          const duration = audio.duration;
+          if (duration && isFinite(duration)) {
+            audio.currentTime = (Date.now() / 1000) % duration;
+          }
+          audio.play().catch(() => {});
+          isPlaying = true;
+          playIcon.classList.add('is-hidden');
+          pauseIcon.classList.remove('is-hidden');
+          if (discWrapper) discWrapper.classList.add('spinning');
+          if (waveform)    waveform.classList.add('playing');
+        }
+
+        // Update player info
+        titleEl.textContent  = 'DYNASTY RADIO';
+        artistEl.textContent = 'LIVE BROADCAST';
+        prodEl.textContent   = 'Tuned into FM 99.8 MHz';
+        if (extraEl) extraEl.textContent = 'A welcoming frequency for the outcasts, destroyers, and creators.';
+        if (genreEl) genreEl.textContent = 'LIVE ARCHIVE';
+        coverEl.src          = 'assets/DWS2NOBG.png';
       } else {
         tuneBtn.textContent = 'TUNE IN FREQUENCY';
         tuneBtn.classList.remove('active');
@@ -1799,6 +1863,15 @@ window.addEventListener('resize', () => {
     if (!document.body.classList.contains('is-locked') && !isTransitioning && !isWaitingForReturnStart) {
       e.preventDefault();
       isWaitingForReturnStart = true;
+
+      // Close lightboxes, cart drawers, and coming-soon modals if open
+      if (window.closeLightbox) window.closeLightbox();
+      if (window.closeCartDrawer) window.closeCartDrawer();
+      const comingSoonModal = document.getElementById('coming-soon-modal');
+      if (comingSoonModal) {
+        comingSoonModal.classList.remove('is-active');
+        comingSoonModal.classList.add('is-hidden');
+      }
 
       // 1. Trigger white flash overlay fade-in (takes 800ms to go solid white)
       const flash = document.getElementById('flash-overlay');
@@ -2859,6 +2932,7 @@ window.addEventListener('resize', () => {
       document.body.style.overflow = '';
     }
   }
+  window.closeCartDrawer = closeCartDrawer;
 
   // Bind Openers
   document.querySelectorAll('.nav-cart-trigger, .mobile-cart-trigger').forEach(trigger => {
@@ -3023,9 +3097,9 @@ window.addEventListener('resize', () => {
         const formGroup = modal.querySelector('.modal-email-form');
         
         if (accentLabel) accentLabel.textContent = '( DYNASTY STORE )';
-        if (heading) heading.textContent = 'CHECKOUT SIMULATED';
+        if (heading) heading.textContent = 'STORE COMING SOON';
         if (message) {
-          message.innerHTML = 'This transaction is simulated for showroom review. The actual payment and order fulfillment integration is coming soon!';
+          message.innerHTML = 'Our curated collection is currently being archived and prepared for launch. The official storefront is opening soon.';
         }
         
         if (inputField) inputField.style.display = 'none';
@@ -3033,7 +3107,7 @@ window.addEventListener('resize', () => {
         
         if (ackBtn) {
           ackBtn.style.display = 'inline-block';
-          ackBtn.textContent = 'SECURE ACCESS';
+          ackBtn.textContent = 'CONTINUE EXPLORING';
         }
 
         modal.classList.remove('is-hidden');
