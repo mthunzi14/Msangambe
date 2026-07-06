@@ -3230,36 +3230,26 @@ body.is-locked .site-footer {
 
 .terminal-btn {
   font-size: 8px;
-  color: #39FF14;
-  border: 1px solid rgba(57, 255, 20, 0.4);
-  background: transparent;
-  padding: 8px 18px;
-  border-radius: 20px;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: none;
-  text-shadow: 0 0 4px rgba(57, 255, 20, 0.3);
-  box-shadow: 0 0 10px rgba(57, 255, 20, 0.05);
-}
-
-.terminal-btn:hover {
-  background: #39FF14;
-  color: var(--black);
-  box-shadow: 0 0 20px #39FF14;
-  border-color: #39FF14;
-  text-shadow: none;
-}
-
-.terminal-btn.active {
-  background: #ff3366;
   color: var(--white);
-  border-color: #ff3366;
-  box-shadow: 0 0 20px #ff3366;
-  text-shadow: none;
+  border: 1px solid var(--silver-deep);
+  padding: 6px 14px;
+  transition: all 0.4s ease;
+  cursor: none;
+}
+
+.terminal-btn:hover,
+.terminal-btn.active {
+  background: var(--white);
+  color: var(--black);
+  box-shadow: var(--glow-white-sm);
+  border-color: var(--white);
 }
 
 .terminal-stat {
   font-size: 8px;
   color: var(--silver-deep);
+  margin-left: auto;
+  padding-left: 24px;
 }
 
 /* Audio Player */
@@ -8109,48 +8099,59 @@ html {
     margin-bottom: 0px !important;
   }
   .lightbox-modal {
-    overflow-y: scroll !important; /* Allow modal scrolling on mobile stack */
+    overflow: hidden !important; /* Block modal-level scrolling entirely on mobile */
+    height: 100dvh !important;
+  }
+  .lightbox-backdrop {
+    height: 100dvh !important;
   }
   .lightbox-content-wrapper {
     flex-direction: column !important; /* Stack vertically on mobile */
-    margin: 6vh auto 4vh auto !important;
-    min-height: 85vh !important;
-    width: 92% !important;
-    gap: 20px !important;
-    justify-content: flex-start !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    padding: 16px !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    box-sizing: border-box !important;
   }
   .lightbox-media-container {
-    max-width: 100% !important;
-    max-height: none !important;
-    height: auto !important;
+    flex: 1 !important;
     display: flex !important;
-    flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 16px !important;
+    max-height: 45vh !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    gap: 12px !important;
   }
   .lightbox-media-container img,
   .lightbox-media-container video {
-    max-height: 50vh !important;
+    max-height: 40vh !important; /* Centered, leaving room for text card */
+    max-width: 90% !important;
     width: auto !important;
     height: auto !important;
+    object-fit: contain !important;
   }
   .lightbox-sub-nav {
     position: relative !important;
     top: auto !important;
     left: auto !important;
     transform: none !important;
-    margin: 8px auto 0 !important;
+    margin: 4px auto 0 !important;
     display: inline-flex !important;
   }
   .lightbox-caption {
-    margin-top: 0 !important;
-    padding: 16px 20px !important;
-    max-width: 100% !important; /* Allow card to expand to full screen width on mobile */
-    max-height: none !important; /* Expand card fully on mobile scroll modal */
-    overflow-y: visible !important;
-    bottom: auto !important;
     width: 100% !important;
+    max-width: 100% !important;
+    max-height: 42vh !important; /* Height constraint on card to prevent screen overflow */
+    overflow-y: auto !important; /* Scroll internally for long text */
+    padding: 16px 20px !important;
+    margin-top: 0 !important;
+    box-sizing: border-box !important;
+    border-radius: 12px !important;
+    overflow-x: hidden !important;
   }
 }
 

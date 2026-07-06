@@ -351,6 +351,46 @@ window.addEventListener('resize', () => {
   const mainWrapper = document.getElementById('main-content-wrapper');
   const flash = document.getElementById('flash-overlay');
 
+  function hideMainContentWrapper() {
+    const el = document.getElementById('main-content-wrapper');
+    if (el) {
+      el.style.visibility = 'hidden';
+      el.style.height = '0';
+      el.style.minHeight = '0';
+      el.style.overflow = 'hidden';
+    }
+  }
+
+  function showMainContentWrapper() {
+    const el = document.getElementById('main-content-wrapper');
+    if (el) {
+      el.style.visibility = 'visible';
+      el.style.height = '';
+      el.style.minHeight = '';
+      el.style.overflow = '';
+    }
+  }
+
+  function hideHomeSection() {
+    const el = document.getElementById('home');
+    if (el) {
+      el.style.visibility = 'hidden';
+      el.style.height = '0';
+      el.style.minHeight = '0';
+      el.style.overflow = 'hidden';
+    }
+  }
+
+  function showHomeSection() {
+    const el = document.getElementById('home');
+    if (el) {
+      el.style.visibility = 'visible';
+      el.style.height = '100vh';
+      el.style.minHeight = '640px';
+      el.style.overflow = '';
+    }
+  }
+
   function setActiveNavLink(targetId) {
     const links = document.querySelectorAll('.nav-link, .mobile-nav-links a');
     links.forEach(link => {
@@ -392,18 +432,11 @@ window.addEventListener('resize', () => {
     if (isTargetPage) {
       if (visiblePageId === id) return;
 
-      if (flash) {
-        flash.classList.add('is-fast');
-        flash.classList.add('is-active');
-      }
+      // If already on a subpage, switch immediately with 0ms delay and no flash!
+      if (visiblePageId) {
+        window.isCanvasActive = false;
+        hideMainContentWrapper();
 
-      setTimeout(() => {
-        window.isCanvasActive = false; // Pause WebGL loop when navigating away from home page
-
-        // Hide main content wrapper
-        if (mainWrapper) mainWrapper.style.display = 'none';
-
-        // Hide all other SPA pages
         SPA_PAGES.forEach(pageId => {
           const el = document.querySelector(pageId);
           if (el) {
@@ -412,7 +445,6 @@ window.addEventListener('resize', () => {
           }
         });
 
-        // Show the target page
         if (target) {
           const displayMode = (id === '#contact' || id === '#story-page' || id === '#hox' || id === '#dwi') ? 'flex' : 'block';
           target.style.display = displayMode;
@@ -421,7 +453,6 @@ window.addEventListener('resize', () => {
 
           if (id === '#dwi') {
             alignDwiTwitterFeedHeight();
-            setTimeout(alignDwiTwitterFeedHeight, 100);
           }
 
           if (id === '#visual-art' && window.reinitArtCardSwapPositions) {
@@ -429,7 +460,6 @@ window.addEventListener('resize', () => {
           }
         }
 
-        // Toggle footer and nav dark theme classes
         const footer = $('.site-footer');
         if (footer) {
           if (id === '#hox' || id === '#sound') {
@@ -446,7 +476,70 @@ window.addEventListener('resize', () => {
           }
         }
 
-        // Trigger typing reveal animation on story page title
+        if (id === '#story-page') {
+          const titleEl = target.querySelector('.story-page-title');
+          if (titleEl) {
+            titleEl.classList.remove('play-typing');
+            void titleEl.offsetWidth; // force reflow
+            titleEl.classList.add('play-typing');
+          }
+        }
+
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        setActiveNavLink(id.replace('#', ''));
+        return;
+      }
+
+      // If coming from landing page, keep the fast 150ms flash transition
+      if (flash) {
+        flash.classList.add('is-fast');
+        flash.classList.add('is-active');
+      }
+
+      setTimeout(() => {
+        window.isCanvasActive = false;
+        hideMainContentWrapper();
+
+        SPA_PAGES.forEach(pageId => {
+          const el = document.querySelector(pageId);
+          if (el) {
+            el.classList.remove('is-visible');
+            el.style.display = 'none';
+          }
+        });
+
+        if (target) {
+          const displayMode = (id === '#contact' || id === '#story-page' || id === '#hox' || id === '#dwi') ? 'flex' : 'block';
+          target.style.display = displayMode;
+          target.offsetHeight; // force reflow
+          target.classList.add('is-visible');
+
+          if (id === '#dwi') {
+            alignDwiTwitterFeedHeight();
+            setTimeout(alignDwiTwitterFeedHeight, 100);
+          }
+
+          if (id === '#visual-art' && window.reinitArtCardSwapPositions) {
+            window.reinitArtCardSwapPositions();
+          }
+        }
+
+        const footer = $('.site-footer');
+        if (footer) {
+          if (id === '#hox' || id === '#sound') {
+            footer.classList.add('is-dark');
+          } else {
+            footer.classList.remove('is-dark');
+          }
+        }
+        if (nav) {
+          if (id === '#hox' || id === '#sound') {
+            nav.classList.add('is-dark-page');
+          } else {
+            nav.classList.remove('is-dark-page');
+          }
+        }
+
         if (id === '#story-page') {
           const titleEl = target.querySelector('.story-page-title');
           if (titleEl) {
@@ -459,7 +552,10 @@ window.addEventListener('resize', () => {
         window.scrollTo({ top: 0, behavior: 'auto' });
         setActiveNavLink(id.replace('#', ''));
 
-        if (flash) flash.classList.remove('is-active');
+        if (flash) {
+          flash.classList.remove('is-active');
+          flash.classList.remove('is-fast');
+        }
       }, 150);
 
       return;
@@ -473,9 +569,8 @@ window.addEventListener('resize', () => {
       }
 
       setTimeout(() => {
-        window.isCanvasActive = true; // Resume WebGL loop when returning to main layout sections
+        window.isCanvasActive = true;
 
-        // Hide all SPA pages
         SPA_PAGES.forEach(pageId => {
           const el = document.querySelector(pageId);
           if (el) {
@@ -484,19 +579,19 @@ window.addEventListener('resize', () => {
           }
         });
 
-        // Restore main content wrapper
-        if (mainWrapper) mainWrapper.style.display = 'block';
+        showMainContentWrapper();
 
-        // Scroll instantly to the target section
         const top = target.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT;
         window.scrollTo({ top, behavior: 'auto' });
         
-        // Toggle footer and nav dark theme classes off
         const footer = $('.site-footer');
         if (footer) footer.classList.remove('is-dark');
         if (nav) nav.classList.remove('is-dark-page');
 
-        if (flash) flash.classList.remove('is-active');
+        if (flash) {
+          flash.classList.remove('is-active');
+          flash.classList.remove('is-fast');
+        }
       }, 150);
 
       return;
@@ -520,7 +615,7 @@ window.addEventListener('resize', () => {
   if (initialHash && SPA_PAGES.includes(initialHash)) {
     window.isCanvasActive = false; // Pause WebGL loop if SPA subpage loaded directly
     // Hide main content wrapper
-    if (mainWrapper) mainWrapper.style.display = 'none';
+    hideMainContentWrapper();
 
     // Hide all other SPA pages
     SPA_PAGES.forEach(pageId => {
@@ -1564,12 +1659,13 @@ window.addEventListener('resize', () => {
 
   // Raycasting & Transition variables
   let raycaster = new THREE.Raycaster();
-  let mouseVector = new THREE.Vector2();
+  let mouseVector = new THREE.Vector2(9999, 9999);
   let isHoveringMedallion = false;
   let isTransitioning = false;
   let isWaitingForReturnStart = false;
   let transitionStartTime = 0;
   let transitionDirection = 1; // 1 for zoom-in, -1 for zoom-out
+  let isIntroComplete = false;
 
   function init() {
     // 1. SCENE & CAMERA
@@ -1688,6 +1784,47 @@ window.addEventListener('resize', () => {
       navLogo.addEventListener('click', onLogoClick);
     }
     
+    // Intro animation check
+    const initialHash = window.location.hash;
+    const SPA_PAGES = ['#dwi', '#story-page', '#modelling', '#visual-art', '#visual-art-gallery', '#sound', '#hox', '#contact'];
+    const baseScale = window.innerWidth < 768 ? 1.35 : 1.0;
+    
+    if (initialHash && SPA_PAGES.includes(initialHash)) {
+      isIntroComplete = true;
+    } else {
+      camera.position.z = 15;
+      if (emblemGroup) {
+        emblemGroup.scale.set(0, 0, 0);
+      }
+      
+      gsap.to(camera.position, {
+        z: 5.5,
+        duration: 1.8,
+        ease: 'power3.out',
+        delay: 0.3
+      });
+      
+      setTimeout(() => {
+        if (emblemGroup) {
+          gsap.fromTo(emblemGroup.scale, 
+            { x: 0, y: 0, z: 0 },
+            {
+              x: baseScale,
+              y: baseScale,
+              z: baseScale,
+              duration: 1.8,
+              ease: 'power3.out',
+              onComplete: () => {
+                isIntroComplete = true;
+              }
+            }
+          );
+        } else {
+          isIntroComplete = true;
+        }
+      }, 300);
+    }
+    
     // Start animation loop
     animate();
   }
@@ -1791,8 +1928,7 @@ window.addEventListener('resize', () => {
     // At 1500ms (fully solid white): hide #home, unlock body, nav, scroll, and reset scene
     setTimeout(() => {
       // Hide the home section to lock scroll up capability
-      const homeSection = document.getElementById('home');
-      if (homeSection) homeSection.style.display = 'none';
+      hideHomeSection();
       
       window.isCanvasActive = false; // Pause WebGL loop
 
@@ -1877,14 +2013,9 @@ window.addEventListener('resize', () => {
             el.style.display = 'none';
           }
         });
-        const mainWrapper = document.getElementById('main-content-wrapper');
-        if (mainWrapper) {
-          mainWrapper.style.display = 'block';
-        }
-
-        // Restore home section in layout
-        const homeSection = document.getElementById('home');
-        if (homeSection) homeSection.style.display = 'block';
+        showMainContentWrapper();
+        showHomeSection();
+        onWindowResize();
 
         const storyHeading = document.querySelector('.story-heading');
         if (storyHeading) {
@@ -2047,11 +2178,13 @@ window.addEventListener('resize', () => {
         emblemGroup.rotation.y = pivotY + targetX * 0.45;
         emblemGroup.rotation.x = targetY * 0.35;
         
-        // Dynamic breathing pulse for organic interactive feel
-        const pulse = 1.0 + Math.sin(elapsedTime * 2.0) * 0.035;
-        emblemGroup.scale.set(baseScale * pulse, baseScale * pulse, baseScale * pulse);
+        if (isIntroComplete) {
+          // Dynamic breathing pulse for organic interactive feel
+          const pulse = 1.0 + Math.sin(elapsedTime * 2.0) * 0.035;
+          emblemGroup.scale.set(baseScale * pulse, baseScale * pulse, baseScale * pulse);
+        }
       }
-      if (camera) {
+      if (camera && isIntroComplete) {
         camera.position.z = 5.5;
       }
     }
