@@ -6150,7 +6150,7 @@ body.is-locked-modal {
 /* DWI Video Section Placeholder styling */
 .dwi-video-section {
   grid-column: 1 / -1;
-  margin-top: 180px;
+  margin-top: 280px;
   width: 100%;
 }
 
