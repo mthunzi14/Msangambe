@@ -1362,7 +1362,7 @@ window.addEventListener('resize', () => {
       genre:    "PUNK · HIP-HOP · POP · ROCK",
       written:  "Written by: Son Dynasty, Droopie, Cushy",
       cover:    "assets/images/Digital_Overload_.png",
-      src:      "assets/music/DIGITAL OVERLOAD.mp3"
+      src:      "assets/music/DIGITAL_OVERLOAD.mp3"
     }
   ];
 
@@ -1584,20 +1584,20 @@ window.addEventListener('resize', () => {
   });
 
   const radioParts = [
-    'assets/music/dynnnasty radio_part1.mp3',
-    'assets/music/dynnnasty radio_part2.mp3',
-    'assets/music/dynnnasty radio_part3.mp3',
-    'assets/music/dynnnasty radio_part4.mp3',
-    'assets/music/dynnnasty radio_part5.mp3',
-    'assets/music/dynnnasty radio_part6.mp3',
-    'assets/music/dynnnasty radio_part7.mp3',
-    'assets/music/dynnnasty radio_part8.mp3',
-    'assets/music/dynnnasty radio_part9.mp3',
-    'assets/music/dynnnasty radio_part10.mp3',
-    'assets/music/dynnnasty radio_part11.mp3',
-    'assets/music/dynnnasty radio_part12.mp3',
-    'assets/music/dynnnasty radio_part13.mp3',
-    'assets/music/dynnnasty radio_part14.mp3'
+    'assets/music/dynnnasty_radio_part1.mp3',
+    'assets/music/dynnnasty_radio_part2.mp3',
+    'assets/music/dynnnasty_radio_part3.mp3',
+    'assets/music/dynnnasty_radio_part4.mp3',
+    'assets/music/dynnnasty_radio_part5.mp3',
+    'assets/music/dynnnasty_radio_part6.mp3',
+    'assets/music/dynnnasty_radio_part7.mp3',
+    'assets/music/dynnnasty_radio_part8.mp3',
+    'assets/music/dynnnasty_radio_part9.mp3',
+    'assets/music/dynnnasty_radio_part10.mp3',
+    'assets/music/dynnnasty_radio_part11.mp3',
+    'assets/music/dynnnasty_radio_part12.mp3',
+    'assets/music/dynnnasty_radio_part13.mp3',
+    'assets/music/dynnnasty_radio_part14.mp3'
   ];
   let radioPartDurations = [300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300];
   let currentRadioPartIndex = 0;

@@ -3,8 +3,8 @@
 *.mp3
 # Allow specific music files
 !assets/music/ZIZI.mp3
-!assets/music/DIGITAL OVERLOAD.mp3
-!assets/music/dynnnasty radio_part*.mp3
+!assets/music/DIGITAL_OVERLOAD.mp3
+!assets/music/dynnnasty_radio_part*.mp3
 *.wav
 *.mov
 *.zip
