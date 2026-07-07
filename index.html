@@ -5,12 +5,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Msangambe Sigudla — Artist, Model, Creator. Son Dynasty. South Africa.">
+  <meta name="keywords" content="Msangambe, Msangambe Sigudla, Son Dynasty, Dynasty World, South Africa, Artist, Model, Creator, Pretoria, fashion, photography, design, techno animal, house of xyon, HOX, Zim, VP, GCWALA">
   <meta name="author" content="Msangambe Sigudla">
   <meta property="og:title" content="Msangambe Sigudla · Son Dynasty">
   <meta property="og:description" content="Artist. Model. Creator. Son of the Dynasty.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://msangambe.com">
   <title>Msangambe Sigudla · Son Dynasty</title>
+
+  <!-- JSON-LD Structured Data for Google SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Msangambe Sigudla",
+    "alternateName": "Son Dynasty",
+    "url": "https://msangambe.com",
+    "image": "https://msangambe.com/SONDYNASTY-removebg-preview.png",
+    "sameAs": [
+      "https://instagram.com/msangambe_"
+    ],
+    "jobTitle": "Artist, Model, Creator",
+    "knowsAbout": ["Visual Art", "3D Art", "Futurewear", "Fashion Design", "Creative Direction"],
+    "homeLocation": {
+      "@type": "Place",
+      "name": "Pretoria, South Africa"
+    }
+  }
+  </script>
 
   <link rel="icon" type="image/png" href="FAVICON-LOGO_NOBG-removebg-preview.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -348,7 +370,7 @@
 
       <!-- COLUMN 3: RIGHT -->
       <div class="gallery-column gallery-column--right">
-        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/ALLPURP.jpeg" data-title="VP" data-artist="Pinky Mabena" data-subject="Pinky Mabena" data-date-made="2003" data-date-published="3 November 2025" data-notes="Mama" data-sub-media="Art/PURPLE.jpeg" data-sub-title="PURPLE" data-sub-date-made="07 September 2025" data-sub-date-published="01 November 2025" data-sub-notes="Atmospheric violet emissions surrounding organic fluid structures." data-meta="2026 · 3D ART">
+        <figure class="gallery-cell reveal-scale" data-media-type="image" data-media-src="Art/ALLPURP.jpeg" data-title="VP" data-artist="Pinky Mabena" data-subject="Pinky Mabena" data-date-made="2003" data-date-published="3 November 2025" data-notes="Mama" data-sub-media="Art/PURPLE.jpeg" data-sub-title="VP2" data-sub-date-made="2003" data-sub-date-published="3 November 2025" data-sub-notes="Mama" data-meta="2026 · 3D ART">
           <div class="gallery-media-wrap">
             <img src="Art/ALLPURP.jpeg" alt="VP" loading="lazy">
             <div class="gallery-hover-overlay"><span class="label">VIEW</span></div>
@@ -433,22 +455,22 @@
       <form id="contact-form" action="https://formspree.io/f/xrevweyl" method="POST" class="booking-form">
         <div class="form-row-dual">
           <div class="form-group">
-            <input type="text" name="name" id="form-name" required placeholder="NAME">
+            <input type="text" name="name" id="form-name" required placeholder="NAME" autocomplete="given-name">
           </div>
           <div class="form-group">
-            <input type="text" name="surname" id="form-surname" required placeholder="SURNAME">
+            <input type="text" name="surname" id="form-surname" required placeholder="SURNAME" autocomplete="family-name">
           </div>
         </div>
         <div class="form-row-dual">
           <div class="form-group">
-            <input type="tel" name="number" id="form-number" required placeholder="CONTACT NUMBER">
+            <input type="tel" name="number" id="form-number" required placeholder="CONTACT NUMBER" autocomplete="tel">
           </div>
           <div class="form-group">
-            <input type="email" name="email" id="form-email" required placeholder="EMAIL ADDRESS">
+            <input type="email" name="email" id="form-email" required placeholder="EMAIL ADDRESS" autocomplete="email">
           </div>
         </div>
         <div class="form-group">
-          <textarea name="message" id="form-message" rows="4" placeholder="COMMENT / ENQUIRY / REASON FOR CONTACT"></textarea>
+          <textarea name="message" id="form-message" rows="4" placeholder="COMMENT / ENQUIRY / REASON FOR CONTACT (OPTIONAL)" autocomplete="off"></textarea>
         </div>
         <button type="submit" class="contact-btn" id="form-submit-btn">LET'S CONNECT</button>
       </form>
@@ -727,7 +749,7 @@
         <!-- Registration Form -->
         <div class="hox-interactive-zone">
           <div class="hox-form-group" id="hox-form-container">
-            <input type="email" id="hox-email-field" placeholder="ENTER YOUR EMAIL FOR DROP ACCESS" class="hox-email-input">
+            <input type="email" id="hox-email-field" placeholder="ENTER YOUR EMAIL FOR DROP ACCESS" class="hox-email-input" autocomplete="email">
             <button type="button" class="hox-action-btn" id="hox-notify-btn">REQUEST ACCESS</button>
           </div>
           <p class="hox-success-note is-hidden" id="hox-success-note">ACCESS GRANTED. YOU WILL BE NOTIFIED OF THE DROP.</p>

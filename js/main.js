@@ -6,6 +6,36 @@
 
 'use strict';
 
+/* ── DEVTOOLS & SOURCE CODE PROTECTION ── */
+(function protectSource() {
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    // Prevent F12
+    if (e.keyCode === 123) {
+      e.preventDefault();
+      return false;
+    }
+    // Prevent Ctrl+Shift+I, J, C, K
+    if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67 || e.keyCode === 75)) {
+      e.preventDefault();
+      return false;
+    }
+    // Prevent Ctrl+U (View Source)
+    if (e.ctrlKey && e.keyCode === 85) {
+      e.preventDefault();
+      return false;
+    }
+    // Prevent Ctrl+S (Save Page)
+    if (e.ctrlKey && e.keyCode === 83) {
+      e.preventDefault();
+      return false;
+    }
+  });
+  document.addEventListener('dragstart', e => {
+    if (e.target.nodeName === 'IMG') e.preventDefault();
+  });
+})();
+
 /* ─────────────────────────────────────────────────────────────
    SHARED HELPERS (module scope, not exposed globally)
 ───────────────────────────────────────────────────────────── */
@@ -177,8 +207,15 @@ window.addEventListener('resize', () => {
         ringX = mouseX;
         ringY = mouseY;
       } else {
-        ringX = lerp(ringX, mouseX, LERP);
-        ringY = lerp(ringY, mouseY, LERP);
+        let currentLerp = 0.18;
+        const lightboxActive = document.querySelector('.lightbox-modal:not(.is-hidden)') || 
+                               document.querySelector('.cart-drawer.is-active') || 
+                               document.querySelector('.coming-soon-modal.is-active');
+        if (lightboxActive) {
+          currentLerp = 0.40;
+        }
+        ringX = lerp(ringX, mouseX, currentLerp);
+        ringY = lerp(ringY, mouseY, currentLerp);
       }
       
       ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
@@ -948,9 +985,15 @@ window.addEventListener('resize', () => {
       showError(surnameField, 'SURNAME IS REQUIRED');
       valid = false;
     }
-    if (numberField && !numberField.value.trim()) {
-      showError(numberField, 'CONTACT NUMBER IS REQUIRED');
-      valid = false;
+    if (numberField) {
+      const numVal = numberField.value.trim();
+      if (!numVal) {
+        showError(numberField, 'CONTACT NUMBER IS REQUIRED');
+        valid = false;
+      } else if (!/^[0-9]{10}$/.test(numVal)) {
+        showError(numberField, 'CONTACT NUMBER MUST BE EXACTLY 10 DIGITS');
+        valid = false;
+      }
     }
     if (emailField) {
       if (!emailField.value.trim()) {
@@ -1540,6 +1583,73 @@ window.addEventListener('resize', () => {
     radioAudio.volume = vol;
   });
 
+  const radioParts = [
+    'assets/music/dynnnasty radio_part1.mp3',
+    'assets/music/dynnnasty radio_part2.mp3',
+    'assets/music/dynnnasty radio_part3.mp3',
+    'assets/music/dynnnasty radio_part4.mp3',
+    'assets/music/dynnnasty radio_part5.mp3',
+    'assets/music/dynnnasty radio_part6.mp3',
+    'assets/music/dynnnasty radio_part7.mp3'
+  ];
+  let radioPartDurations = [600, 600, 600, 600, 600, 600, 600];
+  let currentRadioPartIndex = 0;
+
+  radioParts.forEach((src, idx) => {
+    const tempAudio = new Audio();
+    tempAudio.src = src;
+    tempAudio.addEventListener('loadedmetadata', () => {
+      if (tempAudio.duration && isFinite(tempAudio.duration)) {
+        radioPartDurations[idx] = tempAudio.duration;
+      }
+    });
+  });
+
+  function syncRadioPlayback() {
+    if (!isTuned) return;
+    const totalDuration = radioPartDurations.reduce((a, b) => a + b, 0);
+    const elapsed = (Date.now() / 1000) % totalDuration;
+    
+    let accum = 0;
+    let partIndex = 0;
+    let timeInPart = 0;
+    
+    for (let i = 0; i < radioPartDurations.length; i++) {
+      const dur = radioPartDurations[i];
+      if (elapsed >= accum && elapsed < accum + dur) {
+        partIndex = i;
+        timeInPart = elapsed - accum;
+        break;
+      }
+      accum += dur;
+    }
+    
+    currentRadioPartIndex = partIndex;
+    radioAudio.src = radioParts[partIndex];
+    
+    const onRadioMetadata = () => {
+      if (isTuned && radioAudio.src.includes(radioParts[currentRadioPartIndex])) {
+        radioAudio.currentTime = timeInPart;
+        radioAudio.play().catch(() => {});
+      }
+      radioAudio.removeEventListener('loadedmetadata', onRadioMetadata);
+    };
+    radioAudio.addEventListener('loadedmetadata', onRadioMetadata);
+
+    if (radioAudio.readyState >= 1) {
+      radioAudio.currentTime = timeInPart;
+      radioAudio.play().catch(() => {});
+    }
+  }
+
+  radioAudio.addEventListener('ended', () => {
+    if (!isTuned) return;
+    currentRadioPartIndex = (currentRadioPartIndex + 1) % radioParts.length;
+    radioAudio.src = radioParts[currentRadioPartIndex];
+    radioAudio.currentTime = 0;
+    radioAudio.play().catch(() => {});
+  });
+
   /* ── RADIO TERMINAL ─────────────────────────────────────── */
   if (tuneBtn && visualizer && terminalText) {
     tuneBtn.addEventListener('click', () => {
@@ -1553,28 +1663,8 @@ window.addEventListener('resize', () => {
         visualizer.classList.add('animating');
         terminalText.textContent = 'DYNASTY RADIO BROADCAST · ONLINE';
         
-        radioAudio.src = 'assets/music/dynnnasty radio.mp3';
-        radioAudio.loop = true;
-        
-        const onRadioMetadata = () => {
-          if (isTuned && (radioAudio.src.includes('dynnnasty%20radio.mp3') || radioAudio.src.includes('dynnnasty radio.mp3'))) {
-            const duration = radioAudio.duration;
-            if (duration && isFinite(duration)) {
-              radioAudio.currentTime = (Date.now() / 1000) % duration;
-            }
-            radioAudio.play().catch(() => {});
-          }
-          radioAudio.removeEventListener('loadedmetadata', onRadioMetadata);
-        };
-        radioAudio.addEventListener('loadedmetadata', onRadioMetadata);
-
-        if (radioAudio.readyState >= 1) {
-          const duration = radioAudio.duration;
-          if (duration && isFinite(duration)) {
-            radioAudio.currentTime = (Date.now() / 1000) % duration;
-          }
-          radioAudio.play().catch(() => {});
-        }
+        radioAudio.loop = false;
+        syncRadioPlayback();
       } else {
         tuneBtn.textContent = 'TUNE IN FREQUENCY';
         tuneBtn.classList.remove('active');
@@ -1740,7 +1830,6 @@ window.addEventListener('resize', () => {
       ior: 2.42,
       roughness: 0.02,
       metalness: 0.0,
-      thickness: 1.2,
       transparent: true,
       envMap: envMapTexture,
       envMapIntensity: 2.6,
@@ -2336,11 +2425,42 @@ window.addEventListener('resize', () => {
 (function initHoxInteractive() {
   const notifyBtn = document.getElementById('hox-notify-btn');
   const successNote = document.getElementById('hox-success-note');
+  const emailField = document.getElementById('hox-email-field');
   const hoxCard = document.querySelector('.hox-card-interactive');
 
-  if (notifyBtn && successNote) {
+  if (notifyBtn && successNote && emailField) {
+    let errorNote = document.getElementById('hox-error-note');
+    if (!errorNote) {
+      errorNote = document.createElement('p');
+      errorNote.id = 'hox-error-note';
+      errorNote.className = 'hox-error-note is-hidden';
+      errorNote.style.cssText = 'color: #c9a054; font-family: "Cinzel", serif; font-size: 10px; letter-spacing: 0.15em; margin-top: 12px; text-align: center;';
+      successNote.parentNode.insertBefore(errorNote, successNote);
+    }
+
     notifyBtn.addEventListener('click', () => {
-      notifyBtn.classList.add('is-hidden');
+      const emailVal = emailField.value.trim();
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      errorNote.classList.add('is-hidden');
+      emailField.classList.remove('is-invalid');
+
+      if (!emailVal) {
+        emailField.classList.add('is-invalid');
+        errorNote.textContent = 'EMAIL IS REQUIRED';
+        errorNote.classList.remove('is-hidden');
+        return;
+      }
+
+      if (!EMAIL_RE.test(emailVal)) {
+        emailField.classList.add('is-invalid');
+        errorNote.textContent = 'PLEASE ENTER A VALID EMAIL';
+        errorNote.classList.remove('is-hidden');
+        return;
+      }
+
+      emailField.disabled = true;
+      emailField.style.opacity = '0.5';
       notifyBtn.style.display = 'none';
       successNote.classList.remove('is-hidden');
     });

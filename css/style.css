@@ -410,7 +410,7 @@ button {
 
 /* Burger */
 .nav-burger {
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: flex-end;
@@ -3439,8 +3439,8 @@ body.is-locked .site-footer {
   position: fixed; /* Keeps backdrop fixed behind scrolling content */
   inset: 0;
   background: rgba(10,10,10,0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   z-index: 1;
   pointer-events: none; /* Let all click events hit empty spaces on the wrapper */
 }
@@ -3554,9 +3554,9 @@ body.is-locked .site-footer {
   max-width: 38%;
   max-height: 80vh; /* Limits height to fit screen alongside image */
   overflow-y: auto; /* Independent native scrolling inside card */
-  background: rgba(255, 255, 255, 0.05) !important; /* Elevated frosted glassmorphic brightness */
-  backdrop-filter: blur(30px) !important; /* Intense premium blur filter */
-  -webkit-backdrop-filter: blur(30px) !important;
+  background: rgba(20, 20, 20, 0.6) !important; /* Elegant dark glass fill */
+  backdrop-filter: none !important; /* Disabled card blur for maximum performance */
+  -webkit-backdrop-filter: none !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important; /* Clean glowing edge */
   border-radius: 16px !important; /* Elegant rounded corners */
   padding: 24px 30px !important;
@@ -4593,8 +4593,8 @@ body.is-locked {
   border-radius: 24px;
   padding: 56px 40px;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   overflow: hidden;
   transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   display: flex;
@@ -5103,7 +5103,7 @@ body.is-locked .magnification-dock-container {
 }
 
 .section--hox.spa-page .hox-card-interactive {
-  background: rgba(15, 15, 15, 0.75) !important; /* Dark frosted glass card */
+  background: rgba(15, 15, 15, 0.96) !important; /* Premium dark background */
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5) !important;
 }
@@ -7665,8 +7665,8 @@ html {
 .cart-drawer-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: none;
   opacity: 0;
   transition: opacity 0.4s ease;
 }
@@ -7682,9 +7682,9 @@ html {
   bottom: 0;
   width: 100%;
   max-width: 440px;
-  background: rgba(15, 15, 15, 0.85); /* Premium glassmorphism dark background */
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(12, 12, 12, 0.98); /* Premium high-performance solid dark background */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border-left: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
