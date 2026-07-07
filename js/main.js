@@ -1590,9 +1590,16 @@ window.addEventListener('resize', () => {
     'assets/music/dynnnasty radio_part4.mp3',
     'assets/music/dynnnasty radio_part5.mp3',
     'assets/music/dynnnasty radio_part6.mp3',
-    'assets/music/dynnnasty radio_part7.mp3'
+    'assets/music/dynnnasty radio_part7.mp3',
+    'assets/music/dynnnasty radio_part8.mp3',
+    'assets/music/dynnnasty radio_part9.mp3',
+    'assets/music/dynnnasty radio_part10.mp3',
+    'assets/music/dynnnasty radio_part11.mp3',
+    'assets/music/dynnnasty radio_part12.mp3',
+    'assets/music/dynnnasty radio_part13.mp3',
+    'assets/music/dynnnasty radio_part14.mp3'
   ];
-  let radioPartDurations = [600, 600, 600, 600, 600, 600, 600];
+  let radioPartDurations = [300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300];
   let currentRadioPartIndex = 0;
 
   // Add error handling to capture missing track state gracefully in the terminal UI
