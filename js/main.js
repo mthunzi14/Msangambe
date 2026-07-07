@@ -1595,14 +1595,12 @@ window.addEventListener('resize', () => {
   let radioPartDurations = [600, 600, 600, 600, 600, 600, 600];
   let currentRadioPartIndex = 0;
 
-  radioParts.forEach((src, idx) => {
-    const tempAudio = new Audio();
-    tempAudio.src = src;
-    tempAudio.addEventListener('loadedmetadata', () => {
-      if (tempAudio.duration && isFinite(tempAudio.duration)) {
-        radioPartDurations[idx] = tempAudio.duration;
-      }
-    });
+  // Add error handling to capture missing track state gracefully in the terminal UI
+  radioAudio.addEventListener('error', () => {
+    if (isTuned) {
+      terminalText.textContent = 'DYNASTY RADIO BROADCAST · OFFLINE (MISSING)';
+      if (visualizer) visualizer.classList.remove('animating');
+    }
   });
 
   function syncRadioPlayback() {
@@ -1629,6 +1627,9 @@ window.addEventListener('resize', () => {
     
     const onRadioMetadata = () => {
       if (isTuned && radioAudio.src.includes(radioParts[currentRadioPartIndex])) {
+        if (radioAudio.duration && isFinite(radioAudio.duration)) {
+          radioPartDurations[currentRadioPartIndex] = radioAudio.duration;
+        }
         radioAudio.currentTime = timeInPart;
         radioAudio.play().catch(() => {});
       }
@@ -1637,6 +1638,9 @@ window.addEventListener('resize', () => {
     radioAudio.addEventListener('loadedmetadata', onRadioMetadata);
 
     if (radioAudio.readyState >= 1) {
+      if (radioAudio.duration && isFinite(radioAudio.duration)) {
+        radioPartDurations[currentRadioPartIndex] = radioAudio.duration;
+      }
       radioAudio.currentTime = timeInPart;
       radioAudio.play().catch(() => {});
     }
@@ -2179,6 +2183,8 @@ window.addEventListener('resize', () => {
     renderer.setSize(width, height);
   }
 
+  let raycastThrottleCount = 0;
+
   function animate() {
     requestAnimationFrame(animate);
 
@@ -2199,37 +2205,41 @@ window.addEventListener('resize', () => {
     targetY += (mouseY - targetY) * lerpFactor;
 
     // Raycast hover tracking (only while landing page is locked active)
-    if (window.hasMouseMoved && emblemGroup && !isTransitioning && document.body.classList.contains('is-locked')) {
-      raycaster.setFromCamera(mouseVector, camera);
-      const intersects = raycaster.intersectObjects([coinMesh, logoMesh]);
-      
-      if (intersects.length > 0) {
-        if (!isHoveringMedallion) {
-          isHoveringMedallion = true;
-          // Desktop hover tooltip activation (only if non-touch!)
-          if (navigator.maxTouchPoints === 0) {
-            const prompt = document.getElementById('medallion-prompt');
-            if (prompt) prompt.classList.add('is-active');
+    raycastThrottleCount++;
+    if (raycastThrottleCount >= 3) {
+      raycastThrottleCount = 0;
+      if (window.hasMouseMoved && emblemGroup && !isTransitioning && document.body.classList.contains('is-locked')) {
+        raycaster.setFromCamera(mouseVector, camera);
+        const intersects = raycaster.intersectObjects([coinMesh, logoMesh]);
+        
+        if (intersects.length > 0) {
+          if (!isHoveringMedallion) {
+            isHoveringMedallion = true;
+            // Desktop hover tooltip activation (only if non-touch!)
+            if (navigator.maxTouchPoints === 0) {
+              const prompt = document.getElementById('medallion-prompt');
+              if (prompt) prompt.classList.add('is-active');
+            }
+            const ring = document.querySelector('.cursor-ring');
+            if (ring) ring.classList.add('is-hovering');
           }
-          const ring = document.querySelector('.cursor-ring');
-          if (ring) ring.classList.add('is-hovering');
+        } else {
+          if (isHoveringMedallion) {
+            isHoveringMedallion = false;
+            // Desktop hover tooltip deactivation (only if non-touch!)
+            if (navigator.maxTouchPoints === 0) {
+              const prompt = document.getElementById('medallion-prompt');
+              if (prompt) prompt.classList.remove('is-active');
+            }
+            const ring = document.querySelector('.cursor-ring');
+            if (ring) ring.classList.remove('is-hovering');
+          }
         }
       } else {
-        if (isHoveringMedallion) {
-          isHoveringMedallion = false;
-          // Desktop hover tooltip deactivation (only if non-touch!)
-          if (navigator.maxTouchPoints === 0) {
-            const prompt = document.getElementById('medallion-prompt');
-            if (prompt) prompt.classList.remove('is-active');
-          }
-          const ring = document.querySelector('.cursor-ring');
-          if (ring) ring.classList.remove('is-hovering');
-        }
+        // Hide tooltip when not on landing page or transitioning
+        const prompt = document.getElementById('medallion-prompt');
+        if (prompt) prompt.classList.remove('is-active');
       }
-    } else {
-      // Hide tooltip when not on landing page or transitioning
-      const prompt = document.getElementById('medallion-prompt');
-      if (prompt) prompt.classList.remove('is-active');
     }
 
     // Apply transformation logic
