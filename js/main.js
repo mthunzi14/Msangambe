@@ -3387,3 +3387,5 @@ window.addEventListener('resize', () => {
   }
 
 })();
+
+// v1.7.3 - SEO and WebGL Optimizations
