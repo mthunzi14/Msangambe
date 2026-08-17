@@ -42,10 +42,10 @@ module.exports = async (req, res) => {
   const emailStyleAndHead = `<head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="dark only">
-  <meta name="supported-color-schemes" content="dark only">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
   <style>
-    :root { color-scheme: dark only; supported-color-schemes: dark only; }
+    :root { color-scheme: dark; supported-color-schemes: dark; }
     
     @keyframes pulse-glow {
       0% {
@@ -88,9 +88,11 @@ module.exports = async (req, res) => {
       background-image: linear-gradient(#1C1C1C, #1C1C1C) !important;
       border: 1px solid rgba(192, 192, 192, 0.2) !important;
       border-radius: 12px;
-      padding: 36px;
       text-align: left;
       animation: pulse-glow 6s ease-in-out infinite;
+    }
+    .card-content {
+      padding: 36px !important;
     }
     .logo {
       text-align: center;
@@ -203,87 +205,95 @@ module.exports = async (req, res) => {
   </style>
 </head>`;
 
-  // 1. Build Admin HTML Template (wrapped in table for mobile styling compatibility)
+  // 1. Build Admin HTML Template (pure tables for spacing and responsiveness)
   const adminHtml = `<!DOCTYPE html>
 <html>
 ${emailStyleAndHead}
 <body>
-  <table class="body-table" width="100%" height="100%" bgcolor="#0A0A0A" cellpadding="0" cellspacing="0" border="0" style="background-color: #0A0A0A; width: 100%; height: 100%; margin: 0; padding: 40px 20px;">
+  <table class="body-table" width="100%" height="100%" bgcolor="#0A0A0A" cellpadding="0" cellspacing="0" border="0" style="background-color: #0A0A0A; background-image: linear-gradient(#0A0A0A, #0A0A0A) !important; width: 100%; height: 100%; margin: 0; padding: 40px 20px;">
     <tr>
       <td align="center" valign="top">
-        <div class="card">
-          <div class="logo">SON DYNASTY / MSANGAMBE</div>
-          <div class="title">New Signal Received</div>
-          
-          <div class="row">
-            <div class="label">From</div>
-            <div class="value">${name} ${surname}</div>
-          </div>
-          <div class="row">
-            <div class="label">Contact Number</div>
-            <div class="value">${number}</div>
-          </div>
-          <div class="row">
-            <div class="label">Email Address</div>
-            <div class="value">${email}</div>
-          </div>
-          <div class="row">
-            <div class="label">Transmission Message</div>
-            <div class="message-box">${message || 'No additional comment provided.'}</div>
-          </div>
-          
-          <div class="footer">Automated System Transmission · msangambe.com</div>
-        </div>
+        <table class="card" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 580px; width: 100%; background-color: #1C1C1C; background-image: linear-gradient(#1C1C1C, #1C1C1C) !important; border: 1px solid rgba(192, 192, 192, 0.2); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.6);">
+          <tr>
+            <td class="card-content" style="padding: 36px;">
+              <div class="logo">SON DYNASTY / MSANGAMBE</div>
+              <div class="title">New Signal Received</div>
+              
+              <div class="row">
+                <div class="label">From</div>
+                <div class="value">${name} ${surname}</div>
+              </div>
+              <div class="row">
+                <div class="label">Contact Number</div>
+                <div class="value">${number}</div>
+              </div>
+              <div class="row">
+                <div class="label">Email Address</div>
+                <div class="value">${email}</div>
+              </div>
+              <div class="row">
+                <div class="label">Transmission Message</div>
+                <div class="message-box">${message || 'No additional comment provided.'}</div>
+              </div>
+              
+              <div class="footer">Automated System Transmission · msangambe.com</div>
+            </td>
+          </tr>
+        </table>
       </td>
     </tr>
   </table>
 </body>
 </html>`;
 
-  // 2. Build User Confirmation HTML Template
+  // 2. Build User Confirmation HTML Template (pure tables for spacing and responsiveness)
   const userHtml = `<!DOCTYPE html>
 <html>
 ${emailStyleAndHead}
 <body>
-  <table class="body-table" width="100%" height="100%" bgcolor="#0A0A0A" cellpadding="0" cellspacing="0" border="0" style="background-color: #0A0A0A; width: 100%; height: 100%; margin: 0; padding: 40px 20px;">
+  <table class="body-table" width="100%" height="100%" bgcolor="#0A0A0A" cellpadding="0" cellspacing="0" border="0" style="background-color: #0A0A0A; background-image: linear-gradient(#0A0A0A, #0A0A0A) !important; width: 100%; height: 100%; margin: 0; padding: 40px 20px;">
     <tr>
       <td align="center" valign="top">
-        <div class="card">
-          <div class="logo">SON DYNASTY</div>
-          <div class="title">Transmission Secured</div>
-          
-          <div class="greeting">
-            Greetings ${name},<br><br>
-            Your signal has been received and secured in Dynasty World. Msangambe "Son Dynasty" Sigudla has been notified of your transmission and will connect with you shortly.
-          </div>
+        <table class="card" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 580px; width: 100%; background-color: #1C1C1C; background-image: linear-gradient(#1C1C1C, #1C1C1C) !important; border: 1px solid rgba(192, 192, 192, 0.2); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.6);">
+          <tr>
+            <td class="card-content" style="padding: 36px;">
+              <div class="logo">SON DYNASTY</div>
+              <div class="title">Transmission Secured</div>
+              
+              <div class="greeting">
+                Greetings ${name},<br><br>
+                Your signal has been received and secured in Dynasty World. Msangambe "Son Dynasty" Sigudla has been notified of your transmission and will connect with you shortly.
+              </div>
 
-          <div class="details-title">Transmission Reference Details</div>
-          
-          <div class="horizontal-row">
-            <span class="horizontal-label">Reference Name:</span>
-            <span class="horizontal-value">${name} ${surname}</span>
-          </div>
-          <div class="horizontal-row">
-            <span class="horizontal-label">Contact Number:</span>
-            <span class="horizontal-value">${number}</span>
-          </div>
-          <div class="horizontal-row">
-            <span class="horizontal-label">Email Address:</span>
-            <span class="horizontal-value">${email}</span>
-          </div>
-          ${message ? `
-          <div class="row" style="margin-top: 16px;">
-            <span class="horizontal-label">Your Message:</span>
-            <div class="message-box">${message}</div>
-          </div>` : ''}
-          
-          <div class="closing">
-            STEP INTO THE UNDERWORLD.<br>
-            <img src="https://msangambe.com/assets/images/msangambe_signature.png" alt="Msangambe" width="220" style="display: block; margin: 12px auto 0; border: 0; filter: brightness(100%);">
-          </div>
+              <div class="details-title">Transmission Reference Details</div>
+              
+              <div class="horizontal-row">
+                <span class="horizontal-label">Reference Name:</span>
+                <span class="horizontal-value">${name} ${surname}</span>
+              </div>
+              <div class="horizontal-row">
+                <span class="horizontal-label">Contact Number:</span>
+                <span class="horizontal-value">${number}</span>
+              </div>
+              <div class="horizontal-row">
+                <span class="horizontal-label">Email Address:</span>
+                <span class="horizontal-value">${email}</span>
+              </div>
+              ${message ? `
+              <div class="row" style="margin-top: 16px;">
+                <span class="horizontal-label">Your Message:</span>
+                <div class="message-box">${message}</div>
+              </div>` : ''}
+              
+              <div class="closing">
+                STEP INTO THE UNDERWORLD.<br>
+                <img src="https://msangambe.com/assets/images/msangambe_signature.png" alt="Msangambe" width="220" style="display: block; margin: 12px auto 0; border: 0; filter: brightness(100%);">
+              </div>
 
-          <div class="footer">This is an automated receipt confirmation from msangambe.com</div>
-        </div>
+              <div class="footer">This is an automated receipt confirmation from msangambe.com</div>
+            </td>
+          </tr>
+        </table>
       </td>
     </tr>
   </table>
