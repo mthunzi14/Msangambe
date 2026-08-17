@@ -1012,10 +1012,19 @@ window.addEventListener('resize', () => {
       submitBtn.disabled = true;
     }
 
-    fetch(form.action, {
+    fetch('/api/send-email', {
       method: 'POST',
-      headers: { 'Accept': 'application/json' },
-      body: new FormData(form)
+      headers: { 
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: nameField ? nameField.value.trim() : '',
+        surname: surnameField ? surnameField.value.trim() : '',
+        number: numberField ? numberField.value.trim() : '',
+        email: emailField ? emailField.value.trim() : '',
+        message: messageField ? messageField.value.trim() : ''
+      })
     })
     .then(res => {
       // Regardless of Formspree test limit, display success for previewing client response
@@ -1599,14 +1608,47 @@ window.addEventListener('resize', () => {
     'assets/music/dynnnasty_radio_part13.mp3',
     'assets/music/dynnnasty_radio_part14.mp3'
   ];
-  let radioPartDurations = [300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300];
+  let radioPartDurations = [
+    393.221, 393.221, 393.221, 393.221, 393.221, 393.221, 393.221,
+    393.221, 393.221, 393.221, 393.221, 393.221, 393.231, 274.312
+  ];
   let currentRadioPartIndex = 0;
+  let radioRetryCount = 0;
+  let radioRetryTimeout = null;
 
-  // Add error handling to capture missing track state gracefully in the terminal UI
+  // Add error handling to capture missing track state gracefully in the terminal UI with retry support
   radioAudio.addEventListener('error', () => {
-    if (isTuned) {
-      terminalText.textContent = 'DYNASTY RADIO BROADCAST · OFFLINE (MISSING)';
+    if (!isTuned) return;
+    
+    const err = radioAudio.error;
+    const isNetworkError = err && (err.code === 2 || err.code === 1);
+    
+    if (isNetworkError && radioRetryCount < 3) {
+      radioRetryCount++;
+      if (terminalText) {
+        terminalText.textContent = `DYNASTY RADIO BROADCAST · RECONNECTING (TRY ${radioRetryCount}/3)...`;
+      }
+      if (radioRetryTimeout) clearTimeout(radioRetryTimeout);
+      radioRetryTimeout = setTimeout(() => {
+        if (isTuned) {
+          radioAudio.load();
+          radioAudio.play().catch(() => {});
+        }
+      }, 2000);
+    } else {
+      if (terminalText) {
+        terminalText.textContent = 'DYNASTY RADIO BROADCAST · OFFLINE (MISSING)';
+      }
       if (visualizer) visualizer.classList.remove('animating');
+    }
+  });
+
+  // Reset retry count upon successful playback start
+  radioAudio.addEventListener('playing', () => {
+    radioRetryCount = 0;
+    if (radioRetryTimeout) clearTimeout(radioRetryTimeout);
+    if (isTuned && terminalText) {
+      terminalText.textContent = 'DYNASTY RADIO BROADCAST · LIVE';
     }
   });
 
