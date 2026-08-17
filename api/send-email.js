@@ -38,40 +38,19 @@ module.exports = async (req, res) => {
   // Admin email to notify
   const adminRecipients = ['sondynasty@msangambe.com'];
 
-  // Common Header/Style Block with Titanium Silver & Charcoal theme, including premium animations
+  // Common Header/Style Block with White, Silver & Charcoal theme (Look One)
   const emailStyleAndHead = `<head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="dark">
-  <meta name="supported-color-schemes" content="dark">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
   <style>
-    :root { color-scheme: dark; supported-color-schemes: dark; }
-    
-    @keyframes pulse-glow {
-      0% {
-        border-color: rgba(192, 192, 192, 0.15) !important;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 12px rgba(192, 192, 192, 0.05);
-      }
-      50% {
-        border-color: rgba(192, 192, 192, 0.35) !important;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 24px rgba(192, 192, 192, 0.25);
-      }
-      100% {
-        border-color: rgba(192, 192, 192, 0.15) !important;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 12px rgba(192, 192, 192, 0.05);
-      }
-    }
-    
-    @keyframes shimmer {
-      0% { opacity: 0.85; }
-      50% { opacity: 1; }
-      100% { opacity: 0.85; }
-    }
+    :root { color-scheme: light; supported-color-schemes: light; }
     
     body, .body-table {
-      background-color: #0A0A0A !important;
-      background-image: linear-gradient(#0A0A0A, #0A0A0A) !important;
-      color: #E8E8E8 !important;
+      background-color: #F7F5F2 !important;
+      background-image: linear-gradient(#F7F5F2, #F7F5F2) !important;
+      color: #1C1C1C !important;
       margin: 0;
       padding: 0;
       width: 100% !important;
@@ -79,37 +58,26 @@ module.exports = async (req, res) => {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     .body-table {
-      padding: 40px 20px !important;
+      padding: 30px 15px !important;
     }
     .card {
       max-width: 580px;
       width: 100%;
-      background-color: #1C1C1C !important;
-      background-image: linear-gradient(#1C1C1C, #1C1C1C) !important;
-      border: 1px solid rgba(192, 192, 192, 0.2) !important;
+      background-color: #FFFFFF !important;
+      background-image: linear-gradient(#FFFFFF, #FFFFFF) !important;
+      border: 1px solid rgba(192, 192, 192, 0.4) !important;
       border-radius: 12px;
       text-align: left;
-      animation: pulse-glow 6s ease-in-out infinite;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
     }
     .card-content {
       padding: 36px !important;
     }
-    .logo {
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-      letter-spacing: 4px;
-      color: #FFFFFF !important;
-      margin-bottom: 24px;
-      border-bottom: 1px solid rgba(192, 192, 192, 0.15);
-      padding-bottom: 20px;
-      animation: shimmer 4s ease-in-out infinite;
-    }
     .title {
-      font-size: 15px;
-      font-weight: 500;
+      font-size: 13px;
+      font-weight: 600;
       letter-spacing: 2px;
-      color: #C0C0C0 !important;
+      color: #8A8A8A !important;
       text-transform: uppercase;
       margin-bottom: 24px;
       text-align: center;
@@ -126,15 +94,15 @@ module.exports = async (req, res) => {
     }
     .value {
       font-size: 14px;
-      color: #E8E8E8 !important;
+      color: #1C1C1C !important;
     }
     .message-box {
-      background: #121212;
-      border-left: 2px solid #C0C0C0;
+      background: #F7F5F2;
+      border-left: 2px solid #8A8A8A;
       padding: 16px;
       border-radius: 4px;
       margin-top: 12px;
-      color: #E8E8E8 !important;
+      color: #1C1C1C !important;
       font-style: italic;
       font-size: 14px;
       line-height: 1.6;
@@ -142,7 +110,7 @@ module.exports = async (req, res) => {
     .greeting {
       font-size: 15px;
       line-height: 1.7;
-      color: #E8E8E8 !important;
+      color: #1C1C1C !important;
       margin-bottom: 24px;
     }
     .details-title {
@@ -152,7 +120,7 @@ module.exports = async (req, res) => {
       text-transform: uppercase;
       margin-top: 28px;
       margin-bottom: 16px;
-      border-bottom: 1px solid rgba(192, 192, 192, 0.1);
+      border-bottom: 1px solid rgba(192, 192, 192, 0.2);
       padding-bottom: 8px;
     }
     .horizontal-row {
@@ -168,14 +136,14 @@ module.exports = async (req, res) => {
     }
     .horizontal-value {
       font-size: 13px;
-      color: #D4D4D4 !important;
+      color: #1C1C1C !important;
       display: inline-block;
     }
     .closing {
       margin-top: 36px;
-      font-size: 12px;
+      font-size: 11px;
       letter-spacing: 2px;
-      color: #C0C0C0 !important;
+      color: #8A8A8A !important;
       text-align: center;
       line-height: 1.8;
       text-transform: uppercase;
@@ -186,37 +154,62 @@ module.exports = async (req, res) => {
       font-size: 9px;
       color: #8A8A8A !important;
       letter-spacing: 1.5px;
-      border-top: 1px solid rgba(192, 192, 192, 0.1);
+      border-top: 1px solid rgba(192, 192, 192, 0.2);
       padding-top: 20px;
       text-transform: uppercase;
     }
     
     /* Strict override overrides to prevent client-side auto-inversion */
     @media (prefers-color-scheme: dark) {
-      body, .body-table { background-color: #0A0A0A !important; background-image: linear-gradient(#0A0A0A, #0A0A0A) !important; color: #E8E8E8 !important; }
-      .card { background-color: #1C1C1C !important; background-image: linear-gradient(#1C1C1C, #1C1C1C) !important; border-color: rgba(192, 192, 192, 0.2) !important; }
-      .value, .logo { color: #FFFFFF !important; }
+      body, .body-table { background-color: #F7F5F2 !important; background-image: linear-gradient(#F7F5F2, #F7F5F2) !important; color: #1C1C1C !important; }
+      .card { background-color: #FFFFFF !important; background-image: linear-gradient(#FFFFFF, #FFFFFF) !important; border-color: rgba(192, 192, 192, 0.4) !important; }
+      .value { color: #1C1C1C !important; }
     }
     @media (prefers-color-scheme: light) {
-      body, .body-table { background-color: #0A0A0A !important; background-image: linear-gradient(#0A0A0A, #0A0A0A) !important; color: #E8E8E8 !important; }
-      .card { background-color: #1C1C1C !important; background-image: linear-gradient(#1C1C1C, #1C1C1C) !important; border-color: rgba(192, 192, 192, 0.2) !important; }
-      .value, .logo { color: #FFFFFF !important; }
+      body, .body-table { background-color: #F7F5F2 !important; background-image: linear-gradient(#F7F5F2, #F7F5F2) !important; color: #1C1C1C !important; }
+      .card { background-color: #FFFFFF !important; background-image: linear-gradient(#FFFFFF, #FFFFFF) !important; border-color: rgba(192, 192, 192, 0.4) !important; }
+      .value { color: #1C1C1C !important; }
     }
   </style>
 </head>`;
 
-  // 1. Build Admin HTML Template (pure tables for spacing and responsiveness)
+  // 1. Build Admin HTML Template (Look One, pure tables)
   const adminHtml = `<!DOCTYPE html>
 <html>
 ${emailStyleAndHead}
 <body>
-  <table class="body-table" width="100%" height="100%" bgcolor="#0A0A0A" cellpadding="0" cellspacing="0" border="0" style="background-color: #0A0A0A; background-image: linear-gradient(#0A0A0A, #0A0A0A) !important; width: 100%; height: 100%; margin: 0; padding: 40px 20px;">
+  <table class="body-table" width="100%" height="100%" bgcolor="#F7F5F2" cellpadding="0" cellspacing="0" border="0" style="background-color: #F7F5F2; background-image: linear-gradient(#F7F5F2, #F7F5F2) !important; width: 100%; height: 100%; margin: 0; padding: 30px 15px;">
     <tr>
       <td align="center" valign="top">
-        <table class="card" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 580px; width: 100%; background-color: #1C1C1C; background-image: linear-gradient(#1C1C1C, #1C1C1C) !important; border: 1px solid rgba(192, 192, 192, 0.2); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.6);">
+        
+        <!-- Scrolling Marquee Strip -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 580px; background-color: #FFFFFF; border-top: 1px solid rgba(192, 192, 192, 0.3); border-left: 1px solid rgba(192, 192, 192, 0.3); border-right: 1px solid rgba(192, 192, 192, 0.3); border-radius: 12px 12px 0 0; text-align: center; overflow: hidden;">
+          <tr>
+            <td style="padding: 12px 10px;">
+              <marquee scrollamount="2" behavior="scroll" direction="left" style="font-family: 'Cinzel', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 8px; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: #8A8A8A; display: block; width: 100%;">
+                MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA
+              </marquee>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Main Card -->
+        <table class="card" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 580px; width: 100%; background-color: #FFFFFF; background-image: linear-gradient(#FFFFFF, #FFFFFF) !important; border: 1px solid rgba(192, 192, 192, 0.4); border-radius: 0 0 12px 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
           <tr>
             <td class="card-content" style="padding: 36px;">
-              <div class="logo">SON DYNASTY / MSANGAMBE</div>
+              
+              <!-- Header Row with Dragon Logo & Cursive Title -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 28px; border-bottom: 1px solid rgba(192, 192, 192, 0.2); padding-bottom: 20px;">
+                <tr>
+                  <td width="55" valign="middle" align="left">
+                    <img src="https://msangambe.com/assets/DWS2NOBG.png" alt="SM" width="45" style="display: block; border: 0;">
+                  </td>
+                  <td valign="middle" align="center" style="padding-right: 55px;">
+                    <img src="https://msangambe.com/assets/images/welcome_dynasty_world_dark.png" alt="Welcome to Dynasty World" width="280" style="display: block; margin: 0 auto; border: 0;">
+                  </td>
+                </tr>
+              </table>
+
               <div class="title">New Signal Received</div>
               
               <div class="row">
@@ -240,25 +233,49 @@ ${emailStyleAndHead}
             </td>
           </tr>
         </table>
+
       </td>
     </tr>
   </table>
 </body>
 </html>`;
 
-  // 2. Build User Confirmation HTML Template (pure tables for spacing and responsiveness)
+  // 2. Build User Confirmation HTML Template (Look One, pure tables)
   const userHtml = `<!DOCTYPE html>
 <html>
 ${emailStyleAndHead}
 <body>
-  <table class="body-table" width="100%" height="100%" bgcolor="#0A0A0A" cellpadding="0" cellspacing="0" border="0" style="background-color: #0A0A0A; background-image: linear-gradient(#0A0A0A, #0A0A0A) !important; width: 100%; height: 100%; margin: 0; padding: 40px 20px;">
+  <table class="body-table" width="100%" height="100%" bgcolor="#F7F5F2" cellpadding="0" cellspacing="0" border="0" style="background-color: #F7F5F2; background-image: linear-gradient(#F7F5F2, #F7F5F2) !important; width: 100%; height: 100%; margin: 0; padding: 30px 15px;">
     <tr>
       <td align="center" valign="top">
-        <table class="card" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 580px; width: 100%; background-color: #1C1C1C; background-image: linear-gradient(#1C1C1C, #1C1C1C) !important; border: 1px solid rgba(192, 192, 192, 0.2); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.6);">
+        
+        <!-- Scrolling Marquee Strip -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 580px; background-color: #FFFFFF; border-top: 1px solid rgba(192, 192, 192, 0.3); border-left: 1px solid rgba(192, 192, 192, 0.3); border-right: 1px solid rgba(192, 192, 192, 0.3); border-radius: 12px 12px 0 0; text-align: center; overflow: hidden;">
+          <tr>
+            <td style="padding: 12px 10px;">
+              <marquee scrollamount="2" behavior="scroll" direction="left" style="font-family: 'Cinzel', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 8px; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: #8A8A8A; display: block; width: 100%;">
+                MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA
+              </marquee>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Main Card -->
+        <table class="card" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 580px; width: 100%; background-color: #FFFFFF; background-image: linear-gradient(#FFFFFF, #FFFFFF) !important; border: 1px solid rgba(192, 192, 192, 0.4); border-radius: 0 0 12px 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
           <tr>
             <td class="card-content" style="padding: 36px;">
-              <div class="logo">SON DYNASTY</div>
-              <div class="title">Transmission Secured</div>
+              
+              <!-- Header Row with Dragon Logo & Cursive Title -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 28px; border-bottom: 1px solid rgba(192, 192, 192, 0.2); padding-bottom: 20px;">
+                <tr>
+                  <td width="55" valign="middle" align="left">
+                    <img src="https://msangambe.com/assets/DWS2NOBG.png" alt="SM" width="45" style="display: block; border: 0;">
+                  </td>
+                  <td valign="middle" align="center" style="padding-right: 55px;">
+                    <img src="https://msangambe.com/assets/images/welcome_dynasty_world_dark.png" alt="Welcome to Dynasty World" width="280" style="display: block; margin: 0 auto; border: 0;">
+                  </td>
+                </tr>
+              </table>
               
               <div class="greeting">
                 Greetings ${name},<br><br>
@@ -287,13 +304,44 @@ ${emailStyleAndHead}
               
               <div class="closing">
                 STEP INTO THE UNDERWORLD.<br>
-                <img src="https://msangambe.com/assets/images/msangambe_signature.png" alt="Msangambe" width="220" style="display: block; margin: 12px auto 0; border: 0; filter: brightness(100%);">
+                <img src="https://msangambe.com/assets/images/msangambe_signature_dark.png" alt="Msangambe" width="220" style="display: block; margin: 12px auto 0; border: 0;">
               </div>
+
+              <!-- Magnification Dock (Social Bar) -->
+              <table align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 32px auto 0; background-color: #FFFFFF; border: 1px solid rgba(192, 192, 192, 0.3); border-radius: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); padding: 8px 16px;">
+                <tr>
+                  <!-- YouTube -->
+                  <td align="center" style="padding: 0 10px;">
+                    <a href="https://www.youtube.com/@sondynastytv" target="_blank" style="display: block; text-decoration: none; color: #8A8A8A;">
+                      <img src="https://msangambe.com/assets/logo-sondynasty-globe.png" alt="YouTube" width="20" height="20" style="display: block; border: 0;">
+                    </a>
+                  </td>
+                  <!-- Instagram -->
+                  <td align="center" style="padding: 0 10px;">
+                    <a href="https://www.instagram.com/msangambe_" target="_blank" style="display: block; text-decoration: none; color: #8A8A8A;">
+                      <img src="https://msangambe.com/assets/logo-msangambe-cursive.png" alt="Instagram" width="20" height="20" style="display: block; border: 0;">
+                    </a>
+                  </td>
+                  <!-- TikTok -->
+                  <td align="center" style="padding: 0 10px;">
+                    <a href="https://www.tiktok.com/@sondynasty" target="_blank" style="display: block; text-decoration: none; color: #8A8A8A;">
+                      <img src="https://msangambe.com/FAVICON-LOGO_NOBG-removebg-preview.png" alt="TikTok" width="20" height="20" style="display: block; border: 0;">
+                    </a>
+                  </td>
+                  <!-- Twitter/X -->
+                  <td align="center" style="padding: 0 10px;">
+                    <a href="https://x.com/msangambe1" target="_blank" style="display: block; text-decoration: none; color: #8A8A8A;">
+                      <img src="https://msangambe.com/SONDYNASTY-removebg-preview.png" alt="X" width="20" height="20" style="display: block; border: 0;">
+                    </a>
+                  </td>
+                </tr>
+              </table>
 
               <div class="footer">This is an automated receipt confirmation from msangambe.com</div>
             </td>
           </tr>
         </table>
+
       </td>
     </tr>
   </table>
