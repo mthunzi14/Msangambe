@@ -32,11 +32,13 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Required fields are missing.' });
   }
 
+  // Fallback recipient if domain/emails are unverified in Resend sandbox
   const defaultTestingEmail = 'info@msangambe.com';
   
+  // Admin email to notify
   const adminRecipients = ['sondynasty@msangambe.com'];
 
-  // Common Header/Style Block with CSS gradient hack to bypass Gmail's dark-to-light auto-inversion
+  // Common Header/Style Block with Titanium Silver & Charcoal theme, including premium animations
   const emailStyleAndHead = `<head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,10 +46,32 @@ module.exports = async (req, res) => {
   <meta name="supported-color-schemes" content="dark only">
   <style>
     :root { color-scheme: dark only; supported-color-schemes: dark only; }
+    
+    @keyframes pulse-glow {
+      0% {
+        border-color: rgba(192, 192, 192, 0.15) !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 12px rgba(192, 192, 192, 0.05);
+      }
+      50% {
+        border-color: rgba(192, 192, 192, 0.35) !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 24px rgba(192, 192, 192, 0.25);
+      }
+      100% {
+        border-color: rgba(192, 192, 192, 0.15) !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 12px rgba(192, 192, 192, 0.05);
+      }
+    }
+    
+    @keyframes shimmer {
+      0% { opacity: 0.85; }
+      50% { opacity: 1; }
+      100% { opacity: 0.85; }
+    }
+    
     body, .body-table {
-      background-color: #050505 !important;
-      background-image: linear-gradient(#050505, #050505) !important;
-      color: #e5e5e5 !important;
+      background-color: #0A0A0A !important;
+      background-image: linear-gradient(#0A0A0A, #0A0A0A) !important;
+      color: #E8E8E8 !important;
       margin: 0;
       padding: 0;
       width: 100% !important;
@@ -60,120 +84,121 @@ module.exports = async (req, res) => {
     .card {
       max-width: 580px;
       width: 100%;
-      background-color: #0c0c0c !important;
-      background-image: linear-gradient(#0c0c0c, #0c0c0c) !important;
-      border: 1px solid #222222 !important;
+      background-color: #1C1C1C !important;
+      background-image: linear-gradient(#1C1C1C, #1C1C1C) !important;
+      border: 1px solid rgba(192, 192, 192, 0.2) !important;
       border-radius: 12px;
-      padding: 32px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      padding: 36px;
       text-align: left;
+      animation: pulse-glow 6s ease-in-out infinite;
     }
     .logo {
       text-align: center;
       font-size: 20px;
       font-weight: bold;
       letter-spacing: 4px;
-      color: #ffffff !important;
+      color: #FFFFFF !important;
       margin-bottom: 24px;
-      border-bottom: 1px solid #222222;
+      border-bottom: 1px solid rgba(192, 192, 192, 0.15);
       padding-bottom: 20px;
+      animation: shimmer 4s ease-in-out infinite;
     }
     .title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 500;
       letter-spacing: 2px;
-      color: #888888 !important;
+      color: #C0C0C0 !important;
       text-transform: uppercase;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       text-align: center;
     }
     .row {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     .label {
       font-size: 10px;
-      letter-spacing: 1px;
-      color: #666666 !important;
+      letter-spacing: 1.5px;
+      color: #8A8A8A !important;
       text-transform: uppercase;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     .value {
       font-size: 14px;
-      color: #ffffff !important;
+      color: #E8E8E8 !important;
     }
     .message-box {
-      background: #111111;
-      border-left: 2px solid #c9a054;
+      background: #121212;
+      border-left: 2px solid #C0C0C0;
       padding: 16px;
       border-radius: 4px;
       margin-top: 12px;
-      color: #cccccc !important;
+      color: #E8E8E8 !important;
       font-style: italic;
       font-size: 14px;
       line-height: 1.6;
     }
     .greeting {
       font-size: 15px;
-      line-height: 1.6;
-      color: #e5e5e5 !important;
+      line-height: 1.7;
+      color: #E8E8E8 !important;
       margin-bottom: 24px;
     }
     .details-title {
       font-size: 11px;
-      letter-spacing: 1px;
-      color: #555555 !important;
+      letter-spacing: 1.5px;
+      color: #8A8A8A !important;
       text-transform: uppercase;
-      margin-top: 24px;
-      margin-bottom: 12px;
-      border-bottom: 1px solid #111111;
-      padding-bottom: 6px;
+      margin-top: 28px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(192, 192, 192, 0.1);
+      padding-bottom: 8px;
     }
     .horizontal-row {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
     .horizontal-label {
       font-size: 10px;
       letter-spacing: 1px;
-      color: #555555 !important;
+      color: #8A8A8A !important;
       text-transform: uppercase;
       display: inline-block;
-      width: 130px;
+      width: 140px;
     }
     .horizontal-value {
       font-size: 13px;
-      color: #b5b5b5 !important;
+      color: #D4D4D4 !important;
       display: inline-block;
     }
     .closing {
-      margin-top: 32px;
-      font-size: 13px;
-      letter-spacing: 1.5px;
-      color: #cccccc !important;
+      margin-top: 36px;
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: #C0C0C0 !important;
       text-align: center;
       line-height: 1.8;
       text-transform: uppercase;
     }
     .footer {
       text-align: center;
-      margin-top: 32px;
+      margin-top: 36px;
       font-size: 9px;
-      color: #444444 !important;
+      color: #8A8A8A !important;
       letter-spacing: 1.5px;
-      border-top: 1px solid #111111;
+      border-top: 1px solid rgba(192, 192, 192, 0.1);
       padding-top: 20px;
       text-transform: uppercase;
     }
     
     /* Strict override overrides to prevent client-side auto-inversion */
     @media (prefers-color-scheme: dark) {
-      body, .body-table { background-color: #050505 !important; background-image: linear-gradient(#050505, #050505) !important; color: #e5e5e5 !important; }
-      .card { background-color: #0c0c0c !important; background-image: linear-gradient(#0c0c0c, #0c0c0c) !important; border-color: #222222 !important; }
-      .value, .logo { color: #ffffff !important; }
+      body, .body-table { background-color: #0A0A0A !important; background-image: linear-gradient(#0A0A0A, #0A0A0A) !important; color: #E8E8E8 !important; }
+      .card { background-color: #1C1C1C !important; background-image: linear-gradient(#1C1C1C, #1C1C1C) !important; border-color: rgba(192, 192, 192, 0.2) !important; }
+      .value, .logo { color: #FFFFFF !important; }
     }
     @media (prefers-color-scheme: light) {
-      body, .body-table { background-color: #050505 !important; background-image: linear-gradient(#050505, #050505) !important; color: #e5e5e5 !important; }
-      .card { background-color: #0c0c0c !important; background-image: linear-gradient(#0c0c0c, #0c0c0c) !important; border-color: #222222 !important; }
-      .value, .logo { color: #ffffff !important; }
+      body, .body-table { background-color: #0A0A0A !important; background-image: linear-gradient(#0A0A0A, #0A0A0A) !important; color: #E8E8E8 !important; }
+      .card { background-color: #1C1C1C !important; background-image: linear-gradient(#1C1C1C, #1C1C1C) !important; border-color: rgba(192, 192, 192, 0.2) !important; }
+      .value, .logo { color: #FFFFFF !important; }
     }
   </style>
 </head>`;
@@ -183,7 +208,7 @@ module.exports = async (req, res) => {
 <html>
 ${emailStyleAndHead}
 <body>
-  <table class="body-table" width="100%" height="100%" bgcolor="#050505" cellpadding="0" cellspacing="0" border="0" style="background-color: #050505; width: 100%; height: 100%; margin: 0; padding: 40px 20px;">
+  <table class="body-table" width="100%" height="100%" bgcolor="#0A0A0A" cellpadding="0" cellspacing="0" border="0" style="background-color: #0A0A0A; width: 100%; height: 100%; margin: 0; padding: 40px 20px;">
     <tr>
       <td align="center" valign="top">
         <div class="card">
@@ -220,7 +245,7 @@ ${emailStyleAndHead}
 <html>
 ${emailStyleAndHead}
 <body>
-  <table class="body-table" width="100%" height="100%" bgcolor="#050505" cellpadding="0" cellspacing="0" border="0" style="background-color: #050505; width: 100%; height: 100%; margin: 0; padding: 40px 20px;">
+  <table class="body-table" width="100%" height="100%" bgcolor="#0A0A0A" cellpadding="0" cellspacing="0" border="0" style="background-color: #0A0A0A; width: 100%; height: 100%; margin: 0; padding: 40px 20px;">
     <tr>
       <td align="center" valign="top">
         <div class="card">
@@ -279,10 +304,7 @@ ${emailStyleAndHead}
   };
 
   try {
-    // If using the default onboarding domain, Resend requires 'from' to be 'onboarding@resend.dev'
-    const fromSender = (RESEND_API_KEY && RESEND_API_KEY.includes('re_NMZiLgfS'))
-      ? 'onboarding@resend.dev'
-      : 'Dynasty World <info@msangambe.com>';
+    const fromSender = 'Dynasty World <info@msangambe.com>';
 
     // First, send the Admin notification
     let adminRes = await sendEmail(
@@ -299,7 +321,7 @@ ${emailStyleAndHead}
       console.warn('Admin email failed, attempting sandbox fallback:', errorData);
 
       adminRes = await sendEmail(
-        'onboarding@resend.dev',
+        fromSender,
         [defaultTestingEmail],
         `[FALLBACK ADMIN] Inquiry: ${name} ${surname} (originally to admin)`,
         adminHtml
@@ -319,7 +341,7 @@ ${emailStyleAndHead}
       console.warn('User confirmation failed, attempting sandbox fallback:', errorData);
 
       userRes = await sendEmail(
-        'onboarding@resend.dev',
+        fromSender,
         [defaultTestingEmail],
         `[FALLBACK USER] Confirmation receipt for ${name} (originally to ${email})`,
         userHtml
