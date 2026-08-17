@@ -38,107 +38,244 @@ module.exports = async (req, res) => {
   // Admin emails to notify
   const adminRecipients = ['sondynastyent@gmail.com', 'mnksigudla@gmail.com'];
 
-  // 1. Build Admin HTML Template
+  // Common Header/Style Block for robust mobile dark rendering and custom font load
+  const emailStyleAndHead = `<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <style>
+    @font-face {
+      font-family: 'Bastliga One';
+      src: url('https://msangambe.com/Bastliga%20One.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    :root { color-scheme: light dark; supported-color-schemes: light dark; }
+    body, .body-table {
+      background-color: #050505 !important;
+      color: #e5e5e5 !important;
+      margin: 0;
+      padding: 0;
+      width: 100% !important;
+      height: 100% !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .body-table {
+      padding: 40px 20px !important;
+    }
+    .card {
+      max-width: 580px;
+      width: 100%;
+      background-color: #0c0c0c !important;
+      border: 1px solid #222222 !important;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      text-align: left;
+    }
+    .logo {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 4px;
+      color: #ffffff !important;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #222222;
+      padding-bottom: 20px;
+    }
+    .title {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      color: #888888 !important;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .row {
+      margin-bottom: 16px;
+    }
+    .label {
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: #666666 !important;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .value {
+      font-size: 14px;
+      color: #ffffff !important;
+    }
+    .message-box {
+      background: #111111;
+      border-left: 2px solid #c9a054;
+      padding: 16px;
+      border-radius: 4px;
+      margin-top: 12px;
+      color: #cccccc !important;
+      font-style: italic;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .greeting {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #e5e5e5 !important;
+      margin-bottom: 24px;
+    }
+    .details-title {
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #555555 !important;
+      text-transform: uppercase;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #111111;
+      padding-bottom: 6px;
+    }
+    .horizontal-row {
+      margin-bottom: 12px;
+    }
+    .horizontal-label {
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: #555555 !important;
+      text-transform: uppercase;
+      display: inline-block;
+      width: 130px;
+    }
+    .horizontal-value {
+      font-size: 13px;
+      color: #b5b5b5 !important;
+      display: inline-block;
+    }
+    .closing {
+      margin-top: 32px;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      color: #cccccc !important;
+      text-align: center;
+      line-height: 1.8;
+      text-transform: uppercase;
+    }
+    .signature {
+      font-family: 'Bastliga One', 'Italianno', cursive;
+      font-size: 52px;
+      color: #ffffff !important;
+      display: block;
+      margin-top: 8px;
+      text-transform: none;
+      letter-spacing: normal;
+      font-weight: normal;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 9px;
+      color: #444444 !important;
+      letter-spacing: 1.5px;
+      border-top: 1px solid #111111;
+      padding-top: 20px;
+      text-transform: uppercase;
+    }
+    
+    /* Strict override overrides to prevent client-side auto-inversion */
+    @media (prefers-color-scheme: dark) {
+      body, .body-table { background-color: #050505 !important; color: #e5e5e5 !important; }
+      .card { background-color: #0c0c0c !important; border-color: #222222 !important; }
+    }
+    @media (prefers-color-scheme: light) {
+      body, .body-table { background-color: #050505 !important; color: #e5e5e5 !important; }
+      .card { background-color: #0c0c0c !important; border-color: #222222 !important; }
+    }
+  </style>
+</head>`;
+
+  // 1. Build Admin HTML Template (wrapped in table for mobile styling compatibility)
   const adminHtml = `<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { background-color: #050505; color: #e5e5e5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 40px 20px; }
-    .card { max-width: 580px; margin: 0 auto; background: #0c0c0c; border: 1px solid #222222; border-radius: 12px; padding: 32px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
-    .logo { text-align: center; font-size: 20px; font-weight: bold; letter-spacing: 4px; color: #ffffff; margin-bottom: 24px; border-bottom: 1px solid #222222; padding-bottom: 20px; }
-    .title { font-size: 16px; font-weight: 500; letter-spacing: 2px; color: #888888; text-transform: uppercase; margin-bottom: 20px; }
-    .row { margin-bottom: 16px; }
-    .label { font-size: 11px; letter-spacing: 1px; color: #666666; text-transform: uppercase; margin-bottom: 4px; }
-    .value { font-size: 14px; color: #ffffff; }
-    .message-box { background: #111111; border-left: 2px solid #c9a054; padding: 16px; border-radius: 4px; margin-top: 12px; color: #cccccc; font-style: italic; font-size: 14px; line-height: 1.6; }
-    .footer { text-align: center; margin-top: 32px; font-size: 10px; color: #444444; letter-spacing: 1.5px; border-top: 1px solid #111111; padding-top: 20px; text-transform: uppercase; }
-  </style>
-</head>
+${emailStyleAndHead}
 <body>
-  <div class="card">
-    <div class="logo">SON DYNASTY / MSANGAMBE</div>
-    <div class="title">New Signal Received</div>
-    
-    <div class="row">
-      <div class="label">From</div>
-      <div class="value">${name} ${surname}</div>
-    </div>
-    <div class="row">
-      <div class="label">Contact Number</div>
-      <div class="value">${number}</div>
-    </div>
-    <div class="row">
-      <div class="label">Email Address</div>
-      <div class="value">${email}</div>
-    </div>
-    <div class="row">
-      <div class="label">Transmission Message</div>
-      <div class="message-box">${message || 'No additional comment provided.'}</div>
-    </div>
-    
-    <div class="footer">Automated System Transmission · msangambe.com</div>
-  </div>
+  <table class="body-table" width="100%" height="100%" bgcolor="#050505" cellpadding="0" cellspacing="0" border="0" style="background-color: #050505; width: 100%; height: 100%; margin: 0; padding: 40px 20px;">
+    <tr>
+      <td align="center" valign="top">
+        <div class="card">
+          <div class="logo">SON DYNASTY / MSANGAMBE</div>
+          <div class="title">New Signal Received</div>
+          
+          <div class="row">
+            <div class="label">From</div>
+            <div class="value">${name} ${surname}</div>
+          </div>
+          <div class="row">
+            <div class="label">Contact Number</div>
+            <div class="value">${number}</div>
+          </div>
+          <div class="row">
+            <div class="label">Email Address</div>
+            <div class="value">${email}</div>
+          </div>
+          <div class="row">
+            <div class="label">Transmission Message</div>
+            <div class="message-box">${message || 'No additional comment provided.'}</div>
+          </div>
+          
+          <div class="footer">Automated System Transmission · msangambe.com</div>
+        </div>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>`;
 
-  // 2. Build User Confirmation HTML Template
+  // 2. Build User Confirmation HTML Template (wrapped in table for mobile styling compatibility)
   const userHtml = `<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { background-color: #050505; color: #e5e5e5; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 40px 20px; }
-    .card { max-width: 580px; margin: 0 auto; background: #0c0c0c; border: 1px solid #222222; border-radius: 12px; padding: 32px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
-    .logo { text-align: center; font-size: 20px; font-weight: bold; letter-spacing: 4px; color: #ffffff; margin-bottom: 24px; border-bottom: 1px solid #222222; padding-bottom: 20px; }
-    .title { font-size: 16px; font-weight: 500; letter-spacing: 2px; color: #cccccc; text-transform: uppercase; margin-bottom: 20px; text-align: center; }
-    .greeting { font-size: 15px; line-height: 1.6; color: #e5e5e5; margin-bottom: 24px; }
-    .details-title { font-size: 11px; letter-spacing: 1px; color: #555555; text-transform: uppercase; margin-top: 24px; margin-bottom: 12px; border-bottom: 1px solid #111111; padding-bottom: 6px; }
-    .row { margin-bottom: 12px; }
-    .label { font-size: 10px; letter-spacing: 1px; color: #555555; text-transform: uppercase; display: inline-block; width: 120px; }
-    .value { font-size: 13px; color: #b5b5b5; display: inline-block; }
-    .message-box { background: #111111; border-left: 2px solid #333333; padding: 12px; border-radius: 4px; color: #999999; font-style: italic; font-size: 13px; margin-top: 8px; }
-    .closing { margin-top: 32px; font-size: 14px; color: #ffffff; text-align: center; line-height: 1.8; }
-    .footer { text-align: center; margin-top: 32px; font-size: 9px; color: #444444; letter-spacing: 1.5px; border-top: 1px solid #111111; padding-top: 20px; text-transform: uppercase; }
-  </style>
-</head>
+${emailStyleAndHead}
 <body>
-  <div class="card">
-    <div class="logo">SON DYNASTY</div>
-    <div class="title">Transmission Secured</div>
-    
-    <div class="greeting">
-      Greetings ${name},<br><br>
-      Your signal has been received and secured in the Dynasty. Msangambe "Son Dynasty" Sigudla has been notified of your transmission and will connect with you shortly.
-    </div>
+  <table class="body-table" width="100%" height="100%" bgcolor="#050505" cellpadding="0" cellspacing="0" border="0" style="background-color: #050505; width: 100%; height: 100%; margin: 0; padding: 40px 20px;">
+    <tr>
+      <td align="center" valign="top">
+        <div class="card">
+          <div class="logo">SON DYNASTY</div>
+          <div class="title">Transmission Secured</div>
+          
+          <div class="greeting">
+            Greetings ${name},<br><br>
+            Your signal has been received and secured in Dynasty World. Msangambe "Son Dynasty" Sigudla has been notified of your transmission and will connect with you shortly.
+          </div>
 
-    <div class="details-title">Transmission Reference Details</div>
-    
-    <div class="row">
-      <span class="label">Reference Name:</span>
-      <span class="value">${name} ${surname}</span>
-    </div>
-    <div class="row">
-      <span class="label">Contact Number:</span>
-      <span class="value">${number}</span>
-    </div>
-    <div class="row">
-      <span class="label">Email Address:</span>
-      <span class="value">${email}</span>
-    </div>
-    ${message ? `
-    <div class="row">
-      <span class="label">Your Message:</span>
-      <div class="message-box">${message}</div>
-    </div>` : ''}
-    
-    <div class="closing">
-      Walk in the light.<br>
-      <strong>SON DYNASTY</strong>
-    </div>
+          <div class="details-title">Transmission Reference Details</div>
+          
+          <div class="horizontal-row">
+            <span class="horizontal-label">Reference Name:</span>
+            <span class="horizontal-value">${name} ${surname}</span>
+          </div>
+          <div class="horizontal-row">
+            <span class="horizontal-label">Contact Number:</span>
+            <span class="horizontal-value">${number}</span>
+          </div>
+          <div class="horizontal-row">
+            <span class="horizontal-label">Email Address:</span>
+            <span class="horizontal-value">${email}</span>
+          </div>
+          ${message ? `
+          <div class="row" style="margin-top: 16px;">
+            <span class="horizontal-label">Your Message:</span>
+            <div class="message-box">${message}</div>
+          </div>` : ''}
+          
+          <div class="closing">
+            STEP INTO THE UNDERWORLD.<br>
+            <span class="signature">Msangambe</span>
+          </div>
 
-    <div class="footer">This is an automated receipt confirmation from msangambe.com</div>
-  </div>
+          <div class="footer">This is an automated receipt confirmation from msangambe.com</div>
+        </div>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>`;
 
