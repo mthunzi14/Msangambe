@@ -32,11 +32,9 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Required fields are missing.' });
   }
 
-  // Fallback recipient if domain/emails are unverified in Resend sandbox
-  const defaultTestingEmail = 'mthunzi.sibiya2005@gmail.com';
+  const defaultTestingEmail = 'info@msangambe.com';
   
-  // Admin emails to notify
-  const adminRecipients = ['sondynastyent@gmail.com', 'mnksigudla@gmail.com'];
+  const adminRecipients = ['sondynasty@msangambe.com'];
 
   // Common Header/Style Block with CSS gradient hack to bypass Gmail's dark-to-light auto-inversion
   const emailStyleAndHead = `<head>
