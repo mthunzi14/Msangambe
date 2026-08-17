@@ -182,13 +182,11 @@ ${emailStyleAndHead}
     <tr>
       <td align="center" valign="top">
         
-        <!-- Scrolling Marquee Strip -->
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 580px; background-color: #FFFFFF; border-top: 1px solid rgba(192, 192, 192, 0.3); border-left: 1px solid rgba(192, 192, 192, 0.3); border-right: 1px solid rgba(192, 192, 192, 0.3); border-radius: 12px 12px 0 0; text-align: center; overflow: hidden;">
+        <!-- Top Centered Banner Strip -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 580px; background-color: #FFFFFF; border-top: 1px solid rgba(192, 192, 192, 0.3); border-left: 1px solid rgba(192, 192, 192, 0.3); border-right: 1px solid rgba(192, 192, 192, 0.3); border-radius: 12px 12px 0 0; text-align: center;">
           <tr>
-            <td style="padding: 12px 10px;">
-              <marquee scrollamount="2" behavior="scroll" direction="left" style="font-family: 'Cinzel', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 8px; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: #8A8A8A; display: block; width: 100%;">
-                MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA
-              </marquee>
+            <td style="padding: 14px 10px; font-family: 'Cinzel', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 8px; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: #8A8A8A;">
+              MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA
             </td>
           </tr>
         </table>
@@ -198,14 +196,14 @@ ${emailStyleAndHead}
           <tr>
             <td class="card-content" style="padding: 36px;">
               
-              <!-- Header Row with Dragon Logo & Cursive Title -->
+              <!-- Header Row with Crest Logo & Cursive Title -->
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 28px; border-bottom: 1px solid rgba(192, 192, 192, 0.2); padding-bottom: 20px;">
                 <tr>
-                  <td width="55" valign="middle" align="left">
-                    <img src="https://msangambe.com/assets/DWS2NOBG.png" alt="SM" width="45" style="display: block; border: 0;">
+                  <td width="60" valign="middle" align="left">
+                    <img src="https://msangambe.com/assets/logo-crest-black-on-white.png" alt="SM Crest" width="50" style="display: block; border: 0;">
                   </td>
-                  <td valign="middle" align="center" style="padding-right: 55px;">
-                    <img src="https://msangambe.com/assets/images/welcome_dynasty_world_dark.png" alt="Welcome to Dynasty World" width="280" style="display: block; margin: 0 auto; border: 0;">
+                  <td valign="middle" align="center" style="padding-right: 60px;">
+                    <img src="https://msangambe.com/assets/images/welcome_dynasty_world_dark.png" alt="Welcome to Dynasty World" width="336" style="display: block; margin: 0 auto; border: 0;">
                   </td>
                 </tr>
               </table>
@@ -249,13 +247,11 @@ ${emailStyleAndHead}
     <tr>
       <td align="center" valign="top">
         
-        <!-- Scrolling Marquee Strip -->
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 580px; background-color: #FFFFFF; border-top: 1px solid rgba(192, 192, 192, 0.3); border-left: 1px solid rgba(192, 192, 192, 0.3); border-right: 1px solid rgba(192, 192, 192, 0.3); border-radius: 12px 12px 0 0; text-align: center; overflow: hidden;">
+        <!-- Top Centered Banner Strip -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 580px; background-color: #FFFFFF; border-top: 1px solid rgba(192, 192, 192, 0.3); border-left: 1px solid rgba(192, 192, 192, 0.3); border-right: 1px solid rgba(192, 192, 192, 0.3); border-radius: 12px 12px 0 0; text-align: center;">
           <tr>
-            <td style="padding: 12px 10px;">
-              <marquee scrollamount="2" behavior="scroll" direction="left" style="font-family: 'Cinzel', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 8px; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: #8A8A8A; display: block; width: 100%;">
-                MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA
-              </marquee>
+            <td style="padding: 14px 10px; font-family: 'Cinzel', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 8px; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: #8A8A8A;">
+              MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA
             </td>
           </tr>
         </table>
@@ -265,14 +261,14 @@ ${emailStyleAndHead}
           <tr>
             <td class="card-content" style="padding: 36px;">
               
-              <!-- Header Row with Dragon Logo & Cursive Title -->
+              <!-- Header Row with Crest Logo & Cursive Title -->
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 28px; border-bottom: 1px solid rgba(192, 192, 192, 0.2); padding-bottom: 20px;">
                 <tr>
-                  <td width="55" valign="middle" align="left">
-                    <img src="https://msangambe.com/assets/DWS2NOBG.png" alt="SM" width="45" style="display: block; border: 0;">
+                  <td width="60" valign="middle" align="left">
+                    <img src="https://msangambe.com/assets/logo-crest-black-on-white.png" alt="SM Crest" width="50" style="display: block; border: 0;">
                   </td>
-                  <td valign="middle" align="center" style="padding-right: 55px;">
-                    <img src="https://msangambe.com/assets/images/welcome_dynasty_world_dark.png" alt="Welcome to Dynasty World" width="280" style="display: block; margin: 0 auto; border: 0;">
+                  <td valign="middle" align="center" style="padding-right: 60px;">
+                    <img src="https://msangambe.com/assets/images/welcome_dynasty_world_dark.png" alt="Welcome to Dynasty World" width="336" style="display: block; margin: 0 auto; border: 0;">
                   </td>
                 </tr>
               </table>
@@ -311,27 +307,33 @@ ${emailStyleAndHead}
               <table align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 32px auto 0; background-color: #FFFFFF; border: 1px solid rgba(192, 192, 192, 0.3); border-radius: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); padding: 8px 16px;">
                 <tr>
                   <!-- YouTube -->
-                  <td align="center" style="padding: 0 10px;">
-                    <a href="https://www.youtube.com/@sondynastytv" target="_blank" style="display: block; text-decoration: none; color: #8A8A8A;">
-                      <img src="https://msangambe.com/assets/logo-sondynasty-globe.png" alt="YouTube" width="20" height="20" style="display: block; border: 0;">
+                  <td align="center" style="padding: 0 8px;">
+                    <a href="https://www.youtube.com/@sondynastytv" target="_blank" style="display: inline-block; width: 36px; height: 36px; line-height: 36px; background-color: #EFEFED; border-radius: 50%; text-decoration: none; text-align: center;">
+                      <img src="https://img.icons8.com/ios-glyphs/30/1c1c1c/youtube-play.png" alt="YouTube" width="18" height="18" style="display: inline-block; vertical-align: middle; border: 0;">
                     </a>
                   </td>
                   <!-- Instagram -->
-                  <td align="center" style="padding: 0 10px;">
-                    <a href="https://www.instagram.com/msangambe_" target="_blank" style="display: block; text-decoration: none; color: #8A8A8A;">
-                      <img src="https://msangambe.com/assets/logo-msangambe-cursive.png" alt="Instagram" width="20" height="20" style="display: block; border: 0;">
+                  <td align="center" style="padding: 0 8px;">
+                    <a href="https://www.instagram.com/msangambe_" target="_blank" style="display: inline-block; width: 36px; height: 36px; line-height: 36px; background-color: #EFEFED; border-radius: 50%; text-decoration: none; text-align: center;">
+                      <img src="https://img.icons8.com/ios-glyphs/30/1c1c1c/instagram-new.png" alt="Instagram" width="18" height="18" style="display: inline-block; vertical-align: middle; border: 0;">
                     </a>
                   </td>
                   <!-- TikTok -->
-                  <td align="center" style="padding: 0 10px;">
-                    <a href="https://www.tiktok.com/@sondynasty" target="_blank" style="display: block; text-decoration: none; color: #8A8A8A;">
-                      <img src="https://msangambe.com/FAVICON-LOGO_NOBG-removebg-preview.png" alt="TikTok" width="20" height="20" style="display: block; border: 0;">
+                  <td align="center" style="padding: 0 8px;">
+                    <a href="https://www.tiktok.com/@sondynasty" target="_blank" style="display: inline-block; width: 36px; height: 36px; line-height: 36px; background-color: #EFEFED; border-radius: 50%; text-decoration: none; text-align: center;">
+                      <img src="https://img.icons8.com/ios-glyphs/30/1c1c1c/tiktok.png" alt="TikTok" width="18" height="18" style="display: inline-block; vertical-align: middle; border: 0;">
+                    </a>
+                  </td>
+                  <!-- Twitch -->
+                  <td align="center" style="padding: 0 8px;">
+                    <a href="https://www.twitch.tv/sondynastytv" target="_blank" style="display: inline-block; width: 36px; height: 36px; line-height: 36px; background-color: #EFEFED; border-radius: 50%; text-decoration: none; text-align: center;">
+                      <img src="https://img.icons8.com/ios-glyphs/30/1c1c1c/twitch.png" alt="Twitch" width="18" height="18" style="display: inline-block; vertical-align: middle; border: 0;">
                     </a>
                   </td>
                   <!-- Twitter/X -->
-                  <td align="center" style="padding: 0 10px;">
-                    <a href="https://x.com/msangambe1" target="_blank" style="display: block; text-decoration: none; color: #8A8A8A;">
-                      <img src="https://msangambe.com/SONDYNASTY-removebg-preview.png" alt="X" width="20" height="20" style="display: block; border: 0;">
+                  <td align="center" style="padding: 0 8px;">
+                    <a href="https://x.com/msangambe1" target="_blank" style="display: inline-block; width: 36px; height: 36px; line-height: 36px; background-color: #EFEFED; border-radius: 50%; text-decoration: none; text-align: center;">
+                      <img src="https://img.icons8.com/ios-glyphs/30/1c1c1c/twitter.png" alt="X" width="18" height="18" style="display: inline-block; vertical-align: middle; border: 0;">
                     </a>
                   </td>
                 </tr>
