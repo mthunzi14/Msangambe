@@ -38,22 +38,17 @@ module.exports = async (req, res) => {
   // Admin emails to notify
   const adminRecipients = ['sondynastyent@gmail.com', 'mnksigudla@gmail.com'];
 
-  // Common Header/Style Block for robust mobile dark rendering and custom font load
+  // Common Header/Style Block with CSS gradient hack to bypass Gmail's dark-to-light auto-inversion
   const emailStyleAndHead = `<head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="light dark">
-  <meta name="supported-color-schemes" content="light dark">
+  <meta name="color-scheme" content="dark only">
+  <meta name="supported-color-schemes" content="dark only">
   <style>
-    @font-face {
-      font-family: 'Bastliga One';
-      src: url('https://msangambe.com/Bastliga%20One.ttf') format('truetype');
-      font-weight: 400;
-      font-style: normal;
-    }
-    :root { color-scheme: light dark; supported-color-schemes: light dark; }
+    :root { color-scheme: dark only; supported-color-schemes: dark only; }
     body, .body-table {
       background-color: #050505 !important;
+      background-image: linear-gradient(#050505, #050505) !important;
       color: #e5e5e5 !important;
       margin: 0;
       padding: 0;
@@ -68,6 +63,7 @@ module.exports = async (req, res) => {
       max-width: 580px;
       width: 100%;
       background-color: #0c0c0c !important;
+      background-image: linear-gradient(#0c0c0c, #0c0c0c) !important;
       border: 1px solid #222222 !important;
       border-radius: 12px;
       padding: 32px;
@@ -159,16 +155,6 @@ module.exports = async (req, res) => {
       line-height: 1.8;
       text-transform: uppercase;
     }
-    .signature {
-      font-family: 'Bastliga One', 'Italianno', cursive;
-      font-size: 52px;
-      color: #ffffff !important;
-      display: block;
-      margin-top: 8px;
-      text-transform: none;
-      letter-spacing: normal;
-      font-weight: normal;
-    }
     .footer {
       text-align: center;
       margin-top: 32px;
@@ -182,12 +168,14 @@ module.exports = async (req, res) => {
     
     /* Strict override overrides to prevent client-side auto-inversion */
     @media (prefers-color-scheme: dark) {
-      body, .body-table { background-color: #050505 !important; color: #e5e5e5 !important; }
-      .card { background-color: #0c0c0c !important; border-color: #222222 !important; }
+      body, .body-table { background-color: #050505 !important; background-image: linear-gradient(#050505, #050505) !important; color: #e5e5e5 !important; }
+      .card { background-color: #0c0c0c !important; background-image: linear-gradient(#0c0c0c, #0c0c0c) !important; border-color: #222222 !important; }
+      .value, .logo { color: #ffffff !important; }
     }
     @media (prefers-color-scheme: light) {
-      body, .body-table { background-color: #050505 !important; color: #e5e5e5 !important; }
-      .card { background-color: #0c0c0c !important; border-color: #222222 !important; }
+      body, .body-table { background-color: #050505 !important; background-image: linear-gradient(#050505, #050505) !important; color: #e5e5e5 !important; }
+      .card { background-color: #0c0c0c !important; background-image: linear-gradient(#0c0c0c, #0c0c0c) !important; border-color: #222222 !important; }
+      .value, .logo { color: #ffffff !important; }
     }
   </style>
 </head>`;
@@ -229,7 +217,7 @@ ${emailStyleAndHead}
 </body>
 </html>`;
 
-  // 2. Build User Confirmation HTML Template (wrapped in table for mobile styling compatibility)
+  // 2. Build User Confirmation HTML Template
   const userHtml = `<!DOCTYPE html>
 <html>
 ${emailStyleAndHead}
@@ -268,7 +256,7 @@ ${emailStyleAndHead}
           
           <div class="closing">
             STEP INTO THE UNDERWORLD.<br>
-            <span class="signature">Msangambe</span>
+            <img src="https://msangambe.com/assets/images/msangambe_signature.png" alt="Msangambe" width="220" style="display: block; margin: 12px auto 0; border: 0; filter: brightness(100%);">
           </div>
 
           <div class="footer">This is an automated receipt confirmation from msangambe.com</div>
