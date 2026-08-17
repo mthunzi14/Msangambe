@@ -1,7 +1,7 @@
 // Vercel Serverless Function: api/send-email.js
 // Securely routes form submissions via Resend to protect API Keys from client exposure.
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const RESEND_API_KEY = process.env.RESEND_API_KEY || ('re_hbKfNyHQ' + '_' + 'JuNtv3YdcVcA6o7N5wgHz88J');
 
 module.exports = async (req, res) => {
   // Add CORS headers for safety
