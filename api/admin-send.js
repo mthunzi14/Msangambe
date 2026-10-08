@@ -65,6 +65,20 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Please provide recipient email, recipient name, subject, and message.' });
     }
 
+    // Parse and sanitize multiple recipients (comma, semicolon, newline, space separated)
+    let recipientsList = [];
+    if (Array.isArray(recipientEmail)) {
+      recipientsList = recipientEmail;
+    } else if (typeof recipientEmail === 'string') {
+      recipientsList = recipientEmail.split(/[,;\n]+/).map(e => e.trim()).filter(Boolean);
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const validRecipients = recipientsList.filter(e => emailRegex.test(e));
+
+    if (validRecipients.length === 0) {
+      return res.status(400).json({ error: 'Please provide at least one valid recipient email address.' });
+    }
+
     // Format plain text into clean styled paragraphs
     const formattedParagraphs = message
       .split(/\n\s*\n/)
@@ -252,7 +266,7 @@ ${emailStyleAndHead}
     try {
       const payload = {
         from: 'Dynasty World <info@msangambe.com>',
-        to: [recipientEmail.trim()],
+        to: validRecipients,
         subject: subject.trim(),
         html: emailHtml
       };
@@ -281,8 +295,9 @@ ${emailStyleAndHead}
 
       return res.status(200).json({
         success: true,
-        message: `Transmission successfully dispatched to ${recipientEmail}`,
-        id: data.id
+        message: `Transmission successfully dispatched to ${validRecipients.join(', ')}`,
+        id: data.id,
+        count: validRecipients.length
       });
     } catch (err) {
       console.error('Server error in admin-send:', err);

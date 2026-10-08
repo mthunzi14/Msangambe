@@ -26,10 +26,11 @@
       --grey-light: #EFEFED;
       --grey-mid: #D4D4D4;
       --silver: #C0C0C0;
+      --silver-bright: #E8E8E8;
       --silver-deep: #8A8A8A;
       --black: #0A0A0A;
       --charcoal: #1C1C1C;
-      --border-subtle: rgba(192, 192, 192, 0.4);
+      --border-subtle: rgba(192, 192, 192, 0.3);
       --shadow-luxury: 0 8px 32px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
       --ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -64,28 +65,60 @@
       z-index: 0;
     }
 
-    /* Top Centered Banner Strip */
-    .top-strip {
-      width: 100%;
-      background-color: var(--white);
+    /* ═══════════════════════════════════════════════════════════
+       ORIGINAL WEBSITE MARQUEE STRIP (NO COLOR DIFFERENCE)
+       ═══════════════════════════════════════════════════════════ */
+    .marquee-strip {
+      height: 48px;
+      background: var(--off-white);
+      border-top: 1px solid var(--border-subtle);
       border-bottom: 1px solid var(--border-subtle);
-      text-align: center;
-      padding: 12px 16px;
-      font-family: 'Cinzel', serif;
-      font-size: 9px;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--silver-deep);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
       position: relative;
       z-index: 2;
+      width: 100%;
     }
 
-    /* Navigation Bar */
+    .marquee-track {
+      display: flex;
+      white-space: nowrap;
+      will-change: transform;
+    }
+
+    .marquee-track span {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--silver-deep);
+      padding-right: 0;
+      display: inline-block;
+    }
+
+    .marquee-track--left {
+      animation: marquee-left 35s linear infinite;
+    }
+
+    .marquee-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes marquee-left {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       HEADER NAVIGATION & GLOBE LOGO
+       ═══════════════════════════════════════════════════════════ */
     .admin-nav {
       max-width: 1200px;
       width: 100%;
       margin: 0 auto;
-      padding: 24px 20px 16px;
+      padding: 18px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -93,35 +126,30 @@
       z-index: 2;
     }
 
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
+    .nav-logo-link {
+      display: inline-block;
       text-decoration: none;
-      color: inherit;
+      cursor: pointer;
+      transition: transform 0.4s var(--ease);
     }
 
-    .nav-crest {
-      width: 42px;
-      height: auto;
+    .nav-logo-globe {
+      height: 78px;
+      width: auto;
       display: block;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.12));
+      animation: globe-slow-spin 25s linear infinite;
+      transition: transform 0.3s var(--ease), filter 0.3s var(--ease);
     }
 
-    .nav-title-group h1 {
-      font-family: 'Cinzel', serif;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--charcoal);
+    .nav-logo-link:hover .nav-logo-globe {
+      transform: scale(1.08);
+      filter: drop-shadow(0 4px 14px rgba(0, 255, 204, 0.25));
     }
 
-    .nav-title-group p {
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      color: var(--silver-deep);
-      text-transform: uppercase;
-      margin-top: 2px;
+    @keyframes globe-slow-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
     }
 
     .nav-session {
@@ -134,7 +162,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 12px;
+      padding: 6px 14px;
       background: var(--white);
       border: 1px solid var(--border-subtle);
       border-radius: 20px;
@@ -155,7 +183,7 @@
     .btn-logout {
       background: transparent;
       border: 1px solid var(--border-subtle);
-      padding: 6px 14px;
+      padding: 6px 16px;
       border-radius: 20px;
       font-family: 'Cinzel', serif;
       font-size: 9px;
@@ -178,7 +206,7 @@
       max-width: 1200px;
       width: 100%;
       margin: 0 auto;
-      padding: 10px 20px 40px;
+      padding: 8px 20px 40px;
       position: relative;
       z-index: 2;
     }
@@ -187,7 +215,7 @@
        VIEW 1: LOGIN CARD
        ═══════════════════════════════════════════════════════════ */
     .login-container {
-      min-height: 65vh;
+      min-height: 60vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -237,13 +265,23 @@
     }
 
     .form-label {
-      display: block;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-size: 10px;
       font-family: 'Cinzel', serif;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--silver-deep);
       margin-bottom: 8px;
+    }
+
+    .form-label-hint {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 9px;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--silver-deep);
     }
 
     .form-input, .form-textarea {
@@ -263,6 +301,32 @@
       background: var(--white);
       border-color: var(--charcoal);
       box-shadow: 0 0 0 3px rgba(28, 28, 28, 0.05);
+    }
+
+    .multi-email-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+
+    .btn-add-email {
+      background: transparent;
+      border: none;
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--silver-deep);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 4px;
+      transition: color 0.2s;
+    }
+
+    .btn-add-email:hover {
+      color: var(--charcoal);
     }
 
     .btn-primary {
@@ -452,10 +516,6 @@
         gap: 16px;
         text-align: center;
       }
-      .nav-brand {
-        flex-direction: column;
-        gap: 8px;
-      }
     }
   </style>
 </head>
@@ -464,19 +524,18 @@
   <!-- Watermark background crest -->
   <img src="assets/logo-crest-black-on-white.png" alt="" class="bg-watermark">
 
-  <!-- Top Centered Strip -->
-  <div class="top-strip">
-    MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; ADMIN DISPATCH TERMINAL
+  <!-- Dynamic Moving Marquee Strip (Exact Website System & Color) -->
+  <div class="marquee-strip marquee-strip--top" aria-hidden="true">
+    <div class="marquee-track marquee-track--left">
+      <span>MSANGAMBE SIGUDLA &nbsp;·&nbsp; ARTIST &nbsp;·&nbsp; DYNASTY WORLD &nbsp;·&nbsp; GCWALA &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; CREATOR &nbsp;·&nbsp; ALIENO NATURA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; MODEL &nbsp;·&nbsp; TECHNO/ANIMAL &nbsp;·&nbsp; DYNASTY FOREVER &nbsp;·&nbsp; MSANGAMBE SIGUDLA &nbsp;·&nbsp; ARTIST &nbsp;·&nbsp; DYNASTY WORLD &nbsp;·&nbsp; GCWALA &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; CREATOR &nbsp;·&nbsp; ALIENO NATURA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; MODEL &nbsp;·&nbsp; TECHNO/ANIMAL &nbsp;·&nbsp; DYNASTY FOREVER &nbsp;·&nbsp;</span>
+      <span aria-hidden="true">MSANGAMBE SIGUDLA &nbsp;·&nbsp; ARTIST &nbsp;·&nbsp; DYNASTY WORLD &nbsp;·&nbsp; GCWALA &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; CREATOR &nbsp;·&nbsp; ALIENO NATURA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; MODEL &nbsp;·&nbsp; TECHNO/ANIMAL &nbsp;·&nbsp; DYNASTY FOREVER &nbsp;·&nbsp; MSANGAMBE SIGUDLA &nbsp;·&nbsp; ARTIST &nbsp;·&nbsp; DYNASTY WORLD &nbsp;·&nbsp; GCWALA &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; CREATOR &nbsp;·&nbsp; ALIENO NATURA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; MODEL &nbsp;·&nbsp; TECHNO/ANIMAL &nbsp;·&nbsp; DYNASTY FOREVER &nbsp;·&nbsp;</span>
+    </div>
   </div>
 
-  <!-- Header Nav -->
+  <!-- Header Nav (Rotating Globe links to home & signs out) -->
   <header class="admin-nav">
-    <a href="/" class="nav-brand">
-      <img src="assets/logo-crest-black-on-white.png" alt="Msangambe" class="nav-crest">
-      <div class="nav-title-group">
-        <h1>Dynasty World</h1>
-        <p>Private Transmission Terminal</p>
-      </div>
+    <a href="/" class="nav-logo-link" id="nav-globe-home" title="Return to Dynasty World">
+      <img src="SONDYNASTY-removebg-preview.png" alt="Son Dynasty Globe" class="nav-logo-globe">
     </a>
     
     <div class="nav-session" id="nav-session" style="display: none;">
@@ -535,8 +594,14 @@
 
           <form id="form-dispatch">
             <div class="form-group">
-              <label class="form-label" for="field-recipient-email">Recipient Email Address *</label>
-              <input type="email" id="field-recipient-email" class="form-input" placeholder="e.g. client@domain.com, curator@gallery.com" required>
+              <label class="form-label" for="field-recipient-email">
+                <span>Recipient Email Address(es) *</span>
+                <span class="form-label-hint">Separate multiple with commas</span>
+              </label>
+              <input type="text" id="field-recipient-email" class="form-input" placeholder="e.g. sasa@domain.com, curator@gallery.com" required>
+              <div class="multi-email-actions">
+                <button type="button" class="btn-add-email" id="btn-add-another-email">+ Add Recipient</button>
+              </div>
             </div>
 
             <div class="form-group">
@@ -648,6 +713,7 @@
     const viewDispatcher = document.getElementById('view-dispatcher');
     const navSession = document.getElementById('nav-session');
     const btnLogout = document.getElementById('btn-logout');
+    const navGlobeHome = document.getElementById('nav-globe-home');
 
     const formLogin = document.getElementById('form-login');
     const loginEmail = document.getElementById('login-email');
@@ -657,6 +723,7 @@
 
     const formDispatch = document.getElementById('form-dispatch');
     const fieldRecipientEmail = document.getElementById('field-recipient-email');
+    const btnAddAnotherEmail = document.getElementById('btn-add-another-email');
     const fieldRecipientName = document.getElementById('field-recipient-name');
     const fieldSubject = document.getElementById('field-subject');
     const fieldMessage = document.getElementById('field-message');
@@ -709,6 +776,12 @@
       setAuthenticated(true);
     }
 
+    // Globe Home click also terminates session safely
+    navGlobeHome.addEventListener('click', (e) => {
+      sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(SESSION_EMAIL);
+    });
+
     // 1. Handle Login
     formLogin.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -753,7 +826,22 @@
       showToast('Session terminated.');
     });
 
-    // 3. Live Preview Listeners
+    // 3. Multi-email Helper
+    btnAddAnotherEmail.addEventListener('click', () => {
+      const current = fieldRecipientEmail.value.trim();
+      if (!current) {
+        fieldRecipientEmail.focus();
+        return;
+      }
+      if (!current.endsWith(',')) {
+        fieldRecipientEmail.value = current + ', ';
+      } else {
+        fieldRecipientEmail.value = current + ' ';
+      }
+      fieldRecipientEmail.focus();
+    });
+
+    // 4. Live Preview Listeners
     fieldRecipientName.addEventListener('input', () => {
       const name = fieldRecipientName.value.trim();
       previewGreeting.textContent = name ? `Greetings ${name},` : 'Greetings [Recipient Name],';
@@ -769,12 +857,31 @@
       previewMessage.innerHTML = paragraphs;
     });
 
-    // 4. Handle Email Dispatch
+    // 5. Handle Email Dispatch
     formDispatch.addEventListener('submit', async (e) => {
       e.preventDefault();
       dispatchError.style.display = 'none';
+
+      // Parse emails
+      const rawEmails = fieldRecipientEmail.value;
+      const emails = rawEmails.split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const invalid = emails.filter(em => !emailRegex.test(em));
+
+      if (emails.length === 0) {
+        dispatchError.textContent = 'Please enter at least one recipient email address.';
+        dispatchError.style.display = 'block';
+        return;
+      }
+
+      if (invalid.length > 0) {
+        dispatchError.textContent = `Invalid email address detected: "${invalid[0]}". Please check format.`;
+        dispatchError.style.display = 'block';
+        return;
+      }
+
       btnSendDispatch.disabled = true;
-      btnSendText.textContent = 'Transmitting Signal...';
+      btnSendText.textContent = `Transmitting Signal to ${emails.length} recipient${emails.length > 1 ? 's' : ''}...`;
 
       const token = sessionStorage.getItem(SESSION_KEY);
 
@@ -787,7 +894,7 @@
           },
           body: JSON.stringify({
             action: 'send',
-            recipientEmail: fieldRecipientEmail.value.trim(),
+            recipientEmail: emails,
             recipientName: fieldRecipientName.value.trim(),
             subject: fieldSubject.value.trim(),
             message: fieldMessage.value.trim(),
@@ -798,7 +905,7 @@
         const data = await res.json();
 
         if (res.ok && data.success) {
-          showToast(`Transmission dispatched to ${fieldRecipientEmail.value}!`);
+          showToast(`Transmission successfully dispatched to ${emails.length} recipient${emails.length > 1 ? 's' : ''}!`);
           // Clear inputs but preserve state
           fieldRecipientEmail.value = '';
           fieldRecipientName.value = '';
