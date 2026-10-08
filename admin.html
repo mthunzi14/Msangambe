@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal · Dynasty World</title>
+  
+  <link rel="icon" type="image/png" href="FAVICON-LOGO_NOBG-removebg-preview.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;600;700&family=Raleway:wght@200;300;400;500;600&family=Space+Mono:wght@400;700&display=block" rel="stylesheet">
+  
+  <style>
+    @font-face {
+      font-family: 'Bastliga One';
+      src: url('Bastliga One.ttf') format('truetype'),
+           url('Bastliga One.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: block;
+    }
+
+    :root {
+      --white: #FFFFFF;
+      --off-white: #F7F5F2;
+      --grey-light: #EFEFED;
+      --grey-mid: #D4D4D4;
+      --silver: #C0C0C0;
+      --silver-deep: #8A8A8A;
+      --black: #0A0A0A;
+      --charcoal: #1C1C1C;
+      --border-subtle: rgba(192, 192, 192, 0.4);
+      --shadow-luxury: 0 8px 32px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--off-white);
+      color: var(--charcoal);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background watermark */
+    .bg-watermark {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      max-width: 90vw;
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Top Centered Banner Strip */
+    .top-strip {
+      width: 100%;
+      background-color: var(--white);
+      border-bottom: 1px solid var(--border-subtle);
+      text-align: center;
+      padding: 12px 16px;
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--silver-deep);
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Navigation Bar */
+    .admin-nav {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 20px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .nav-crest {
+      width: 42px;
+      height: auto;
+      display: block;
+    }
+
+    .nav-title-group h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+    }
+
+    .nav-title-group p {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--silver-deep);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .nav-session {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: var(--white);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--silver-deep);
+      cursor: pointer;
+      transition: all 0.25s var(--ease);
+    }
+
+    .btn-logout:hover {
+      border-color: var(--charcoal);
+      color: var(--charcoal);
+      background: var(--white);
+    }
+
+    /* Main Container */
+    .main-wrap {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 10px 20px 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       VIEW 1: LOGIN CARD
+       ═══════════════════════════════════════════════════════════ */
+    .login-container {
+      min-height: 65vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--white);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      box-shadow: var(--shadow-luxury);
+      padding: 44px 36px;
+      text-align: center;
+      position: relative;
+      animation: fadeIn 0.4s var(--ease);
+    }
+
+    .login-logo {
+      width: 56px;
+      height: auto;
+      margin: 0 auto 20px;
+      display: block;
+    }
+
+    .login-heading {
+      font-family: 'Cinzel', serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      margin-bottom: 6px;
+    }
+
+    .login-sub {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--silver-deep);
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 10px;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--silver-deep);
+      margin-bottom: 8px;
+    }
+
+    .form-input, .form-textarea {
+      width: 100%;
+      background: var(--off-white);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--charcoal);
+      outline: none;
+      transition: all 0.2s var(--ease);
+      font-family: inherit;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      background: var(--white);
+      border-color: var(--charcoal);
+      box-shadow: 0 0 0 3px rgba(28, 28, 28, 0.05);
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--charcoal);
+      color: var(--white);
+      border: 1px solid var(--charcoal);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.3s var(--ease);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-primary:hover {
+      background: #000000;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .error-msg {
+      margin-top: 16px;
+      padding: 10px;
+      background: #FEF2F2;
+      border: 1px solid #FCA5A5;
+      border-radius: 6px;
+      color: #991B1B;
+      font-size: 12px;
+      display: none;
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       VIEW 2: DISPATCHER WORKSPACE (TWO-COLUMN)
+       ═══════════════════════════════════════════════════════════ */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 32px;
+      align-items: start;
+      margin-top: 12px;
+    }
+
+    .panel-card {
+      background: var(--white);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      box-shadow: var(--shadow-luxury);
+      padding: 32px;
+    }
+
+    .panel-header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 18px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+    }
+
+    .panel-meta {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--silver-deep);
+      text-transform: uppercase;
+    }
+
+    .form-textarea {
+      min-height: 180px;
+      line-height: 1.6;
+      resize: vertical;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0 24px 0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-group input {
+      accent-color: var(--charcoal);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .checkbox-label {
+      font-size: 12px;
+      color: var(--silver-deep);
+    }
+
+    /* Preview Frame */
+    .preview-container {
+      background: var(--off-white);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 20px 10px;
+      max-height: 680px;
+      overflow-y: auto;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .preview-scale-wrapper {
+      max-width: 520px;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 28px 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .toast {
+      background: var(--charcoal);
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 14px 20px;
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideUp 0.3s var(--ease);
+    }
+
+    .toast-success-icon {
+      color: #10B981;
+      font-size: 16px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 990px) {
+      .workspace-grid {
+        grid-template-columns: 1fr;
+      }
+      .panel-card {
+        padding: 24px 18px;
+      }
+      .admin-nav {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+      .nav-brand {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Watermark background crest -->
+  <img src="assets/logo-crest-black-on-white.png" alt="" class="bg-watermark">
+
+  <!-- Top Centered Strip -->
+  <div class="top-strip">
+    MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; ADMIN DISPATCH TERMINAL
+  </div>
+
+  <!-- Header Nav -->
+  <header class="admin-nav">
+    <a href="/" class="nav-brand">
+      <img src="assets/logo-crest-black-on-white.png" alt="Msangambe" class="nav-crest">
+      <div class="nav-title-group">
+        <h1>Dynasty World</h1>
+        <p>Private Transmission Terminal</p>
+      </div>
+    </a>
+    
+    <div class="nav-session" id="nav-session" style="display: none;">
+      <span class="badge-status">
+        <span class="status-dot"></span>
+        <span id="admin-user-display">INFO@MSANGAMBE.COM</span>
+      </span>
+      <button class="btn-logout" id="btn-logout">Exit Session</button>
+    </div>
+  </header>
+
+  <!-- Main View Area -->
+  <main class="main-wrap">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         VIEW 1: AUTHENTICATION GATE
+         ═══════════════════════════════════════════════════════════ -->
+    <section class="login-container" id="view-login">
+      <div class="login-card">
+        <img src="assets/logo-crest-black-on-white.png" alt="SM Crest" class="login-logo">
+        <h2 class="login-heading">Dynasty World</h2>
+        <p class="login-sub">Admin Authentication Required</p>
+
+        <form id="form-login">
+          <div class="form-group">
+            <label class="form-label" for="login-email">Authorized Identity</label>
+            <input type="email" id="login-email" class="form-input" value="info@msangambe.com" required autocomplete="username">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="login-password">Access Cipher (Password)</label>
+            <input type="password" id="login-password" class="form-input" placeholder="••••••••••••" required autocomplete="current-password">
+          </div>
+
+          <button type="submit" class="btn-primary" id="btn-login-submit">
+            <span>Authenticate Transmission</span>
+          </button>
+
+          <div class="error-msg" id="login-error"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         VIEW 2: DISPATCHER WORKSPACE (ACTIVE UPON LOGIN)
+         ═══════════════════════════════════════════════════════════ -->
+    <section id="view-dispatcher" style="display: none;">
+      <div class="workspace-grid">
+        
+        <!-- Column 1: Manual Email Composer Form -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">Compose Transmission</div>
+            <div class="panel-meta">Sender: info@msangambe.com</div>
+          </div>
+
+          <form id="form-dispatch">
+            <div class="form-group">
+              <label class="form-label" for="field-recipient-email">Recipient Email Address *</label>
+              <input type="email" id="field-recipient-email" class="form-input" placeholder="e.g. client@domain.com, curator@gallery.com" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="field-recipient-name">Recipient Name / Entity *</label>
+              <input type="text" id="field-recipient-name" class="form-input" placeholder="e.g. Sasa Sigudla, Alexander Vance" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="field-subject">Subject Line *</label>
+              <input type="text" id="field-subject" class="form-input" placeholder="e.g. Exclusive Invitation · Dynasty World Release" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="field-message">Transmission Message *</label>
+              <textarea id="field-message" class="form-textarea" placeholder="Type your custom transmission message here...&#10;&#10;Separate paragraphs with an empty line. Every line break will be preserved inside the official email template." required></textarea>
+            </div>
+
+            <label class="checkbox-group">
+              <input type="checkbox" id="field-send-copy" checked>
+              <span class="checkbox-label">Send a verification copy to info@msangambe.com (BCC)</span>
+            </label>
+
+            <button type="submit" class="btn-primary" id="btn-send-dispatch">
+              <span id="btn-send-text">Dispatch Transmission</span>
+            </button>
+
+            <div class="error-msg" id="dispatch-error"></div>
+          </form>
+        </div>
+
+        <!-- Column 2: Real-time Live Interactive Template Preview -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">Real-time Template Preview</div>
+            <div class="panel-meta">Official Look One Layout</div>
+          </div>
+
+          <div class="preview-container">
+            <div class="preview-scale-wrapper">
+              
+              <!-- Top Preview Strip -->
+              <div style="text-align: center; border-bottom: 1px solid rgba(192, 192, 192, 0.2); padding-bottom: 8px; margin-bottom: 16px; font-family: 'Cinzel', serif; font-size: 7.5px; letter-spacing: 0.25em; text-transform: uppercase; color: #8A8A8A;">
+                MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA
+              </div>
+
+              <!-- Header with crest and cursive title -->
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid rgba(192, 192, 192, 0.2); padding-bottom: 14px;">
+                <img src="assets/logo-crest-black-on-white.png" alt="SM" style="width: 38px; height: auto;">
+                <img src="assets/images/welcome_dynasty_world_dark.png" alt="Welcome to Dynasty World" style="width: 240px; max-width: 80%; height: auto;">
+              </div>
+
+              <!-- Dynamic Greeting -->
+              <div id="preview-greeting" style="font-size: 14px; font-weight: 500; color: #1C1C1C; margin-bottom: 16px;">
+                Greetings [Recipient Name],
+              </div>
+
+              <!-- Dynamic Message -->
+              <div id="preview-message" style="font-size: 13px; line-height: 1.6; color: #1C1C1C; margin-bottom: 24px; min-height: 60px;">
+                Your custom transmission text will render here live as you type. Separate paragraphs with line breaks to format your letter cleanly.
+              </div>
+
+              <!-- Slogan & Signature -->
+              <div style="text-align: center; margin-top: 24px; font-size: 10px; letter-spacing: 2px; color: #8A8A8A; text-transform: uppercase;">
+                STEP INTO THE UNDERWORLD.<br>
+                <img src="assets/images/msangambe_signature_dark.png" alt="Msangambe" style="width: 160px; margin: 10px auto 0; display: block;">
+              </div>
+
+              <!-- Social Magnification Dock Preview -->
+              <div style="margin: 22px auto 0; width: fit-content; background-color: #FFFFFF; border: 1px solid rgba(192, 192, 192, 0.3); border-radius: 30px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); padding: 6px 14px; display: flex; gap: 8px;">
+                <span style="display: inline-block; width: 28px; height: 28px; line-height: 28px; background-color: #EFEFED; border-radius: 50%; text-align: center;">
+                  <img src="https://img.icons8.com/ios-glyphs/30/1c1c1c/youtube-play.png" width="14" height="14" style="vertical-align: middle;">
+                </span>
+                <span style="display: inline-block; width: 28px; height: 28px; line-height: 28px; background-color: #EFEFED; border-radius: 50%; text-align: center;">
+                  <img src="https://img.icons8.com/ios-glyphs/30/1c1c1c/instagram-new.png" width="14" height="14" style="vertical-align: middle;">
+                </span>
+                <span style="display: inline-block; width: 28px; height: 28px; line-height: 28px; background-color: #EFEFED; border-radius: 50%; text-align: center;">
+                  <img src="https://img.icons8.com/ios-glyphs/30/1c1c1c/tiktok.png" width="14" height="14" style="vertical-align: middle;">
+                </span>
+                <span style="display: inline-block; width: 28px; height: 28px; line-height: 28px; background-color: #EFEFED; border-radius: 50%; text-align: center;">
+                  <img src="https://img.icons8.com/ios-glyphs/30/1c1c1c/twitch.png" width="14" height="14" style="vertical-align: middle;">
+                </span>
+                <span style="display: inline-block; width: 28px; height: 28px; line-height: 28px; background-color: #EFEFED; border-radius: 50%; text-align: center;">
+                  <img src="https://img.icons8.com/ios-glyphs/30/1c1c1c/twitter.png" width="14" height="14" style="vertical-align: middle;">
+                </span>
+              </div>
+
+              <!-- Footer -->
+              <div style="text-align: center; margin-top: 24px; font-size: 8px; color: #8A8A8A; letter-spacing: 1.5px; border-top: 1px solid rgba(192, 192, 192, 0.2); padding-top: 12px; text-transform: uppercase;">
+                Automated System Transmission · msangambe.com
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    // Authentication & Dispatch Controller
+    const SESSION_KEY = 'msangambe_admin_token';
+    const SESSION_EMAIL = 'msangambe_admin_email';
+
+    const viewLogin = document.getElementById('view-login');
+    const viewDispatcher = document.getElementById('view-dispatcher');
+    const navSession = document.getElementById('nav-session');
+    const btnLogout = document.getElementById('btn-logout');
+
+    const formLogin = document.getElementById('form-login');
+    const loginEmail = document.getElementById('login-email');
+    const loginPassword = document.getElementById('login-password');
+    const loginError = document.getElementById('login-error');
+    const btnLoginSubmit = document.getElementById('btn-login-submit');
+
+    const formDispatch = document.getElementById('form-dispatch');
+    const fieldRecipientEmail = document.getElementById('field-recipient-email');
+    const fieldRecipientName = document.getElementById('field-recipient-name');
+    const fieldSubject = document.getElementById('field-subject');
+    const fieldMessage = document.getElementById('field-message');
+    const fieldSendCopy = document.getElementById('field-send-copy');
+    const btnSendDispatch = document.getElementById('btn-send-dispatch');
+    const btnSendText = document.getElementById('btn-send-text');
+    const dispatchError = document.getElementById('dispatch-error');
+
+    const previewGreeting = document.getElementById('preview-greeting');
+    const previewMessage = document.getElementById('preview-message');
+
+    // Show toast notifications
+    function showToast(message, isError = false) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `
+        <span class="toast-success-icon">${isError ? '✕' : '✓'}</span>
+        <span>${message}</span>
+      `;
+      if (isError) {
+        toast.style.borderColor = '#EF4444';
+      }
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.4s ease';
+        setTimeout(() => toast.remove(), 400);
+      }, 5000);
+    }
+
+    // Toggle View State
+    function setAuthenticated(isAuth) {
+      if (isAuth) {
+        viewLogin.style.display = 'none';
+        viewDispatcher.style.display = 'block';
+        navSession.style.display = 'flex';
+      } else {
+        viewLogin.style.display = 'flex';
+        viewDispatcher.style.display = 'none';
+        navSession.style.display = 'none';
+        sessionStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem(SESSION_EMAIL);
+      }
+    }
+
+    // Check existing session
+    const existingToken = sessionStorage.getItem(SESSION_KEY);
+    if (existingToken) {
+      setAuthenticated(true);
+    }
+
+    // 1. Handle Login
+    formLogin.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginError.style.display = 'none';
+      btnLoginSubmit.disabled = true;
+      btnLoginSubmit.innerHTML = '<span>Verifying Cipher...</span>';
+
+      try {
+        const res = await fetch('/api/admin-send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'login',
+            email: loginEmail.value.trim(),
+            password: loginPassword.value
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          sessionStorage.setItem(SESSION_KEY, data.token);
+          sessionStorage.setItem(SESSION_EMAIL, data.admin);
+          setAuthenticated(true);
+          showToast('Authentication confirmed. Welcome to the Transmission Terminal.');
+        } else {
+          loginError.textContent = data.error || 'Authentication failed. Please verify credentials.';
+          loginError.style.display = 'block';
+        }
+      } catch (err) {
+        loginError.textContent = 'Network or server error while authenticating.';
+        loginError.style.display = 'block';
+      } finally {
+        btnLoginSubmit.disabled = false;
+        btnLoginSubmit.innerHTML = '<span>Authenticate Transmission</span>';
+      }
+    });
+
+    // 2. Handle Logout
+    btnLogout.addEventListener('click', () => {
+      setAuthenticated(false);
+      showToast('Session terminated.');
+    });
+
+    // 3. Live Preview Listeners
+    fieldRecipientName.addEventListener('input', () => {
+      const name = fieldRecipientName.value.trim();
+      previewGreeting.textContent = name ? `Greetings ${name},` : 'Greetings [Recipient Name],';
+    });
+
+    fieldMessage.addEventListener('input', () => {
+      const text = fieldMessage.value.trim();
+      if (!text) {
+        previewMessage.innerHTML = 'Your custom transmission text will render here live as you type. Separate paragraphs with line breaks to format your letter cleanly.';
+        return;
+      }
+      const paragraphs = text.split(/\n\s*\n/).map(p => `<p style="margin: 0 0 12px 0;">${p.replace(/\n/g, '<br>')}</p>`).join('');
+      previewMessage.innerHTML = paragraphs;
+    });
+
+    // 4. Handle Email Dispatch
+    formDispatch.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      dispatchError.style.display = 'none';
+      btnSendDispatch.disabled = true;
+      btnSendText.textContent = 'Transmitting Signal...';
+
+      const token = sessionStorage.getItem(SESSION_KEY);
+
+      try {
+        const res = await fetch('/api/admin-send', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token || ''
+          },
+          body: JSON.stringify({
+            action: 'send',
+            recipientEmail: fieldRecipientEmail.value.trim(),
+            recipientName: fieldRecipientName.value.trim(),
+            subject: fieldSubject.value.trim(),
+            message: fieldMessage.value.trim(),
+            sendCopy: fieldSendCopy.checked
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showToast(`Transmission dispatched to ${fieldRecipientEmail.value}!`);
+          // Clear inputs but preserve state
+          fieldRecipientEmail.value = '';
+          fieldRecipientName.value = '';
+          fieldSubject.value = '';
+          fieldMessage.value = '';
+          previewGreeting.textContent = 'Greetings [Recipient Name],';
+          previewMessage.innerHTML = 'Your custom transmission text will render here live as you type.';
+        } else {
+          dispatchError.textContent = data.error || 'Failed to dispatch transmission.';
+          dispatchError.style.display = 'block';
+          showToast(data.error || 'Transmission failed.', true);
+        }
+      } catch (err) {
+        dispatchError.textContent = 'Network or server error while dispatching email.';
+        dispatchError.style.display = 'block';
+        showToast('Connection error occurred.', true);
+      } finally {
+        btnSendDispatch.disabled = false;
+        btnSendText.textContent = 'Dispatch Transmission';
+      }
+    });
+  </script>
+</body>
+</html>
