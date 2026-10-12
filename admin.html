@@ -85,14 +85,14 @@
 
     /* ═══════════════════════════════════════════════════════════
        STAGE 0: TRANSLUCENT BLACK MEDALLION HERO
-       (100% congruent with the main homepage layout and 3D WebGL)
+       (Dark graphite/silver stage matching the smoked medallion)
        ═══════════════════════════════════════════════════════════ */
     .hero-admin-stage {
       position: fixed;
       inset: 0;
       width: 100vw;
       height: 100vh;
-      background-color: var(--white);
+      background: radial-gradient(circle at 50% 50%, #1A1A22 0%, #111116 65%, #0B0B0E 100%);
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -100,6 +100,32 @@
       z-index: 1000;
       cursor: pointer;
       user-select: none;
+    }
+
+    /* Top Moving Marquee Strip on Hero Stage (Dark Version) */
+    .hero-marquee-strip {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 46px;
+      background: #09090C;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      z-index: 25;
+      pointer-events: none;
+    }
+
+    .hero-marquee-strip .marquee-track span {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      display: inline-block;
     }
 
     .hero-watermark {
@@ -116,7 +142,8 @@
       width: 85vw;
       max-width: 900px;
       height: auto;
-      opacity: 0.06;
+      filter: invert(1) brightness(1.2);
+      opacity: 0.045;
       user-select: none;
     }
 
@@ -146,9 +173,9 @@
 
     .hero-nav-logo {
       position: absolute;
-      top: 24px;
+      top: 62px;
       left: 32px;
-      z-index: 10;
+      z-index: 30;
       display: block;
     }
 
@@ -156,7 +183,7 @@
       height: 74px;
       width: auto;
       display: block;
-      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.12));
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
       animation: globe-slow-spin 25s linear infinite;
       transition: transform 0.3s var(--ease);
     }
@@ -193,7 +220,7 @@
       font-size: 11px;
       letter-spacing: 0.35em;
       text-transform: uppercase;
-      color: var(--silver-deep);
+      color: #9E9EA8;
       margin-bottom: 24px;
       display: block;
     }
@@ -204,7 +231,8 @@
       letter-spacing: 0.05em;
       font-size: 71px;
       font-weight: 400;
-      color: #8A8A8A;
+      color: #D2D2DC;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     }
 
     .hero-scroll-indicator {
@@ -226,13 +254,13 @@
       font-weight: 400;
       letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: var(--silver-deep);
+      color: #8E8E98;
     }
 
     .scroll-line {
       width: 1px;
       height: 40px;
-      background: var(--silver-deep);
+      background: #8E8E98;
       transform-origin: bottom;
       animation: scroll-pulse-up 1.8s ease-in-out infinite;
     }
@@ -1001,6 +1029,11 @@
       .admin-nav { flex-direction: column; gap: 16px; text-align: center; }
       .nav-tabs { width: 100%; justify-content: center; }
     }
+    @media (max-width: 768px) {
+      .hero-nav-logo { top: 54px; left: 20px; }
+      .hero-nav-logo img { height: 56px; }
+      .hero-stamp--bottom { font-size: 52px; }
+    }
   </style>
 </head>
 <body>
@@ -1017,8 +1050,16 @@
        ═══════════════════════════════════════════════════════════ -->
   <section class="hero-admin-stage" id="admin-hero" aria-label="Admin Entrance — Dynasty World">
 
-    <!-- Top Left spinning globe -->
-    <a href="#admin-hero" class="hero-nav-logo" id="hero-globe-home" aria-label="Dynasty World Admin Entrance">
+    <!-- Top Moving Marquee Strip (Hero entrance - Dark version) -->
+    <div class="hero-marquee-strip" aria-hidden="true">
+      <div class="marquee-track marquee-track--left">
+        <span>MSANGAMBE SIGUDLA &nbsp;·&nbsp; ARTIST &nbsp;·&nbsp; DYNASTY WORLD &nbsp;·&nbsp; GCWALA &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; CREATOR &nbsp;·&nbsp; ALIENO NATURA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; MODEL &nbsp;·&nbsp; TECHNO/ANIMAL &nbsp;·&nbsp; DYNASTY FOREVER &nbsp;·&nbsp; MSANGAMBE SIGUDLA &nbsp;·&nbsp; ARTIST &nbsp;·&nbsp; DYNASTY WORLD &nbsp;·&nbsp; GCWALA &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; CREATOR &nbsp;·&nbsp; ALIENO NATURA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; MODEL &nbsp;·&nbsp; TECHNO/ANIMAL &nbsp;·&nbsp; DYNASTY FOREVER &nbsp;·&nbsp;</span>
+        <span aria-hidden="true">MSANGAMBE SIGUDLA &nbsp;·&nbsp; ARTIST &nbsp;·&nbsp; DYNASTY WORLD &nbsp;·&nbsp; GCWALA &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; CREATOR &nbsp;·&nbsp; ALIENO NATURA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; MODEL &nbsp;·&nbsp; TECHNO/ANIMAL &nbsp;·&nbsp; DYNASTY FOREVER &nbsp;·&nbsp; MSANGAMBE SIGUDLA &nbsp;·&nbsp; ARTIST &nbsp;·&nbsp; DYNASTY WORLD &nbsp;·&nbsp; GCWALA &nbsp;·&nbsp; SOUTH AFRICA &nbsp;·&nbsp; CREATOR &nbsp;·&nbsp; ALIENO NATURA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; MODEL &nbsp;·&nbsp; TECHNO/ANIMAL &nbsp;·&nbsp; DYNASTY FOREVER &nbsp;·&nbsp;</span>
+      </div>
+    </div>
+
+    <!-- Top Left spinning globe (links to main home page) -->
+    <a href="/" class="hero-nav-logo" id="hero-globe-home" aria-label="Return to Dynasty World Home" title="Return to Main Website">
       <img src="SONDYNASTY-removebg-preview.png" alt="Son Dynasty" class="nav-logo-globe">
     </a>
 
@@ -1112,6 +1153,10 @@
           </button>
 
           <div class="error-msg" id="login-error"></div>
+
+          <div>
+            <button type="button" id="btn-return-hero" style="background: none; border: none; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--silver-deep); margin-top: 20px; cursor: pointer; transition: color 0.2s ease;">&larr; Return to Medallion</button>
+          </div>
         </form>
       </div>
     </section>
@@ -1394,6 +1439,7 @@
     let clock = new THREE.Clock();
     let lastTime = 0;
     let isTransitioning = false;
+    let transitionDirection = 1; // 1 = forward zoom-in, -1 = reverse zoom-out
     let transitionStartTime = 0;
     let isIntroComplete = false;
     let isCanvasActive = true;
@@ -1462,17 +1508,17 @@
       // 4. TRANSLUCENT SMOKED OBSIDIAN / BLACK DIAMOND MATERIAL
       // Translucent smoked glass that refracts the light and environment map dynamically
       materials.diamondCoin = new THREE.MeshPhysicalMaterial({
-        color: 0x141416,         // Deep smoked black
-        transmission: 0.85,      // Translucent glass transmission
-        opacity: 0.95,
+        color: 0x050508,         // Deeper smoked obsidian
+        transmission: 0.65,      // Translucent smoked glass transmission
+        opacity: 0.98,
         ior: 2.42,               // Diamond refractive index
-        roughness: 0.04,         // Glossy polish
-        metalness: 0.12,
+        roughness: 0.04,         // Glossy mirror polish
+        metalness: 0.28,         // Metallic rim & reflection accents
         transparent: true,
         envMap: envMapTexture,
-        envMapIntensity: 2.8,    // Brilliant specular reflections
+        envMapIntensity: 3.2,    // Brilliant specular reflections
         clearcoat: 1.0,
-        clearcoatRoughness: 0.04
+        clearcoatRoughness: 0.03
       });
 
       materials.diamondLogo = new THREE.MeshStandardMaterial({
@@ -1618,13 +1664,30 @@
           ? 4 * progress * progress * progress 
           : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
-        camera.position.z = 5.5 - ease * 4.3; // Zoom from 5.5 to 1.2
-        const currentScale = baseScale + ease * (targetScale - baseScale);
-        if (emblemGroup) {
-          emblemGroup.scale.set(currentScale, currentScale, currentScale);
-          const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
-          emblemGroup.rotation.y = pivotY + targetX * 0.45 + ease * Math.PI * 2;
-          emblemGroup.rotation.x = targetY * 0.35 + ease * Math.PI * 0.5;
+        if (transitionDirection === -1) {
+          // REVERSE ZOOM OUT: Zooms backward from 1.2 to 5.5, scales down from 3.2 to baseScale, unspins
+          camera.position.z = 1.2 + ease * 4.3;
+          const currentScale = targetScale - ease * (targetScale - baseScale);
+          if (emblemGroup) {
+            emblemGroup.scale.set(currentScale, currentScale, currentScale);
+            const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
+            emblemGroup.rotation.y = pivotY + targetX * 0.45 + (1.0 - ease) * Math.PI * 2;
+            emblemGroup.rotation.x = targetY * 0.35 + (1.0 - ease) * Math.PI * 0.5;
+          }
+          if (progress >= 1.0) {
+            isTransitioning = false;
+            transitionDirection = 1;
+          }
+        } else {
+          // FORWARD ZOOM IN: Zooms forward from 5.5 to 1.2, scales up from baseScale to 3.2, spins
+          camera.position.z = 5.5 - ease * 4.3;
+          const currentScale = baseScale + ease * (targetScale - baseScale);
+          if (emblemGroup) {
+            emblemGroup.scale.set(currentScale, currentScale, currentScale);
+            const pivotY = Math.sin(elapsedTime * 0.6) * 0.28;
+            emblemGroup.rotation.y = pivotY + targetX * 0.45 + ease * Math.PI * 2;
+            emblemGroup.rotation.x = targetY * 0.35 + ease * Math.PI * 0.5;
+          }
         }
       } else {
         // Normal hover levitation & swinging
@@ -1643,9 +1706,10 @@
     // ENTRANCE TRANSITION INTO AUTHENTICATION GATE
     // ═══════════════════════════════════════════════════════════
     function onHeroStageClick(e) {
-      if (e.target.closest('.hero-nav-logo')) return;
+      if (e.target.closest('.hero-nav-logo') || e.target.closest('.hero-marquee-strip')) return;
       if (isTransitioning) return;
 
+      transitionDirection = 1;
       isTransitioning = true;
       transitionStartTime = clock.getElapsedTime();
 
@@ -1751,25 +1815,64 @@
       }
     });
 
-    btnLogout.addEventListener('click', () => {
-      setAuthenticated(false);
-      showToast('Session terminated.');
-    });
-
-    function returnToBlackMedallion(e) {
+    // ═══════════════════════════════════════════════════════════
+    // CLEAN BACKWARDS ANIMATION TO TRANSLUCENT MEDALLION HERO
+    // ═══════════════════════════════════════════════════════════
+    function triggerReverseToMedallion(e) {
       if (e) e.preventDefault();
+      if (isTransitioning) return;
+
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(SESSION_EMAIL);
       emailCache.clear();
+
+      // Quick flash overlay veil
       flashOverlay.classList.add('is-active');
+
       setTimeout(() => {
-        setAuthenticated(false);
-        flashOverlay.classList.remove('is-active');
-        showToast('Returned to Dynasty Admin Entrance.');
-      }, 300);
+        // Hide terminal and login view, show dark hero stage
+        adminNavBar.style.display = 'none';
+        viewDashboard.style.display = 'none';
+        marqueeTop.style.display = 'none';
+        viewLogin.style.display = 'none';
+        heroAdminStage.style.display = 'flex';
+
+        // Ensure 3D canvas is running
+        if (!scene) {
+          initTranslucentMedallion();
+        }
+        isCanvasActive = true;
+
+        // Position camera & medallion in the ZOOMED-IN close-up state
+        camera.position.z = 1.2;
+        const targetScale = 3.2;
+        if (emblemGroup) {
+          emblemGroup.scale.set(targetScale, targetScale, targetScale);
+          emblemGroup.rotation.y = Math.PI * 2;
+          emblemGroup.rotation.x = Math.PI * 0.5;
+        }
+
+        // Launch smooth reverse zoom-out animation
+        transitionDirection = -1;
+        isTransitioning = true;
+        transitionStartTime = clock.getElapsedTime();
+
+        // Smoothly fade out flash overlay so user watches medallion zoom backwards to rest
+        setTimeout(() => {
+          flashOverlay.classList.remove('is-active');
+          showToast('Session ended. Returned to Dynasty Entrance.');
+        }, 120);
+
+      }, 250);
     }
 
-    navGlobeHome.addEventListener('click', returnToBlackMedallion);
+    btnLogout.addEventListener('click', triggerReverseToMedallion);
+    navGlobeHome.addEventListener('click', triggerReverseToMedallion);
+
+    const btnReturnHero = document.getElementById('btn-return-hero');
+    if (btnReturnHero) {
+      btnReturnHero.addEventListener('click', triggerReverseToMedallion);
+    }
 
     // ═══════════════════════════════════════════════════════════
     // 2-TAB SWITCHER (INBOX & COMPOSE/PREVIEW)
