@@ -191,14 +191,17 @@ ${emailStyleAndHead}
           <tr>
             <td class="card-content" style="padding: 36px;">
               
-              <!-- Header Row with Crest Logo & Cursive Title -->
+              <!-- Header Row with Crest Logo & Centered Title -->
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 28px; border-bottom: 1px solid rgba(192, 192, 192, 0.2); padding-bottom: 20px;">
                 <tr>
-                  <td width="60" valign="middle" align="left">
-                    <img src="https://msangambe.com/assets/logo-crest-black-on-white.png" alt="SM Crest" width="50" style="display: block; border: 0;">
+                  <td width="55" valign="middle" align="left">
+                    <img src="https://msangambe.com/assets/logo-crest-black-on-white.png" alt="SM Crest" width="48" style="display: block; border: 0;">
                   </td>
-                  <td valign="middle" align="center" style="padding-right: 60px;">
-                    <img src="https://msangambe.com/assets/images/welcome_dynasty_world_dark.png" alt="Welcome to Dynasty World" width="336" style="display: block; margin: 0 auto; border: 0;">
+                  <td valign="middle" align="center" style="text-align: center;">
+                    <img src="https://msangambe.com/assets/images/welcome_dynasty_world_dark.png" alt="Welcome to Dynasty World" width="290" style="display: block; margin: 0 auto; border: 0;">
+                  </td>
+                  <td width="55" valign="middle" align="right">
+                    &nbsp;
                   </td>
                 </tr>
               </table>

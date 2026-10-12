@@ -438,21 +438,31 @@
     .login-card {
       width: 100%;
       max-width: 440px;
-      background: var(--white);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.05);
-      padding: 48px 40px;
+      background: rgba(255, 255, 255, 0.76);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 22px;
+      box-shadow: 
+        0 24px 60px rgba(0, 0, 0, 0.06),
+        0 1px 1px rgba(255, 255, 255, 0.95) inset,
+        0 0 0 1px rgba(192, 192, 192, 0.25);
+      padding: 52px 42px;
       text-align: center;
       position: relative;
       animation: fadeIn 0.4s var(--ease);
     }
 
     .login-logo {
-      width: 56px;
+      width: 88px;
       height: auto;
-      margin: 0 auto 20px;
+      margin: 0 auto 24px;
       display: block;
+      filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.08));
+      transition: transform 0.3s var(--ease);
+    }
+    .login-logo:hover {
+      transform: scale(1.05);
     }
 
     .login-heading {
@@ -500,10 +510,12 @@
 
     .form-input, .form-textarea {
       width: 100%;
-      background: var(--off-white);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 12px 14px;
+      background: rgba(247, 245, 242, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(192, 192, 192, 0.45);
+      border-radius: 10px;
+      padding: 13px 15px;
       font-size: 14px;
       color: var(--charcoal);
       outline: none;
@@ -512,9 +524,9 @@
     }
 
     .form-input:focus, .form-textarea:focus {
-      background: var(--white);
+      background: rgba(255, 255, 255, 0.95);
       border-color: var(--charcoal);
-      box-shadow: 0 0 0 3px rgba(28, 28, 28, 0.05);
+      box-shadow: 0 0 0 3px rgba(28, 28, 28, 0.06);
     }
 
     .multi-email-actions {
@@ -1005,8 +1017,8 @@
        ═══════════════════════════════════════════════════════════ -->
   <section class="hero-admin-stage" id="admin-hero" aria-label="Admin Entrance — Dynasty World">
 
-    <!-- Top Left spinning globe linking to main home -->
-    <a href="/" class="hero-nav-logo" aria-label="Return to Dynasty World">
+    <!-- Top Left spinning globe -->
+    <a href="#admin-hero" class="hero-nav-logo" id="hero-globe-home" aria-label="Dynasty World Admin Entrance">
       <img src="SONDYNASTY-removebg-preview.png" alt="Son Dynasty" class="nav-logo-globe">
     </a>
 
@@ -1048,7 +1060,7 @@
 
   <!-- Header Nav (Active upon authentication) -->
   <header class="admin-nav" id="admin-nav-bar" style="display: none;">
-    <a href="/" class="nav-logo-link" id="nav-globe-home" title="Return to Dynasty World">
+    <a href="#admin-hero" class="nav-logo-link" id="nav-globe-home" title="Return to Dynasty Admin Entrance">
       <img src="SONDYNASTY-removebg-preview.png" alt="Son Dynasty Globe" class="nav-logo-globe">
     </a>
 
@@ -1239,10 +1251,10 @@
                   MSANGAMBE SIGUDLA &nbsp;·&nbsp; SON DYNASTY &nbsp;·&nbsp; SOUTH AFRICA
                 </div>
 
-                <!-- Header with crest and new 2-Line cursive/Cinzel title -->
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid rgba(192, 192, 192, 0.2); padding-bottom: 14px;">
-                  <img src="assets/logo-crest-black-on-white.png" alt="SM" style="width: 44px; height: auto;">
-                  <img src="assets/images/welcome_dynasty_world_dark.png" alt="Welcome to Dynasty World" style="width: 250px; max-width: 80%; height: auto;">
+                <!-- Header with crest and centered 2-Line Bastliga/Cinzel title -->
+                <div style="display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 20px; border-bottom: 1px solid rgba(192, 192, 192, 0.2); padding-bottom: 14px;">
+                  <img src="assets/logo-crest-black-on-white.png" alt="SM" style="width: 40px; height: auto; position: absolute; left: 0;">
+                  <img src="assets/images/welcome_dynasty_world_dark.png" alt="Welcome to Dynasty World" style="width: 260px; max-width: 78%; height: auto; display: block; margin: 0 auto;">
                 </div>
 
                 <!-- Dynamic Greeting -->
@@ -1744,10 +1756,20 @@
       showToast('Session terminated.');
     });
 
-    navGlobeHome.addEventListener('click', () => {
+    function returnToBlackMedallion(e) {
+      if (e) e.preventDefault();
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(SESSION_EMAIL);
-    });
+      emailCache.clear();
+      flashOverlay.classList.add('is-active');
+      setTimeout(() => {
+        setAuthenticated(false);
+        flashOverlay.classList.remove('is-active');
+        showToast('Returned to Dynasty Admin Entrance.');
+      }, 300);
+    }
+
+    navGlobeHome.addEventListener('click', returnToBlackMedallion);
 
     // ═══════════════════════════════════════════════════════════
     // 2-TAB SWITCHER (INBOX & COMPOSE/PREVIEW)
@@ -1820,12 +1842,42 @@
               openMessage(msg.uid);
             }
           });
+
+          // Background prefetch the next 5 emails into memory cache so clicking any of them is 0ms instant!
+          prefetchRecentEmails(data.messages);
         } else {
           inboxListUl.innerHTML = `<li style="padding: 24px; text-align: center; color: #991B1B; font-size: 12px;">${data.error || 'Failed to fetch inbox.'}</li>`;
         }
       } catch (err) {
         inboxListUl.innerHTML = '<li style="padding: 24px; text-align: center; color: #991B1B; font-size: 12px;">Network error loading inbox.</li>';
       }
+    }
+
+    function prefetchRecentEmails(messages) {
+      const token = sessionStorage.getItem(SESSION_KEY);
+      if (!token || !messages || messages.length === 0) return;
+
+      const toPrefetch = messages.slice(0, 6);
+      toPrefetch.forEach((msg, i) => {
+        if (emailCache.has(msg.uid)) return;
+        setTimeout(() => {
+          fetch('/api/admin-inbox', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': token
+            },
+            body: JSON.stringify({ action: 'read', uid: msg.uid })
+          })
+          .then(res => res.json())
+          .then(d => {
+            if (d && d.success && d.email) {
+              emailCache.set(msg.uid, d.email);
+            }
+          })
+          .catch(() => {});
+        }, (i + 1) * 200);
+      });
     }
 
     btnRefreshInbox.addEventListener('click', loadInboxMessages);
