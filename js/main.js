@@ -2119,9 +2119,6 @@ window.addEventListener('resize', () => {
     // If user clicked nav or a button/link inside home, bypass
     if (e.target.closest('a, button')) return;
 
-    // Touch devices handle entrance exclusively via tap/touchend check inside initCursor
-    if (navigator.maxTouchPoints > 0) return;
-
     if (document.body.classList.contains('is-locked') && !isTransitioning) {
       triggerEntryTransition();
     }

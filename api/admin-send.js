@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const { action, email, password, recipientEmail, recipientName, subject, message, sendCopy } = req.body || {};
+  const { action, email, password, recipientEmail, recipientName, subject, message, sendCopy, attachments } = req.body || {};
   const authHeader = (req.headers && (req.headers.authorization || req.headers.Authorization)) || '';
 
   // 1. ACTION: LOGIN / AUTHENTICATE
@@ -270,6 +270,13 @@ ${emailStyleAndHead}
         subject: subject.trim(),
         html: emailHtml
       };
+
+      if (Array.isArray(attachments) && attachments.length > 0) {
+        payload.attachments = attachments.map(att => ({
+          filename: att.filename || 'attachment',
+          content: att.content // base64 string
+        }));
+      }
 
       if (sendCopy) {
         payload.bcc = [ADMIN_EMAIL];

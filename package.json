@@ -1,0 +1,24 @@
+{
+  "name": "msangambe",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mthunzi14/Msangambe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mthunzi14/Msangambe/issues"
+  },
+  "homepage": "https://github.com/mthunzi14/Msangambe#readme",
+  "description": "",
+  "dependencies": {
+    "imapflow": "^2.4.0",
+    "mailparser": "^3.9.38"
+  }
+}
