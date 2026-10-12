@@ -111,7 +111,7 @@ module.exports = async (req, res) => {
 
       const lock = await client.getMailboxLock('INBOX');
       try {
-        const download = await client.download(uid.toString(), { uid: true });
+        const download = await client.download(uid.toString(), undefined, { uid: true });
         if (!download || !download.content) {
           return res.status(404).json({ error: 'Email message not found.' });
         }
